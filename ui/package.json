@@ -1,9 +1,17 @@
 {
-  "name": "ui",
-  "version": "0.1.0",
+  "name": "@neighbourhoods/feed-applet",
+  "description": "Webcomponent lit-element following open-wc recommendations",
+  "license": "MIT",
+  "author": "lit-element",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "scripts": {
-    "start": "vite --port $UI_PORT --clearScreen false",
-    "build": "vite build",
+    "start": "vite dev --port $UI_PORT --clearScreen false",
+    "build": "tsc && vite build",
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "package": "npm run build && cd dist && bestzip ../dist.zip *"

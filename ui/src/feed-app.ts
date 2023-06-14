@@ -11,8 +11,8 @@ import '@material/mwc-circular-progress';
 import './feed/posts/all-posts';
 import { clientContext } from './contexts';
 
-@customElement('holochain-app')
-export class HolochainApp extends LitElement {
+@customElement('feed-app')
+export class FeedApp extends LitElement {
   @state() loading = true;
 
   @provide({ context: clientContext })

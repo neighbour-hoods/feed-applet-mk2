@@ -59,4 +59,4 @@ const appletConfig: AppletConfigInput = {
     "cultural_contexts": [mostLikedPostsContext]
 }
 
-export default appletConfig
+export { appletConfig }

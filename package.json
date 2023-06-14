@@ -12,7 +12,10 @@
     "launch:happ": "echo \"pass\" | RUST_LOG=warn hc launch --piped -n $AGENTS workdir/feed-applet.happ --ui-port $UI_PORT network mdns",
     "package": "npm run build:happ && npm run package -w ui && hc web-app pack workdir --recursive",
     "build:happ": "npm run build:zomes && hc app pack workdir --recursive",
-    "build:zomes": "RUSTFLAGS='' CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown"
+    "build:zomes": "RUSTFLAGS='' CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown",
+    "download-sensemaker": "rimraf workdir/sensemaker.dna && curl -L --output workdir/sensemaker.dna https://github.com/neighbour-hoods/sensemaker-lite/releases/download/v0.0.7-alpha/sensemaker.dna; exit 0",
+    "start:ui": "npm run start -w ui",
+    "postinstall": "npm run download-sensemaker"
   },
   "devDependencies": {
     "@holochain-playground/cli": "^0.1.1",

@@ -10,14 +10,17 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "outDir": "dist",
     "sourceMap": true,
     "inlineSources": true,
+    "incremental": true,
+    "outDir": "out-tsc",
     "rootDir": "./src",
     "declaration": true,
-    "incremental": true,
     "skipLibCheck": true,
-    
+    "baseUrl": ".",
+    "paths": {
+        "@neighbourhoods/feed-applet": ["../ui"]
+    },
   },
   "include": ["src/**/*.ts"]
 }
