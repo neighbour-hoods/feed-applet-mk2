@@ -2,9 +2,9 @@ import { property, state } from "lit/decorators.js";
 import { ScopedElementsMixin } from "@open-wc/scoped-elements";
 import { CircularProgress } from "@scoped-elements/material-web";
 import { LitElement, html, css } from "lit";
-import { AppletInfo } from "@neighbourhoods/nh-launcher-applet";
-import { FeedApp } from "@neighbourhoods/feed-applet";
 import { AppWebsocket, CellType, ProvisionedCell, encodeHashToBase64 } from "@holochain/client";
+import { AppletInfo } from "@neighbourhoods/nh-launcher-applet";
+import { FeedApp, FeedStore, appletConfig, ImportanceDimensionAssessment, TotalImportanceDimensionDisplay } from "@neighbourhoods/feed-applet";
 import { SensemakerStore } from "@neighbourhoods/client";
 import { get } from 'svelte/store';
 
@@ -19,7 +19,7 @@ export class FeedApplet extends ScopedElementsMixin(LitElement) {
   sensemakerStore!: SensemakerStore;
 
   @property()
-  feedStore!: any;//FeedStore;
+  feedStore!: FeedStore;
 
   @state()
   loaded = false;
@@ -31,62 +31,34 @@ export class FeedApplet extends ScopedElementsMixin(LitElement) {
       const cellInfo = feedAppletInfo.appInfo.cell_info[appletRoleName][0]
       const feedCellInfo = (cellInfo as { [CellType.Provisioned]: ProvisionedCell }).provisioned;
 
-      // const maybeAppletConfig = await this.sensemakerStore.checkIfAppletConfigExists(appletConfig.applet_config_input.name)
-      // if (!maybeAppletConfig) {
-        // await this.sensemakerStore.registerApplet(appletConfig)
-      // }
+      const maybeAppletConfig = await this.sensemakerStore.checkIfAppletConfigExists(appletConfig.applet_config_input.name)
+      if (!maybeAppletConfig) {
+        await this.sensemakerStore.registerApplet(appletConfig)
+      }
 
-      // await this.sensemakerStore.updateWidgetMappingConfig(
-      //   encodeHashToBase64(get(this.sensemakerStore.appletConfig()).resource_defs["task_item"]), 
-      //   encodeHashToBase64(get(this.sensemakerStore.appletConfig()).dimensions["importance"]),
-      //   get(this.sensemakerStore.appletConfig()).dimensions["total_importance"], 
-      //   get(this.sensemakerStore.appletConfig()).methods["total_importance_method"],
-      // )
-
-      // await this.sensemakerStore.updateWidgetMappingConfig(
-      //   encodeHashToBase64(get(this.sensemakerStore.appletConfig()).resource_defs["task_item"]), 
-      //   encodeHashToBase64(get(this.sensemakerStore.appletConfig()).dimensions["perceived_heat"]),
-      //   get(this.sensemakerStore.appletConfig()).dimensions["average_heat"], 
-      //   get(this.sensemakerStore.appletConfig()).methods["average_heat_method"],
-      // )
-      
-      // customElements.define('total-importance-dimension-display', TotalImportanceDimensionDisplay);
-      // customElements.define('importance-dimension-assessment', ImportanceDimensionAssessment);
-      // customElements.define('average-heat-dimension-display', AverageHeatDimensionDisplay);
-      // customElements.define('heat-dimension-assessment', HeatDimensionAssessment);
-    //   await this.sensemakerStore.registerWidget(
-    //     [
-    //       encodeHashToBase64(get(this.sensemakerStore.appletConfig()).dimensions["importance"]),
-    //       encodeHashToBase64(get(this.sensemakerStore.appletConfig()).dimensions["total_importance"]),
-    //     ],
-    //     TotalImportanceDimensionDisplay,
-    //     ImportanceDimensionAssessment
-    //   )
-    //   await this.sensemakerStore.registerWidget(
-    //     [
-    //       encodeHashToBase64(get(this.sensemakerStore.appletConfig()).dimensions["perceived_heat"]),
-    //       encodeHashToBase64(get(this.sensemakerStore.appletConfig()).dimensions["average_heat"]),
-    //     ],
-    //     AverageHeatDimensionDisplay,
-    //     HeatDimensionAssessment
-    //   )
-    //   const appWs = await AppWebsocket.connect(this.appWebsocket.client.socket.url)
-    //   this.todoStore = new TodoStore(
-    //     appWs,
-    //     todoCellInfo.cell_id,
-    //     appletRoleName
-    //   );
-    //   const allTasks = await this.todoStore.fetchAllTasks()
-    //   const allTaskEntryHashes = get(this.todoStore.allTaskEntryHashes())
-    //   const importanceDimensionEh = get(this.sensemakerStore.appletConfig()).dimensions["importance"]
-    //   const totalImportanceDimensionEh = get(this.sensemakerStore.appletConfig()).dimensions["total_importance"]
-    //   const perceivedHeatDimensionEh = get(this.sensemakerStore.appletConfig()).dimensions["perceived_heat"]
-    //   const averageHeatDimensionEh = get(this.sensemakerStore.appletConfig()).dimensions["average_heat"]
-    //   await this.sensemakerStore.getAssessmentsForResources({
-    //   dimension_ehs: [importanceDimensionEh, totalImportanceDimensionEh, perceivedHeatDimensionEh, averageHeatDimensionEh],
-    //   resource_ehs: allTaskEntryHashes
-    // })
-    //   this.loaded = true;
+      await this.sensemakerStore.registerWidget(
+        [
+          encodeHashToBase64(get(this.sensemakerStore.appletConfig()).dimensions["like"]),
+          encodeHashToBase64(get(this.sensemakerStore.appletConfig()).dimensions["total_likes"]),
+        ],
+        TotalImportanceDimensionDisplay,
+        ImportanceDimensionAssessment
+      )
+      const appWs = await AppWebsocket.connect(this.appWebsocket.client.socket.url)
+      this.feedStore = new FeedStore(
+        appWs,
+        feedCellInfo.cell_id,
+        appletRoleName
+      );
+      const allPosts = await this.feedStore.fetchAllPosts()
+      const allPostEntryHashes = get(this.feedStore.allPostEntryHashes())
+      const likeDimensionEh = get(this.sensemakerStore.appletConfig()).dimensions["like"]
+      const totalLikesDimensionEh = get(this.sensemakerStore.appletConfig()).dimensions["total_likes"]
+      await this.sensemakerStore.getAssessmentsForResources({
+      dimension_ehs: [likeDimensionEh, totalLikesDimensionEh],
+      resource_ehs: allPostEntryHashes
+    })
+      this.loaded = true;
     }
     catch (e) {
       console.log("error in first update", e)

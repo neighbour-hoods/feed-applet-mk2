@@ -1,4 +1,4 @@
-import { AppletConfigInput, ConfigCulturalContext, ConfigMethod, ConfigResourceType, ConfigThreshold, Dimension, Range } from '@neighbourhoods/sensemaker-lite-types'
+import { AppletConfigInput, CreateAppletConfigInput, ConfigCulturalContext, ConfigMethod, ConfigThreshold, Range, ConfigResourceDef, ConfigDimension } from '@neighbourhoods/client'
 
 const likeRange: Range = {
     "name": "1-scale",
@@ -6,7 +6,7 @@ const likeRange: Range = {
         "Integer": { "min": 0, "max": 1 }
     }
 }
-const likeDimension: Dimension = {
+const likeDimension: ConfigDimension = {
     "name": "like",
     "range": likeRange,
     "computed": false
@@ -18,13 +18,13 @@ const totalLikesRange: Range = {
         "Integer": { "min": 0, "max": 1000000 }
     }
 }
-const totalLikesDimension = {
+const totalLikesDimension: ConfigDimension = {
     "name": "total_likes",
     "range": totalLikesRange,
     "computed": true
 }
 
-const postItemResourceType: ConfigResourceType = {
+const postItemResourceDef: ConfigResourceDef = {
     "name": "post_item",
     "base_types": [{ "entry_index": 0, "zome_index": 0, "visibility": { "Public": null } }],
     "dimensions": [likeDimension, totalLikesDimension]
@@ -32,12 +32,12 @@ const postItemResourceType: ConfigResourceType = {
 
 const totalLikesMethod: ConfigMethod = {
     "name": "total_likes_method",
-    "target_resource_type": postItemResourceType,
+    "target_resource_def": postItemResourceDef,
     "input_dimensions": [likeDimension],
     "output_dimension": totalLikesDimension,
     "program": { "Sum": null },
     "can_compute_live": false,
-    "must_publish_dataset": false
+    "requires_validation": false
 }
 
 const likesThreshold: ConfigThreshold = {
@@ -47,16 +47,22 @@ const likesThreshold: ConfigThreshold = {
 }
 const mostLikedPostsContext: ConfigCulturalContext = {
     "name": "most_liked_posts",
-    "resource_type": postItemResourceType,
+    "resource_def": postItemResourceDef,
     "thresholds": [likesThreshold],
     "order_by": [[totalLikesDimension, { "Biggest": null }]]
 }
-const appletConfig: AppletConfigInput = {
+const appletConfigInput: AppletConfigInput = {
     "name": "feed_applet",
+    "ranges": [likeRange, totalLikesRange],
     "dimensions": [likeDimension, totalLikesDimension],
-    "resource_types": [postItemResourceType],
+    "resource_defs": [postItemResourceDef],
     "methods": [totalLikesMethod],
     "cultural_contexts": [mostLikedPostsContext]
 }
+
+const appletConfig: CreateAppletConfigInput = {
+    "applet_config_input": appletConfigInput,
+    "role_name": "feed_applet"
+} 
 
 export { appletConfig }

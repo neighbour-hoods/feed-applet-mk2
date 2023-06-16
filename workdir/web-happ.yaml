@@ -2,6 +2,6 @@
 manifest_version: "1"
 name: feed-applet
 ui:
-  bundled: "../ui/dist.zip"
+  bundled: "../nh-launcher-applet/ui.zip"
 happ_manifest:
   bundled: "./feed-applet.happ"

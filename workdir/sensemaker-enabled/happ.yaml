@@ -1,0 +1,25 @@
+---
+manifest_version: "1"
+name: feed-sensemaker
+description: ~
+roles:
+  - name: feed_applet
+    provisioning:
+      strategy: create
+      deferred: false
+    dna:
+      bundled: "../../dnas/feed/workdir/feed.dna"
+      properties: ~
+      uuid: ~
+      version: ~
+      clone_limit: 0
+  - name: sensemaker
+    provisioning:
+      strategy: create
+      deferred: false
+    dna:
+      bundled: "../sensemaker.dna"
+      properties: ~
+      uuid: ~
+      version: ~
+      clone_limit: 1000
