@@ -3,6 +3,7 @@
   "private": true,
   "workspaces": [
     "ui",
+    "nh-launcher-applet",
     "tests"
   ],
   "scripts": {
