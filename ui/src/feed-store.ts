@@ -2,12 +2,26 @@ import { derived, get, Writable, writable } from 'svelte/store';
 import { AgentPubKey, AgentPubKeyB64, AppAgentClient, Record, AppSignal, AppWebsocket, CellId, encodeHashToBase64, EntryHash, ActionHash, DnaHash, RoleName } from '@holochain/client';
 import { FeedService } from './feed-service';
 import { PostsSignal, Post, WrappedEntry, EntryTypes } from './feed/posts/types';
-
+import { lazyLoadAndPoll, AsyncReadable } from "@holochain-open-dev/stores";
+import { EntryRecord, LazyHoloHashMap } from "@holochain-open-dev/utils";
 
 export class FeedStore {
   service: FeedService;
 
-  #postData: Writable<Array<Record>> = writable([]);
+  /** Post */
+
+  posts = new LazyHoloHashMap((postHash: ActionHash) =>
+    lazyLoadAndPoll(async () => this.service.fetchPost(postHash), 4000)
+  );
+  
+  /** All Posts */
+
+  allPosts = lazyLoadAndPoll(async () => {
+    const records = await this.service.fetchAllPosts();
+    return records.map(r => r.actionHash);
+  }, 4000);
+
+  #postData: Writable<Array<EntryRecord<Post>>> = writable([]);
 
   signaledHashes: Array<ActionHash> = [];
 
@@ -37,8 +51,9 @@ export class FeedStore {
     this.myAgentPubKey = encodeHashToBase64(cellId[1]);
   }
 
-  async fetchAllPosts(): Promise<Array<Record>> {
+  async fetchAllPosts(): Promise<Array<EntryRecord<Post>>> {
     const fetchedPosts = await this.service.fetchAllPosts();
+    console.log('fetchedPosts :>> ', fetchedPosts);
     this.#postData.update(posts => ({
       ...posts,
       ...fetchedPosts,
@@ -49,8 +64,9 @@ export class FeedStore {
   allPostEntryHashes() {
     return derived(this.#postData, posts => {
       let allPostsEhs: EntryHash[] = []
+      console.log('posts :>> ', posts);
       posts.map(post => {
-        allPostsEhs.push(post.signed_action.hashed.hash)
+        allPostsEhs.push(post.record.signed_action.hashed.hash)
       })
       return allPostsEhs
     })

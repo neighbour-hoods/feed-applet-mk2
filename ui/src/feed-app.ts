@@ -6,7 +6,6 @@ import {
   AppAgentClient,
 } from '@holochain/client';
 import { provide } from '@lit-labs/context';
-import '@material/mwc-circular-progress';
 
 import './feed/posts/all-posts';
 import { clientContext } from './contexts';
@@ -29,7 +28,7 @@ export class FeedApp extends LitElement {
   render() {
     if (this.loading)
       return html`
-        <mwc-circular-progress indeterminate></mwc-circular-progress>
+        Loading!
       `;
 
     return html`

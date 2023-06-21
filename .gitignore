@@ -11,3 +11,4 @@
 .hc
 .running
 pnpm-lock.yaml
+/tests/node_modules

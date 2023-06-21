@@ -3,7 +3,7 @@ manifest_version: "1"
 name: feed-sensemaker
 description: ~
 roles:
-  - name: feed_applet
+  - name: feed
     provisioning:
       strategy: create
       deferred: false

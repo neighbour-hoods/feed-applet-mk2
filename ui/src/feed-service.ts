@@ -1,15 +1,40 @@
 import { ActionHash, AgentPubKey, Record, AppAgentCallZomeRequest, Entry, AppAgentClient, AppWebsocket, CallZomeRequest, CellId, RoleName } from '@holochain/client';
 import { Post, WrappedEntry, EntryTypes } from './feed/posts/types';
+import { isSignalFromCellWithRole, EntryRecord, ZomeClient } from '@holochain-open-dev/utils';
 
 export class FeedService {
-  constructor(public client: AppWebsocket, public cellId: CellId, public roleName: RoleName, public zomeName = 'Feed') {}
+  constructor(public client: AppWebsocket, public cellId: CellId, public roleName: RoleName, public zomeName = 'posts') {}
 
-  async createPost(input: Post): Promise<null> {
-    return this.callZome('create_post', input);
+  /** Post */
+
+  async createPost(post: Post): Promise<EntryRecord<Post>> {
+    const record: Record = await this.callZome('create_post', post);
+    return new EntryRecord(record);
   }
 
-  async fetchAllPosts(): Promise<Array<Record>> {
-    return this.callZome('get_all_posts', null);
+  async fetchPost(postHash: ActionHash): Promise<EntryRecord<Post> | undefined> {
+    const record: Record = await this.callZome('get_post', postHash);
+    return record ? new EntryRecord(record) : undefined;
+  }
+
+  deletePost(originalPostHash: ActionHash): Promise<ActionHash> {
+    return this.callZome('delete_post', originalPostHash);
+  }
+
+  async updatePost(originalPostHash: ActionHash, previousPostHash: ActionHash, updatedPost: Post): Promise<EntryRecord<Post>> {
+    const record: Record = await this.callZome('update_post', {
+      original_post_hash: originalPostHash,
+      previous_post_hash: previousPostHash,
+      updated_post: updatedPost
+    });
+    return new EntryRecord(record);
+  }
+
+  /** All Posts */
+
+  async fetchAllPosts(): Promise<Array<EntryRecord<Post>>> {
+    const records: Record[] = await this.callZome('get_all_posts', null);
+    return records.map(r => new EntryRecord(r));
   }
   
   private callZome(fn_name: string, payload: any) {

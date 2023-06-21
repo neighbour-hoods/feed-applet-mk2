@@ -1,6 +1,5 @@
 import { property, state } from "lit/decorators.js";
 import { ScopedElementsMixin } from "@open-wc/scoped-elements";
-import { CircularProgress } from "@scoped-elements/material-web";
 import { LitElement, html, css } from "lit";
 import { AppWebsocket, CellType, ProvisionedCell, encodeHashToBase64 } from "@holochain/client";
 import { AppletInfo } from "@neighbourhoods/nh-launcher-applet";
@@ -26,7 +25,7 @@ export class FeedApplet extends ScopedElementsMixin(LitElement) {
 
   async firstUpdated() {
     try {
-      const appletRoleName = "posts";
+      const appletRoleName = "feed";
       const feedAppletInfo = this.appletAppInfo[0];
       const cellInfo = feedAppletInfo.appInfo.cell_info[appletRoleName][0]
       const feedCellInfo = (cellInfo as { [CellType.Provisioned]: ProvisionedCell }).provisioned;
@@ -46,7 +45,7 @@ export class FeedApplet extends ScopedElementsMixin(LitElement) {
       )
       const appWs = await AppWebsocket.connect(this.appWebsocket.client.socket.url)
       this.feedStore = new FeedStore(
-        appWs,
+        appWs as any,
         feedCellInfo.cell_id,
         appletRoleName
       );
@@ -76,7 +75,7 @@ export class FeedApplet extends ScopedElementsMixin(LitElement) {
       return html`<div
         style="display: flex; flex: 1; flex-direction: row; align-items: center; justify-content: center"
       >
-        <mwc-circular-progress indeterminate></mwc-circular-progress>
+        Loading!
       </div>`;
     return html`
       <feed-app .sensemakerStore=${this.sensemakerStore} .feedStore=${this.feedStore}></feed-app>
@@ -85,7 +84,7 @@ export class FeedApplet extends ScopedElementsMixin(LitElement) {
 
   static get scopedElements() {
     return {
-      "mwc-circular-progress": CircularProgress,
+      // "mwc-circular-progress": CircularProgress,
       "feed-app": FeedApp,
       // 'total-importance-dimension-display': TotalImportanceDimensionDisplay,
       // 'importance-dimension-assessment': ImportanceDimensionAssessment,

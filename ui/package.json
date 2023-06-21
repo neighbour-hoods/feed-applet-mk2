@@ -4,10 +4,10 @@
   "license": "MIT",
   "author": "lit-element",
   "version": "0.0.0",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "out-tsc/index.js",
+  "module": "out-tsc/index.js",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./out-tsc/index.js"
   },
   "scripts": {
     "start": "vite dev --port $UI_PORT --clearScreen false",
@@ -17,26 +17,28 @@
     "package": "npm run build && cd dist && bestzip ../dist.zip *"
   },
   "dependencies": {
+    "@holochain-open-dev/stores": "^0.5.4",
+    "@holochain-open-dev/utils": "^0.14.2",
     "@holochain/client": "^0.12.0",
     "@lit-labs/context": "^0.2.0",
     "@lit-labs/task": "^2.0.0",
-    "@material/mwc-circular-progress": "^0.27.0",
     "@material/mwc-button": "^0.27.0",
-    "@material/mwc-textfield": "^0.27.0",
-    "@material/mwc-textarea": "^0.27.0",
     "@material/mwc-checkbox": "^0.27.0",
-    "@material/mwc-slider": "^0.27.0",
+    "@material/mwc-circular-progress": "^0.27.0",
+    "@material/mwc-formfield": "^0.27.0",
     "@material/mwc-icon-button": "^0.27.0",
     "@material/mwc-icon-button-toggle": "^0.27.0",
     "@material/mwc-select": "^0.27.0",
+    "@material/mwc-slider": "^0.27.0",
     "@material/mwc-snackbar": "^0.27.0",
-    "@material/mwc-formfield": "^0.27.0",
+    "@material/mwc-textarea": "^0.27.0",
+    "@material/mwc-textfield": "^0.27.0",
     "@msgpack/msgpack": "^2.7.2",
+    "@neighbourhoods/client": "^0.0.3",
+    "@open-wc/scoped-elements": "^2.2.0",
     "@vaadin/date-time-picker": "^23.2.8",
     "lit": "^2.6.1",
-    "lit-svelte-stores": "0.2.5",
-    "@open-wc/scoped-elements": "^2.1.5",
-    "@neighbourhoods/client": "0.0.3"
+    "lit-svelte-stores": "0.2.5"
   },
   "devDependencies": {
     "@open-wc/eslint-config": "^4.3.0",
@@ -47,9 +49,9 @@
     "eslint-config-prettier": "^8.3.0",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
+    "typescript": "^4.5.5",
     "vite": "^4.0.0",
-    "vite-plugin-checker": "^0.5.3",
-    "typescript": "^4.5.5"
+    "vite-plugin-checker": "^0.5.3"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",

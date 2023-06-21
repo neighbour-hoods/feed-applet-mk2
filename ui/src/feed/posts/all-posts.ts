@@ -1,32 +1,32 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { AppAgentClient, AgentPubKey, EntryHash, ActionHash, Record, NewEntryAction } from '@holochain/client';
+import { StoreSubscriber} from '@holochain-open-dev/stores';
 import { consume } from '@lit-labs/context';
-import { Task } from '@lit-labs/task';
-import '@material/mwc-circular-progress';
 
-import { clientContext } from '../../contexts';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+
+import { clientContext, feedStoreContext } from '../../contexts';
 import { PostsSignal } from './types';
 
 import './post-detail';
+import { FeedStore } from '../../feed-store';
 
 @customElement('all-posts')
-export class AllPosts extends LitElement {
+export class AllPosts extends ScopedElementsMixin(LitElement) {
   @consume({ context: clientContext })
   client!: AppAgentClient;
+
+  @consume({ context: feedStoreContext, subscribe: true })
+  @state()
+  public feedStore!: FeedStore;
   
   @state()
   signaledHashes: Array<ActionHash> = [];
   
-  _fetchPosts = new Task(this, ([]) => this.client.callZome({
-      cap_secret: null,
-      role_name: 'feed',
-      zome_name: 'posts',
-      fn_name: 'get_all_posts',
-      payload: null,
-  }) as Promise<Array<Record>>, () => []);
+  _allPosts = new StoreSubscriber(this, () => this.feedStore.allPosts);
 
-  firstUpdated() {
+  async firstUpdated() {
     this.client.on('signal', signal => {
       if (signal.zome_name !== 'posts') return; 
       const payload = signal.payload as PostsSignal;
@@ -36,25 +36,40 @@ export class AllPosts extends LitElement {
     });
   }
   
+  // static get scopedElements() {
+  //   return {
+  //   };
+  // }
+
   renderList(hashes: Array<ActionHash>) {
-    if (hashes.length === 0) return html`<span>No posts found.</span>`;
-    
+    if (hashes.length === 0) 
+      return html` <div class="column center-content">
+        
+        <span class="placeholder">${("No posts found")}</span>
+      `;
+
     return html`
-      <div style="display: flex; flex-direction: column">
+      <div style="display: flex; flex-direction: column; flex: 1">
         ${hashes.map(hash => 
-          html`<post-detail .postHash=${hash} style="margin-bottom: 16px;" @post-deleted=${() => { this._fetchPosts.run(); this.signaledHashes = []; } }></post-detail>`
+          html`${hash}`
         )}
       </div>
     `;
   }
 
   render() {
-    return this._fetchPosts.render({
-      pending: () => html`<div style="display: flex; flex: 1; align-items: center; justify-content: center">
-        <mwc-circular-progress indeterminate></mwc-circular-progress>
-      </div>`,
-      complete: (records) => this.renderList([...this.signaledHashes, ...records.map(r => r.signed_action.hashed.hash)]),
-      error: (e: any) => html`<span>Error fetching the posts: ${e.data.data}.</span>`
-    });
+    switch (this._allPosts.value.status) {
+      case "pending":
+        return html`<div
+          style="display: flex; flex: 1; align-items: center; justify-content: center"
+        >
+          Loading!
+        </div>`;
+      case "complete":
+        return this.renderList(this._allPosts.value.value);
+      case "error":
+        return html`<div
+        >"Error fetching the posts"</div>`;
+    }
   }
 }

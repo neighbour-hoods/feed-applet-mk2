@@ -1,0 +1,7 @@
+---
+manifest_version: "1"
+name: feed-applet
+ui:
+  bundled: "../ui.zip"
+happ_manifest:
+  bundled: "../../workdir/sensemaker-enabled/feed-sensemaker.happ"

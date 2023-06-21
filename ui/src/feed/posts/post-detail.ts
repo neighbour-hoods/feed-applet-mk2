@@ -4,7 +4,7 @@ import { EntryHash, Record, ActionHash, AppAgentClient, DnaHash } from '@holocha
 import { consume } from '@lit-labs/context';
 import { Task } from '@lit-labs/task';
 import { decode } from '@msgpack/msgpack';
-import '@material/mwc-circular-progress';
+// import '@material/mwc-circular-progress';
 import '@material/mwc-icon-button';
 import '@material/mwc-icon-button-toggle';
 import '@material/mwc-snackbar';
@@ -114,7 +114,7 @@ export class PostDetail extends LitElement {
   render() {
     return this._fetchRecord.render({
       pending: () => html`<div style="display: flex; flex: 1; align-items: center; justify-content: center">
-        <mwc-circular-progress indeterminate></mwc-circular-progress>
+        Loading!
       </div>`,
       complete: (maybeRecord) => this.renderPost(maybeRecord),
       error: (e: any) => html`<span>Error fetching the post: ${e.data.data}</span>`
