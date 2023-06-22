@@ -2,9 +2,9 @@ import { ActionHash, AgentPubKey, Record, AppAgentCallZomeRequest, Entry, AppAge
 import { Post, WrappedEntry, EntryTypes } from './feed/posts/types';
 
 export class FeedService {
-  constructor(public client: AppWebsocket, public cellId: CellId, public roleName: RoleName, public zomeName = 'Feed') {}
+  constructor(public client: AppWebsocket, public cellId: CellId, public roleName: RoleName, public zomeName = 'posts') {}
 
-  async createPost(input: Post): Promise<null> {
+  async createPost(input: Post): Promise<Record> {
     return this.callZome('create_post', input);
   }
 

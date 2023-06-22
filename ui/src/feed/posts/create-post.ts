@@ -1,20 +1,24 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { InstalledCell, ActionHash, Record, AgentPubKey, EntryHash, AppAgentClient, DnaHash } from '@holochain/client';
-import { consume } from '@lit-labs/context';
+import { consume, contextProvided, contextProvider } from '@lit-labs/context';
 import '@material/mwc-button';
 import '@material/mwc-snackbar';
 import { Snackbar } from '@material/mwc-snackbar';
 import '@material/mwc-textarea';
 
-import { clientContext } from '../../contexts';
+import { clientContext, feedStoreContext } from '../../contexts';
 import { Post } from './types';
+import { FeedStore } from '../../feed-store';
 
 @customElement('create-post')
 export class CreatePost extends LitElement {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 
+  @consume({ context: feedStoreContext })
+  @property()
+  feedStore!: FeedStore;
 
   @state()
   _text: string = '';
@@ -28,31 +32,34 @@ export class CreatePost extends LitElement {
   }
 
   async createPost() {
+    await this.feedStore.createPost({
+      text: this._text,
+    }) 
     const post: Post = { 
         text: this._text,
     };
 
-    try {
-      const record: Record = await this.client.callZome({
-        cap_secret: null,
-        role_name: 'feed',
-        zome_name: 'posts',
-        fn_name: 'create_post',
-        payload: post,
-      });
+    // try {
+    //   const record: Record = await this.client.callZome({
+    //     cap_secret: null,
+    //     role_name: 'feed',
+    //     zome_name: 'posts',
+    //     fn_name: 'create_post',
+    //     payload: post,
+    //   });
 
-      this.dispatchEvent(new CustomEvent('post-created', {
-        composed: true,
-        bubbles: true,
-        detail: {
-          postHash: record.signed_action.hashed.hash
-        }
-      }));
-    } catch (e: any) {
-      const errorSnackbar = this.shadowRoot?.getElementById('create-error') as Snackbar;
-      errorSnackbar.labelText = `Error creating the post: ${e.data.data}`;
-      errorSnackbar.show();
-    }
+    //   this.dispatchEvent(new CustomEvent('post-created', {
+    //     composed: true,
+    //     bubbles: true,
+    //     detail: {
+    //       postHash: record.signed_action.hashed.hash
+    //     }
+    //   }));
+    // } catch (e: any) {
+    //   const errorSnackbar = this.shadowRoot?.getElementById('create-error') as Snackbar;
+    //   errorSnackbar.labelText = `Error creating the post: ${e.data.data}`;
+    //   errorSnackbar.show();
+    // }
   }
 
   render() {

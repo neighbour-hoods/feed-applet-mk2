@@ -37,12 +37,15 @@ export class FeedStore {
     this.myAgentPubKey = encodeHashToBase64(cellId[1]);
   }
 
+  allPosts() {
+    return this.#postData;
+  }
+
   async fetchAllPosts(): Promise<Array<Record>> {
     const fetchedPosts = await this.service.fetchAllPosts();
-    this.#postData.update(posts => ({
-      ...posts,
+    this.#postData.update(posts => ([
       ...fetchedPosts,
-    }));
+    ]));
     return get(this.#postData);
   }
 
@@ -50,10 +53,15 @@ export class FeedStore {
     return derived(this.#postData, posts => {
       let allPostsEhs: EntryHash[] = []
       posts.map(post => {
-        allPostsEhs.push(post.signed_action.hashed.hash)
+        allPostsEhs.push((post.signed_action.hashed.content as {entry_hash: EntryHash}).entry_hash)
       })
       return allPostsEhs
     })
+  }
+  async createPost(input: Post): Promise<Record> {
+    const postRecord = await this.service.createPost(input);
+    this.#postData.update(posts => [...posts, postRecord]);
+    return postRecord;
   }
 
 }

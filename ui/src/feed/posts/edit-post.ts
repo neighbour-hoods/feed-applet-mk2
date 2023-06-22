@@ -59,7 +59,7 @@ export class EditPost extends LitElement {
     try {
       const updateRecord: Record = await this.client.callZome({
         cap_secret: null,
-        role_name: 'feed',
+        role_name: 'feed_applet',
         zome_name: 'posts',
         fn_name: 'update_post',
         payload: {
@@ -79,6 +79,7 @@ export class EditPost extends LitElement {
         }
       }));
     } catch (e: any) {
+      console.log('update post error', e)
       const errorSnackbar = this.shadowRoot?.getElementById('update-error') as Snackbar;
       errorSnackbar.labelText = `Error updating the post: ${e.data.data}`;
       errorSnackbar.show();

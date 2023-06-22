@@ -5,11 +5,16 @@ import {
   ActionHash,
   AppAgentClient,
 } from '@holochain/client';
-import { provide } from '@lit-labs/context';
+import { contextProvider, provide } from '@lit-labs/context';
 import '@material/mwc-circular-progress';
 
 import './feed/posts/all-posts';
-import { clientContext } from './contexts';
+import { clientContext, feedStoreContext } from './contexts';
+import { AllPosts } from './feed/posts/all-posts';
+import { CreatePost } from './feed/posts/create-post';
+import { FeedStore } from './feed-store';
+import { SensemakerStore, sensemakerStoreContext } from '@neighbourhoods/client';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 @customElement('feed-app')
 export class FeedApp extends LitElement {
@@ -19,9 +24,17 @@ export class FeedApp extends LitElement {
   @property({ type: Object })
   client!: AppAgentClient;
 
+  @provide({ context: feedStoreContext })
+  @property()
+  feedStore!: FeedStore;
+
+  @contextProvider({ context: sensemakerStoreContext })
+  @property()
+  sensemakerStore!: SensemakerStore;
+
   async firstUpdated() {
     // We pass '' as url because it will dynamically be replaced in launcher environments
-    this.client = await AppAgentWebsocket.connect('', 'feed-applet');
+    this.client = await AppAgentWebsocket.connect('', 'feed-sensemaker');
 
     this.loading = false;
   }
@@ -35,11 +48,18 @@ export class FeedApp extends LitElement {
     return html`
       <main>
         <h1>Feed Applet</h1>
+        <create-post></create-post>
         <div id="content"><all-posts></all-posts></div>
       </main>
     `;
   }
 
+  // static get scopedElements() {
+  //   return {
+  //     'all-posts': AllPosts,
+  //     'create-post': CreatePost,
+  //   };
+  // }
   static styles = css`
     :host {
       min-height: 100vh;
