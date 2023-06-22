@@ -10,5 +10,8 @@ export default defineConfig({
     //     lintCommand: 'eslint --ext .ts,.html . --ignore-path .gitignore',
     //   },
     // }),
-  ]
+  ],
+  build: { 
+    sourcemap: true,
+  }
 });

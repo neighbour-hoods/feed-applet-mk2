@@ -15,6 +15,7 @@
     "ts-build": "tsc",
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
+    "build:watch": "rimraf dist && vite build -w",
     "package": "npm run build && cd dist && bestzip ../dist.zip *"
   },
   "dependencies": {
