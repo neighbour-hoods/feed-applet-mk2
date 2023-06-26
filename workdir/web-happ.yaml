@@ -4,4 +4,4 @@ name: feed-applet
 ui:
   bundled: "../nh-launcher-applet/ui.zip"
 happ_manifest:
-  bundled: "./feed-applet.happ"
+  bundled: "./feed-sensemaker.happ"

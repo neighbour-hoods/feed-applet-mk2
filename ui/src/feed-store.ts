@@ -63,5 +63,8 @@ export class FeedStore {
     this.#postData.update(posts => [...posts, postRecord]);
     return postRecord;
   }
-
+  async getPost(postHash: ActionHash): Promise<Record> {
+    const postRecord = await this.service.getPost(postHash);
+    return postRecord;
+  }
 }

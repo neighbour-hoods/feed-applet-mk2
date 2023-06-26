@@ -3,7 +3,7 @@ import { state, customElement, property } from 'lit/decorators.js';
 import { AppAgentClient, AgentPubKey, EntryHash, ActionHash, Record, NewEntryAction } from '@holochain/client';
 import { consume } from '@lit-labs/context';
 import { Task } from '@lit-labs/task';
-import '@material/mwc-circular-progress';
+// import '@material/mwc-circular-progress';
 
 import { clientContext, feedStoreContext } from '../../contexts';
 import { PostsSignal } from './types';
@@ -15,9 +15,11 @@ import { get } from 'svelte/store';
 import { SensemakeResource } from '../../sensemaker/sensemake-resource';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { StoreSubscriber } from 'lit-svelte-stores';
+import { PostDetail } from './post-detail';
 
-@customElement('all-posts')
-export class AllPosts extends LitElement {
+// @customElement('all-posts')
+// export class AllPosts extends LitElement {
+export class AllPosts extends ScopedElementsMixin(LitElement) {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 
@@ -66,6 +68,10 @@ export class AllPosts extends LitElement {
               <post-detail .postHash=${actionHash} style="margin-bottom: 16px;" @post-deleted=${() => { this._fetchPosts.run(); this.signaledHashes = []; } }></post-detail>
             </sensemake-resource>
             `
+          // html`
+          //     <div>${entryHash}</div>
+          //     <post-detail .postHash=${actionHash} style="margin-bottom: 16px;" @post-deleted=${() => { this._fetchPosts.run(); this.signaledHashes = []; } }></post-detail>
+          //   `
         )}
       </div>
     `;
@@ -86,6 +92,7 @@ export class AllPosts extends LitElement {
   static get scopedElements() {
     return {
       'sensemake-resource': SensemakeResource,
+      'post-detail': PostDetail,
     };
   }
 }

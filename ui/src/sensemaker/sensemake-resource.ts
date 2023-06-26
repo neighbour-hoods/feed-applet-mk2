@@ -45,7 +45,7 @@ export class SensemakeResource extends ScopedElementsMixin(LitElement) {
         );
         const assessWidgetStyles = assessDimensionWidgetType.styles as any;
         const displayWidgetStyles = displayDimensionWidgetType.styles as any;
-
+        console.log('widgets html', assessDimensionWidget.render())
         return html`
             <style>
                 ${unsafeCSS(assessWidgetStyles[1])}

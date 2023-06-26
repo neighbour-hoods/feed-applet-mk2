@@ -16,8 +16,9 @@ import { FeedStore } from './feed-store';
 import { SensemakerStore, sensemakerStoreContext } from '@neighbourhoods/client';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
-@customElement('feed-app')
-export class FeedApp extends LitElement {
+// @customElement('feed-app')
+// export class FeedApp extends LitElement {
+export class FeedApp extends ScopedElementsMixin(LitElement) {
   @state() loading = true;
 
   @provide({ context: clientContext })
@@ -54,12 +55,12 @@ export class FeedApp extends LitElement {
     `;
   }
 
-  // static get scopedElements() {
-  //   return {
-  //     'all-posts': AllPosts,
-  //     'create-post': CreatePost,
-  //   };
-  // }
+  static get scopedElements() {
+    return {
+      'all-posts': AllPosts,
+      'create-post': CreatePost,
+    };
+  }
   static styles = css`
     :host {
       min-height: 100vh;

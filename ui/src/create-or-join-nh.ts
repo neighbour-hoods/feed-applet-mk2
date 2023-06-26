@@ -3,7 +3,6 @@ import { ScopedElementsMixin } from "@open-wc/scoped-elements";
 import { LitElement, html, css } from "lit";
 import { TextField, Button } from '@scoped-elements/material-web'
 
-@customElement('create-or-join-nh')
 export class CreateOrJoinNh extends ScopedElementsMixin(LitElement) {
     @query('#ca-pubkey')
     input!: HTMLInputElement;

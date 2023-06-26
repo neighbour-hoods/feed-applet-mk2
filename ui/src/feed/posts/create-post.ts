@@ -2,17 +2,20 @@ import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { InstalledCell, ActionHash, Record, AgentPubKey, EntryHash, AppAgentClient, DnaHash } from '@holochain/client';
 import { consume, contextProvided, contextProvider } from '@lit-labs/context';
-import '@material/mwc-button';
-import '@material/mwc-snackbar';
-import { Snackbar } from '@material/mwc-snackbar';
-import '@material/mwc-textarea';
-
+// import '@material/mwc-button';
+// import '@material/mwc-snackbar';
+// import { Snackbar } from '@material/mwc-snackbar';
+// import '@material/mwc-textarea';
+import { Snackbar, TextArea, Button } from '@scoped-elements/material-web'
 import { clientContext, feedStoreContext } from '../../contexts';
 import { Post } from './types';
 import { FeedStore } from '../../feed-store';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { EditPost } from './edit-post';
 
-@customElement('create-post')
-export class CreatePost extends LitElement {
+// @customElement('create-post')
+// export class CreatePost extends LitElement {
+export class CreatePost extends ScopedElementsMixin(LitElement) {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 
@@ -82,5 +85,13 @@ export class CreatePost extends LitElement {
           @click=${() => this.createPost()}
         ></mwc-button>
     </div>`;
+  }
+  static get scopedElements() {
+    return {
+      'edit-post': EditPost,
+      'mwc-snackbar': Snackbar,
+      'mwc-textarea': TextArea,
+      'mwc-button': Button,
+    };
   }
 }

@@ -5,14 +5,17 @@ import { consume } from '@lit-labs/context';
 import { decode } from '@msgpack/msgpack';
 import '@material/mwc-button';
 import '@material/mwc-snackbar';
-import { Snackbar } from '@material/mwc-snackbar';
+// import { Snackbar } from '@material/mwc-snackbar';
 import '@material/mwc-textarea';
 
 import { clientContext } from '../../contexts';
 import { Post } from './types';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { Snackbar, TextArea, Button, CircularProgress } from '@scoped-elements/material-web'
 
-@customElement('edit-post')
-export class EditPost extends LitElement {
+// @customElement('edit-post')
+// export class EditPost extends LitElement {
+export class EditPost extends ScopedElementsMixin(LitElement) {
 
   @consume({ context: clientContext })
   client!: AppAgentClient;
@@ -118,5 +121,12 @@ export class EditPost extends LitElement {
           ></mwc-button>
         </div>
       </div>`;
+  }
+  static get scopedElements() {
+    return {
+      'mwc-snackbar': Snackbar,
+      'mwc-textarea': TextArea,
+      'mwc-button': Button,
+    };
   }
 }

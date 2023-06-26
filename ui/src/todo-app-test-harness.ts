@@ -57,6 +57,12 @@ export class TodoAppTestHarness extends LitElement {
 
   async firstUpdated() {
     // connect to holochain conductor and set up websocket connections
+
+    // customElements.define('todo-app-test-harness', TodoAppTestHarness);
+    customElements.define('create-or-join-nh', CreateOrJoinNh);
+    customElements.define('feed-app', FeedApp);
+    // customElements.define('importance-dimension-display', ImportanceDimensionAssessment);
+    // customElements.define('total-importance-dimension-display', TotalImportanceDimensionDisplay);
     try {
       await this.connectHolochain()
       const installedCells = this.appInfo.cell_info;
@@ -202,7 +208,7 @@ export class TodoAppTestHarness extends LitElement {
 
   static get scopedElements() {
     return {
-      // 'feed-app': FeedApp,
+      'feed-app': FeedApp,
       'create-or-join-nh': CreateOrJoinNh,
       'total-importance-dimension-display': TotalImportanceDimensionDisplay,
       'importance-dimension-assessment': ImportanceDimensionAssessment,

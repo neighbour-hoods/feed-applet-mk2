@@ -11,6 +11,9 @@ export class FeedService {
   async fetchAllPosts(): Promise<Array<Record>> {
     return this.callZome('get_all_posts', null);
   }
+  async getPost(postHash: ActionHash): Promise<Record> {
+    return this.callZome('get_post', postHash);
+  }
   
   private callZome(fn_name: string, payload: any) {
     const req: CallZomeRequest = {

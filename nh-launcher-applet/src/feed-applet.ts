@@ -87,7 +87,7 @@ export class FeedApplet extends ScopedElementsMixin(LitElement) {
   static get scopedElements() {
     return {
       "mwc-circular-progress": CircularProgress,
-      // "feed-app": FeedApp,
+      "feed-app": FeedApp,
       'total-like-dimension-display': TotalImportanceDimensionDisplay,
       'like-dimension-assessment': ImportanceDimensionAssessment,
       // 'post-detail': PostDetail,

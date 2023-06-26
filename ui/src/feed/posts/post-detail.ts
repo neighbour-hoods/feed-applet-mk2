@@ -4,19 +4,24 @@ import { EntryHash, Record, ActionHash, AppAgentClient, DnaHash } from '@holocha
 import { consume } from '@lit-labs/context';
 import { Task } from '@lit-labs/task';
 import { decode } from '@msgpack/msgpack';
-import '@material/mwc-circular-progress';
-import '@material/mwc-icon-button';
-import '@material/mwc-icon-button-toggle';
-import '@material/mwc-snackbar';
-import { Snackbar } from '@material/mwc-snackbar';
+// import '@material/mwc-circular-progress';
+// import '@material/mwc-icon-button';
+// import '@material/mwc-icon-button-toggle';
+// import '@material/mwc-snackbar';
+// import { Snackbar } from '@material/mwc-snackbar';
+import { Snackbar, TextArea, Button, IconButton, CircularProgress, IconButtonToggle } from '@scoped-elements/material-web'
 
 import './edit-post';
 
-import { clientContext } from '../../contexts';
+import { clientContext, feedStoreContext } from '../../contexts';
 import { Post } from './types';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { EditPost } from './edit-post';
+import { FeedStore } from '../../feed-store';
 
-@customElement('post-detail')
-export class PostDetail extends LitElement {
+// @customElement('post-detail')
+// export class PostDetail extends LitElement {
+export class PostDetail extends ScopedElementsMixin(LitElement) {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 
@@ -25,16 +30,14 @@ export class PostDetail extends LitElement {
   })
   postHash!: ActionHash;
 
+  @consume({ context: feedStoreContext })
+  @property()
+  feedStore!: FeedStore;
+
   @property()
   post!: Post; 
 
-  _fetchRecord = new Task(this, ([postHash]) => this.client.callZome({
-      cap_secret: null,
-      role_name: 'feed_applet',
-      zome_name: 'posts',
-      fn_name: 'get_post',
-      payload: postHash,
-  }) as Promise<Record | undefined>, () => [this.postHash]);
+  _fetchRecord = new Task(this, ([postHash]) => this.feedStore.getPost(postHash), () => [this.postHash]);
 
   @state()
   _editing = false;
@@ -122,5 +125,13 @@ export class PostDetail extends LitElement {
       complete: (maybeRecord) => this.renderPost(maybeRecord),
       error: (e: any) => html`<span>Error fetching the post: ${e.data.data}</span>`
     });
+  }
+  static get scopedElements() {
+    return {
+      'edit-post': EditPost,
+      'mwc-icon-button': IconButton,
+      'mwc-icon-button-toggle': IconButtonToggle,
+      'mwc-circle-progress': CircularProgress,
+    };
   }
 }
