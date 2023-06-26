@@ -11,3 +11,4 @@ node_modules
 .hc
 .running
 pnpm-lock.yaml
+.DS_Store
