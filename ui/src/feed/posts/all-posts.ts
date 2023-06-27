@@ -34,13 +34,6 @@ export class AllPosts extends ScopedElementsMixin(LitElement) {
   @state()
   signaledHashes: Array<ActionHash> = [];
   
-  // _fetchPosts = new Task(this, ([]) => this.client.callZome({
-  //     cap_secret: null,
-  //     role_name: 'feed',
-  //     zome_name: 'posts',
-  //     fn_name: 'get_all_posts',
-  //     payload: null,
-  // }) as Promise<Array<Record>>, () => []);
   _fetchPosts = new Task(this, ([]) => this.feedStore.fetchAllPosts() , () => []);
   allPosts = new StoreSubscriber(this, () => this.feedStore.allPosts());
 

@@ -1,7 +1,7 @@
 ---
 manifest_version: "1"
-name: feed-applet
+name: feed_applet
 ui:
   bundled: "../nh-launcher-applet/ui.zip"
 happ_manifest:
-  bundled: "./feed-sensemaker.happ"
+  bundled: "./feed_happ.happ"

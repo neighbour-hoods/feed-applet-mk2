@@ -4,7 +4,7 @@ import { CircularProgress } from "@scoped-elements/material-web";
 import { LitElement, html, css } from "lit";
 import { AppWebsocket, CellType, ProvisionedCell, encodeHashToBase64 } from "@holochain/client";
 import { AppletInfo } from "@neighbourhoods/nh-launcher-applet";
-import { FeedApp, FeedStore, appletConfig, ImportanceDimensionAssessment, TotalImportanceDimensionDisplay, PostDetail, AllPosts } from "@neighbourhoods/feed-applet";
+import { FeedApp, appletConfig, FeedStore, ImportanceDimensionAssessment, TotalImportanceDimensionDisplay, PostDetail, AllPosts } from "@neighbourhoods/feed-applet";
 import { SensemakerStore } from "@neighbourhoods/client";
 import { get } from 'svelte/store';
 
@@ -57,7 +57,7 @@ export class FeedApplet extends ScopedElementsMixin(LitElement) {
       const totalLikesDimensionEh = get(this.sensemakerStore.appletConfig()).dimensions["total_likes"]
       await this.sensemakerStore.getAssessmentsForResources({
       dimension_ehs: [likeDimensionEh, totalLikesDimensionEh],
-      resource_ehs: allPostEntryHashes
+      resource_ehs: allPostEntryHashes as Uint8Array[]
     })
       this.loaded = true;
     }

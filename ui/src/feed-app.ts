@@ -16,7 +16,7 @@ import { FeedStore } from './feed-store';
 import { SensemakerStore, sensemakerStoreContext } from '@neighbourhoods/client';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
-// @customElement('feed-app')
+//@customElement('feed-app')
 // export class FeedApp extends LitElement {
 export class FeedApp extends ScopedElementsMixin(LitElement) {
   @state() loading = true;
@@ -35,7 +35,7 @@ export class FeedApp extends ScopedElementsMixin(LitElement) {
 
   async firstUpdated() {
     // We pass '' as url because it will dynamically be replaced in launcher environments
-    this.client = await AppAgentWebsocket.connect('', 'feed-sensemaker');
+    this.client = await AppAgentWebsocket.connect('', 'feed_sensemaker');
 
     this.loading = false;
   }

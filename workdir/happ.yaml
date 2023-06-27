@@ -1,6 +1,6 @@
 ---
 manifest_version: "1"
-name: feed-sensemaker
+name: feed_happ
 description: ~
 roles:
   - name: feed_applet

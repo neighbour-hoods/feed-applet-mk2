@@ -26,9 +26,9 @@ import { appletConfig } from './appletConfig'
 import { TotalImportanceDimensionDisplay } from './sensemaker/widgets/total-importance-dimension-display';
 import { ImportanceDimensionAssessment } from './sensemaker/widgets/importance-dimension-assessment';
 
-@customElement('todo-app-test-harness')
-// export class TodoAppTestHarness extends ScopedElementsMixin(LitElement) {
-export class TodoAppTestHarness extends LitElement {
+@customElement('app-test-harness')
+export class AppTestHarness extends LitElement {
+//  export class AppTestHarness extends ScopedElementsMixin(LitElement) {
   @state() loading = true;
   @state() actionHash: ActionHash | undefined;
   @state() currentSelectedList: string | undefined;
@@ -58,11 +58,8 @@ export class TodoAppTestHarness extends LitElement {
   async firstUpdated() {
     // connect to holochain conductor and set up websocket connections
 
-    // customElements.define('todo-app-test-harness', TodoAppTestHarness);
     customElements.define('create-or-join-nh', CreateOrJoinNh);
     customElements.define('feed-app', FeedApp);
-    // customElements.define('importance-dimension-display', ImportanceDimensionAssessment);
-    // customElements.define('total-importance-dimension-display', TotalImportanceDimensionDisplay);
     try {
       await this.connectHolochain()
       const installedCells = this.appInfo.cell_info;
@@ -70,19 +67,19 @@ export class TodoAppTestHarness extends LitElement {
 
       // check if sensemaker has been cloned yet
       const sensemakerCellInfo: CellInfo[] = installedCells["sensemaker"];
-      const todoCellInfo: CellInfo[] = installedCells["feed_applet"];
-      let todoCellId: CellId;
-      if (CellType.Provisioned in todoCellInfo[0]) {
-        todoCellId = (todoCellInfo[0][CellType.Provisioned] as ProvisionedCell).cell_id;
+      const cellInfo: CellInfo[] = installedCells["feed_applet"];
+      let cellId: CellId;
+      if (CellType.Provisioned in cellInfo[0]) {
+        cellId = (cellInfo[0][CellType.Provisioned] as ProvisionedCell).cell_id;
       } else {
-        throw new Error("todo_lists cell not provisioned yet")
+        throw new Error("feed_applet cell not provisioned yet")
 
       }
-      this.agentPubkey = encodeHashToBase64(todoCellId[1]);
+      this.agentPubkey = encodeHashToBase64(cellId[1]);
 
       this._feedStore = new FeedStore(
         this.appWebsocket,
-        todoCellId,
+        cellId,
         "feed_applet"
       );
       console.log('feedStore', this._feedStore)
@@ -97,7 +94,7 @@ export class TodoAppTestHarness extends LitElement {
         if (CellType.Cloned in clonedCellInfo) {
           clonedCell = clonedCellInfo[CellType.Cloned];
         } else {
-          throw new Error("cloned todo cell not found")
+          throw new Error("cloned feed cell not found")
         }
         const clonedSensemakerRoleName = clonedCell.clone_id!;
         await this.initializeSensemakerStore(clonedSensemakerRoleName);
@@ -113,18 +110,18 @@ export class TodoAppTestHarness extends LitElement {
   }
 
   async initializeSensemakerStore(clonedSensemakerRoleName: string) {
-    const appAgentWebsocket: AppAgentWebsocket = await AppAgentWebsocket.connect(``, "feed-sensemaker");
+    const appAgentWebsocket: AppAgentWebsocket = await AppAgentWebsocket.connect(``, "feed_sensemaker");
     this._sensemakerStore = new SensemakerStore(appAgentWebsocket, clonedSensemakerRoleName);
   }
   async cloneSensemakerCell(ca_pubkey: string) {
     const clonedSensemakerCell: ClonedCell = await this.appWebsocket.createCloneCell({
-      app_id: 'feed-sensemaker',
+      app_id: 'feed_sensemaker',
       role_name: "sensemaker",
       modifiers: {
         network_seed: '',
         properties: {
           sensemaker_config: {
-            neighbourhood: "todo test",
+            neighbourhood: "feed test",
             wizard_version: "v0.1",
             community_activator: ca_pubkey
           },
@@ -137,7 +134,7 @@ export class TodoAppTestHarness extends LitElement {
 
   async createNeighbourhood(_e: CustomEvent) {
     await this.cloneSensemakerCell(this.agentPubkey)
-    const _todoConfig = await this._sensemakerStore.registerApplet(appletConfig);
+    const _config = await this._sensemakerStore.registerApplet(appletConfig);
     await this.updateSensemakerState()
     this.loading = false;
   }
@@ -147,7 +144,7 @@ export class TodoAppTestHarness extends LitElement {
     // wait some time for the dht to sync, otherwise checkIfAppletConfigExists returns null
     setTimeout(async () => {
       // const _todoConfig = await this._sensemakerStore.checkIfAppletConfigExists("todo_applet")
-      const _todoConfig = await this._sensemakerStore.registerApplet(appletConfig);
+      const _config = await this._sensemakerStore.registerApplet(appletConfig);
       await this.updateSensemakerState()
       this.loading = false;
     }, 2000)
@@ -177,7 +174,7 @@ export class TodoAppTestHarness extends LitElement {
     this.adminWebsocket = await AdminWebsocket.connect(``);
     this.appWebsocket = await AppWebsocket.connect(``);
     this.appInfo = await this.appWebsocket.appInfo({
-      installed_app_id: 'todo',
+      installed_app_id: 'feed_applet',
     });
   }
 
@@ -185,13 +182,13 @@ export class TodoAppTestHarness extends LitElement {
   async updateSensemakerState() {
     console.log("update sm state");
     await this._sensemakerStore.registerApplet(appletConfig)
-    const allTaskEntryHashes = get(this._feedStore.allPostEntryHashes())
-    console.log('allTaskEntryHashes', allTaskEntryHashes)
+    const allPostEntryHashes = get(this._feedStore.allPostEntryHashes())
+    console.log('allTaskEntryHashes', allPostEntryHashes)
     const importanceDimensionEh = get(this._sensemakerStore.appletConfig()).dimensions["like"]
     const totalImportanceDimensionEh = get(this._sensemakerStore.appletConfig()).dimensions["total_likes"]
     const resourceAssessments = await this._sensemakerStore.getAssessmentsForResources({
       dimension_ehs: [importanceDimensionEh, totalImportanceDimensionEh],
-      resource_ehs: allTaskEntryHashes
+      resource_ehs: allPostEntryHashes
     })
     console.log('resourceAssessments', resourceAssessments)
     

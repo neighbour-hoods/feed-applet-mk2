@@ -3,7 +3,6 @@ import { AgentPubKey, AgentPubKeyB64, AppAgentClient, Record, AppSignal, AppWebs
 import { FeedService } from './feed-service';
 import { PostsSignal, Post, WrappedEntry, EntryTypes } from './feed/posts/types';
 
-
 export class FeedStore {
   service: FeedService;
 
