@@ -37,6 +37,9 @@ export class AllPosts extends ScopedElementsMixin(LitElement) {
     });
   }
   
+  connectedCallback(): void {
+    super.connectedCallback()
+  }
   // static get scopedElements() {
   //   return {
   //   };

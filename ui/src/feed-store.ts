@@ -55,10 +55,10 @@ export class FeedStore {
   async fetchAllPosts(): Promise<Array<EntryRecord<Post>>> {
     const fetchedPosts = await this.service.fetchAllPosts();
     console.log('fetchedPosts :>> ', fetchedPosts);
-    this.#postData.update(posts => ({
+    this.#postData.update(posts => ([
       ...posts,
       ...fetchedPosts,
-    }));
+    ]));
     return get(this.#postData);
   }
 
