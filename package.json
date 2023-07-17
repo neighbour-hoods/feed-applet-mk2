@@ -31,8 +31,8 @@
     "npm": ">=7.0.0"
   },
   "dependencies": {
+    "@holochain/client": "^0.15.0",
     "@neighbourhoods/sensemaker-lite-types": "^0.4.0",
-    "ui": "^0.2.4",
     "vitest": "^0.32.2"
   }
 }

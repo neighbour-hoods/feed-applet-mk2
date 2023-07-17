@@ -20,7 +20,7 @@
   "dependencies": {
     "@holochain-open-dev/stores": "^0.5.4",
     "@holochain-open-dev/utils": "^0.14.2",
-    "@holochain/client": "^0.12.0",
+    "@holochain/client": "0.12.0",
     "@lit-labs/context": "^0.2.0",
     "@lit-labs/task": "^2.0.0",
     "@material/mwc-button": "^0.27.0",
@@ -35,6 +35,7 @@
     "@material/mwc-textarea": "^0.27.0",
     "@material/mwc-textfield": "^0.27.0",
     "@msgpack/msgpack": "^2.8.0",
+    "@neighbourhoods/nh-launcher-applet": "0.0.10",
     "@neighbourhoods/client": "^0.0.3",
     "@open-wc/scoped-elements": "^2.2.0",
     "@vaadin/date-time-picker": "^23.2.8",

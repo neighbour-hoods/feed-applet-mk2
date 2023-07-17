@@ -76,7 +76,7 @@ export class AllPosts extends ScopedElementsMixin(LitElement) {
                   .postHash=${actionHash}
                   style="margin-bottom: 16px;"
                   @post-deleted=${() => {
-                    this._fetchPosts.run();
+                    // this._fetchPosts.run();
                     this.signaledHashes = [];
                   }}
                 ></post-detail>
@@ -96,7 +96,7 @@ export class AllPosts extends ScopedElementsMixin(LitElement) {
           Loading!
         </div>`;
       case 'complete':
-        return this.renderList(this._allPosts.value.value);
+        return this.renderList(this._allPosts.value.value as any);
       case 'error':
         return html`<div>"Error fetching the posts"</div>`;
     }

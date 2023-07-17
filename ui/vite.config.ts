@@ -1,17 +1,30 @@
 import { defineConfig } from 'vite';
 import checker from 'vite-plugin-checker';
+export default defineConfig(({ mode }) => {
+  const isProduction = mode === 'production'
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    // checker({
-    //   typescript: true,
-    //   eslint: {
-    //     lintCommand: 'eslint --ext .ts,.html . --ignore-path .gitignore',
+  return isProduction ? {
+    // plugins: [
+    //   {
+    //     name: 'copy-assets',
+    //     apply: 'build',
+    //     generateBundle() {
+    //       this.emitFile({
+    //         type: 'asset',
+    //         fileName: 'icon.png',
+    //         source: require('fs').readFileSync('icon.png'),
+    //       });
+    //     },
     //   },
-    // }),
-  ],
-  build: { 
-    sourcemap: true,
-  }
-});
+    // ],
+    build: {
+      sourcemap: true,
+      lib: {
+        entry: 'src/applet-index.ts',
+        name: 'applet',
+        fileName: (_format) => `index.js`,
+        formats: ['es'],
+      }
+    },
+  } : {}
+})

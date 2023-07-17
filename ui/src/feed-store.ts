@@ -72,10 +72,10 @@ export class FeedStore {
       return allPostsEhs
     })
   }
-  async createPost(input: Post): Promise<Record> {
+  async createPost(input: Post): Promise<EntryRecord<Post>> {
     const postRecord = await this.service.createPost(input);
     this.#postData.update(posts => [...posts, postRecord]);
-    return postRecord;
+    return postRecord as EntryRecord<Post>;
   }
 
 }
