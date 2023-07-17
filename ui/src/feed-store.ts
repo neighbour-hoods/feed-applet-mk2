@@ -18,6 +18,7 @@ export class FeedStore {
 
   allPosts = lazyLoadAndPoll(async () => {
     const records = await this.service.fetchAllPosts();
+    console.log('alllPosts records :>> ', records);
     return records.map(r => r.actionHash);
   }, 4000);
 

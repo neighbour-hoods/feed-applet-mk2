@@ -49,14 +49,14 @@ export class FeedApplet extends ScopedElementsMixin(LitElement) {
         feedCellInfo.cell_id,
         appletRoleName
       );
-      const allPosts = await this.feedStore.fetchAllPosts()
-      const allPostEntryHashes = get(this.feedStore.allPostEntryHashes())
-      const likeDimensionEh = get(this.sensemakerStore.appletConfig()).dimensions["like"]
-      const totalLikesDimensionEh = get(this.sensemakerStore.appletConfig()).dimensions["total_likes"]
-      await this.sensemakerStore.getAssessmentsForResources({
-      dimension_ehs: [likeDimensionEh, totalLikesDimensionEh],
-      resource_ehs: allPostEntryHashes
-    })
+      // const allPosts = await this.feedStore.fetchAllPosts()
+    //   const allPostEntryHashes = get(this.feedStore.allPostEntryHashes())
+    //   const likeDimensionEh = get(this.sensemakerStore.appletConfig()).dimensions["like"]
+    //   const totalLikesDimensionEh = get(this.sensemakerStore.appletConfig()).dimensions["total_likes"]
+    //   await this.sensemakerStore.getAssessmentsForResources({
+    //   dimension_ehs: [likeDimensionEh, totalLikesDimensionEh],
+    //   resource_ehs: allPostEntryHashes
+    // })
       this.loaded = true;
     }
     catch (e) {

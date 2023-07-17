@@ -24,7 +24,8 @@ export class AllPosts extends ScopedElementsMixin(LitElement) {
   @state()
   signaledHashes: Array<ActionHash> = [];
   
-  _allPosts = new StoreSubscriber(this, () => this.feedStore.allPosts);
+  _allPosts = new StoreSubscriber(this, 
+    () => {console.log('this.feedStore :>> ', this.feedStore); return this.feedStore?.allPosts}  );
 
   async firstUpdated() {
     this.client.on('signal', signal => {

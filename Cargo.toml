@@ -5,7 +5,7 @@ opt-level = "z"
 opt-level = "z"
 
 [workspace]
-members = ["dnas/*/zomes/coordinator/*", "dnas/*/zomes/integrity/*"]
+members = ["dna/*/zomes/coordinator/*", "dna/*/zomes/integrity/*"]
 
 [workspace.dependencies]
 hdi = "=0.2.2"
@@ -14,7 +14,7 @@ holochain_integrity_types = "=0.1.2"
 serde = "1"
 
 [workspace.dependencies.posts]
-path = "dnas/feed/zomes/coordinator/posts"
+path = "dna/feed/zomes/coordinator/posts"
 
 [workspace.dependencies.posts_integrity]
-path = "dnas/feed/zomes/integrity/posts"
+path = "dna/feed/zomes/integrity/posts"

@@ -10,11 +10,12 @@
     ".": "./out-tsc/index.js"
   },
   "scripts": {
-    "start": "vite dev --port $UI_PORT --clearScreen false",
-    "build": "tsc && vite build",
+    "start": "vite dev --mode development --clearScreen false --port $UI_PORT",
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
-    "package": "npm run build && cd dist && bestzip ../dist.zip *"
+    "build": "vite build --mode production",
+    "build:watch": "vite build --config dev.vite.config.js -w",
+    "package:ui": "rimraf ui.zip && npm run build && cd ./dist && bestzip ../ui.zip index.js icon.png"
   },
   "dependencies": {
     "@holochain-open-dev/stores": "^0.5.4",
@@ -33,7 +34,7 @@
     "@material/mwc-snackbar": "^0.27.0",
     "@material/mwc-textarea": "^0.27.0",
     "@material/mwc-textfield": "^0.27.0",
-    "@msgpack/msgpack": "^2.7.2",
+    "@msgpack/msgpack": "^2.8.0",
     "@neighbourhoods/client": "^0.0.3",
     "@open-wc/scoped-elements": "^2.2.0",
     "@vaadin/date-time-picker": "^23.2.8",
@@ -49,6 +50,7 @@
     "eslint-config-prettier": "^8.3.0",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
+    "open-cli": "^7.2.0",
     "typescript": "^4.5.5",
     "vite": "^4.0.0",
     "vite-plugin-checker": "^0.5.3"

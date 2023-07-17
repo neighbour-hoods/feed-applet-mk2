@@ -8,12 +8,12 @@ integrity:
   zomes:
     - name: posts_integrity
       hash: ~
-      bundled: "../../../target/wasm32-unknown-unknown/release/posts_integrity.wasm"
+      bundled: "../../target/wasm32-unknown-unknown/release/posts_integrity.wasm"
       dependencies: ~
 coordinator:
   zomes:
     - name: posts
       hash: ~
-      bundled: "../../../target/wasm32-unknown-unknown/release/posts.wasm"
+      bundled: "../../target/wasm32-unknown-unknown/release/posts.wasm"
       dependencies:
         - name: posts_integrity

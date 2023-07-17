@@ -7,14 +7,18 @@ import '@material/mwc-snackbar';
 import { Snackbar } from '@material/mwc-snackbar';
 import '@material/mwc-textarea';
 
-import { clientContext } from '../../contexts';
+import { EntryRecord } from '@holochain-open-dev/utils';
+import { clientContext, feedStoreContext } from '../../contexts';
 import { Post } from './types';
+import { FeedStore } from '../../feed-store';
 
 @customElement('create-post')
 export class CreatePost extends LitElement {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 
+  @consume({ context: feedStoreContext, subscribe: true })
+  feedStore!: FeedStore;
 
   @state()
   _text: string = '';
@@ -31,21 +35,14 @@ export class CreatePost extends LitElement {
     const post: Post = { 
         text: this._text,
     };
-
     try {
-      const record: Record = await this.client.callZome({
-        cap_secret: null,
-        role_name: 'feed',
-        zome_name: 'posts',
-        fn_name: 'create_post',
-        payload: post,
-      });
+      const record: EntryRecord<Post> = await this.feedStore.service.createPost(post);
 
       this.dispatchEvent(new CustomEvent('post-created', {
         composed: true,
         bubbles: true,
         detail: {
-          postHash: record.signed_action.hashed.hash
+          postHash: record.actionHash
         }
       }));
     } catch (e: any) {
