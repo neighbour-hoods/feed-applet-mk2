@@ -41,11 +41,18 @@ export class FeedApp extends LitElement {
     return html`
       <main>
         <h1>Feed Applet</h1>
-        <div id="content"><all-posts></all-posts><create-post></create-post></div>
+        <create-post></create-post>
+        <div id="content"><all-posts></all-posts></div>
       </main>
     `;
   }
 
+  // static get scopedElements() {
+  //   return {
+  //     'all-posts': AllPosts,
+  //     'create-post': CreatePost,
+  //   };
+  // }
   static styles = css`
     :host {
       min-height: 100vh;

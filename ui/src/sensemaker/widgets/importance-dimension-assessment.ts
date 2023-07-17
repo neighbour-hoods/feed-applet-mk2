@@ -4,7 +4,7 @@ import { EntryHash } from '@holochain/client';
 import { AssessDimensionWidget, RangeValue, SensemakerStore, sensemakerStoreContext } from '@neighbourhoods/client';
 import { contextProvided } from '@lit-labs/context';
 
-@customElement('importance-dimension-assessment')
+@customElement('like-dimension-assessment')
 export class ImportanceDimensionAssessment extends AssessDimensionWidget {
     @contextProvided({ context: sensemakerStoreContext, subscribe: true })
     @state()

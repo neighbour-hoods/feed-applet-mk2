@@ -32,6 +32,9 @@ export class CreatePost extends LitElement {
   }
 
   async createPost() {
+    await this.feedStore.createPost({
+      text: this._text,
+    }) 
     const post: Post = { 
         text: this._text,
     };

@@ -3,7 +3,7 @@ import { ScopedElementsMixin } from "@open-wc/scoped-elements";
 import { LitElement, html, css } from "lit";
 import { AppWebsocket, CellType, ProvisionedCell, encodeHashToBase64 } from "@holochain/client";
 import { AppletInfo } from "@neighbourhoods/nh-launcher-applet";
-import { FeedApp, FeedStore, appletConfig, ImportanceDimensionAssessment, TotalImportanceDimensionDisplay } from "@neighbourhoods/feed-applet";
+import { FeedApp, FeedStore, appletConfig, ImportanceDimensionAssessment, TotalImportanceDimensionDisplay, PostDetail, AllPosts } from "@neighbourhoods/feed-applet";
 import { SensemakerStore } from "@neighbourhoods/client";
 import { get } from 'svelte/store';
 

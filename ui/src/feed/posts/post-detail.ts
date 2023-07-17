@@ -25,9 +25,12 @@ export class PostDetail extends LitElement {
   })
   postHash!: ActionHash;
 
+  @property()
+  post!: Post; 
+
   _fetchRecord = new Task(this, ([postHash]) => this.client.callZome({
       cap_secret: null,
-      role_name: 'feed',
+      role_name: 'feed_applet',
       zome_name: 'posts',
       fn_name: 'get_post',
       payload: postHash,
@@ -46,7 +49,7 @@ export class PostDetail extends LitElement {
     try {
       await this.client.callZome({
         cap_secret: null,
-        role_name: 'feed',
+        role_name: 'feed_applet',
         zome_name: 'posts',
         fn_name: 'delete_post',
         payload: this.postHash,
