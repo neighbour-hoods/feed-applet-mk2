@@ -166,6 +166,7 @@ export class AppletTestHarness extends ScopedElementsMixin(LitElement) {
   }
 
   async connectHolochain() {
+    debugger;
     this.adminWebsocket = await AdminWebsocket.connect(`ws://localhost:9000`);
     this.appWebsocket = await AppWebsocket.connect(`ws://localhost:9001`);
     this.appInfo = await this.appWebsocket.appInfo({

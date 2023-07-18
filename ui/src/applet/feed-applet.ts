@@ -45,7 +45,7 @@ export class FeedApplet extends ScopedElementsMixin(LitElement) {
         TotalImportanceDimensionDisplay,
         ImportanceDimensionAssessment
       )
-      const appWs = await AppWebsocket.connect(this.appWebsocket.client.socket.url)
+      const appWs = this.appWebsocket;
       this.feedStore = new FeedStore(
         this.appWebsocket,
         feedCellInfo.cell_id,

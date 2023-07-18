@@ -14,7 +14,7 @@
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "build": "tsc && vite build --mode production",
-    "build:watch": "rimraf dist && vite build --config dev.vite.config.js -w",
+    "build:watch": "rimraf dist && vite build --mode development --config vite.config.js -w",
     "package:ui": "rimraf ui.zip && npm run build && cd ./dist && bestzip ../ui.zip index.js icon.png"
   },
   "dependencies": {

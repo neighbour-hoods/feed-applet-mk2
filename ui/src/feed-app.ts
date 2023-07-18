@@ -11,11 +11,9 @@ import { provide } from '@lit-labs/context';
 
 import './feed/posts/all-posts';
 import './feed/posts/create-post';
-import { clientContext, feedStoreContext } from './contexts';
+import { feedStoreContext } from './contexts';
 import { FeedStore } from './feed-store';
 import { SensemakerStore, sensemakerStoreContext } from '@neighbourhoods/client';
-import { get } from '@holochain-open-dev/stores';
-import { appletConfig } from './appletConfig';
 
 @customElement('feed-app')
 export class FeedApp extends LitElement {
