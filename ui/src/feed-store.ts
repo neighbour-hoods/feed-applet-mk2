@@ -17,10 +17,17 @@ export class FeedStore {
   /** All Posts */
 
   allPosts = lazyLoadAndPoll(async () => {
-    const records = await this.service.fetchAllPosts();
-    console.log('alllPosts records :>> ', records);
-    return records.map(r => r.actionHash);
+    const records = await this.fetchAllPosts();
+    console.log('polling all post records :>> ', records);
+    return records.map(r => r.entryHash);
   }, 4000);
+
+  allPostsForAssessment = lazyLoadAndPoll(async () => {
+    await this.fetchAllPosts();
+    const tuples =get(await this.allPostEntryActionHashTuples());
+    console.log('polling all post eh/ah :>> ', tuples);
+    return tuples
+  }, 1000);
 
   #postData: Writable<Array<EntryRecord<Post>>> = writable([]);
 
@@ -54,21 +61,29 @@ export class FeedStore {
 
   async fetchAllPosts(): Promise<Array<EntryRecord<Post>>> {
     const fetchedPosts = await this.service.fetchAllPosts();
-    console.log('fetchedPosts :>> ', fetchedPosts);
     this.#postData.update(posts => ([
-      ...posts,
+      // ...posts,
       ...fetchedPosts,
     ]));
     return get(this.#postData);
   }
 
+  allPostEntryActionHashTuples() {
+    return derived(this.#postData, posts => {
+      let allPostsEhAhs: [EntryHash, ActionHash][] = []
+      posts.map(post => {
+        allPostsEhAhs.push([post.entryHash, post.actionHash])
+      })
+      return allPostsEhAhs
+    })
+  }
   allPostEntryHashes() {
     return derived(this.#postData, posts => {
       let allPostsEhs: EntryHash[] = []
-      console.log('posts :>> ', posts);
       posts.map(post => {
-        allPostsEhs.push(post.record.signed_action.hashed.hash)
+        allPostsEhs.push(post.entryHash)
       })
+      console.log('allPostsEhs :>> ', allPostsEhs);
       return allPostsEhs
     })
   }

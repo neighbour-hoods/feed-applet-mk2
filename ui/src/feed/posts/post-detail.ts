@@ -12,13 +12,18 @@ import { Snackbar } from '@material/mwc-snackbar';
 
 import './edit-post';
 
-import { clientContext } from '../../contexts';
+import { clientContext, feedStoreContext } from '../../contexts';
 import { Post } from './types';
+import { FeedStore } from '../../feed-store';
 
 @customElement('post-detail')
 export class PostDetail extends LitElement {
   @consume({ context: clientContext })
   client!: AppAgentClient;
+
+  @consume({ context: feedStoreContext })
+  @property()
+  feedStore!: FeedStore;
 
   @property({
     hasChanged: (newVal: ActionHash, oldVal: ActionHash) => newVal?.toString() !== oldVal?.toString()
@@ -28,13 +33,7 @@ export class PostDetail extends LitElement {
   @property()
   post!: Post; 
 
-  _fetchRecord = new Task(this, ([postHash]) => this.client.callZome({
-      cap_secret: null,
-      role_name: 'feed_applet',
-      zome_name: 'posts',
-      fn_name: 'get_post',
-      payload: postHash,
-  }) as Promise<Record | undefined>, () => [this.postHash]);
+  _fetchRecord = new Task(this, ([postHash]) => this.feedStore.service.fetchPost(postHash), () => [this.postHash]);
 
   @state()
   _editing = false;
@@ -119,7 +118,7 @@ export class PostDetail extends LitElement {
       pending: () => html`<div style="display: flex; flex: 1; align-items: center; justify-content: center">
         Loading!
       </div>`,
-      complete: (maybeRecord) => this.renderPost(maybeRecord),
+      complete: (maybeRecord) => this.renderPost(maybeRecord?.record),
       error: (e: any) => html`<span>Error fetching the post: ${e.data.data}</span>`
     });
   }

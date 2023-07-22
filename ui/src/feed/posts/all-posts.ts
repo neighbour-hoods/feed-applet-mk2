@@ -41,9 +41,9 @@ export class AllPosts extends ScopedElementsMixin(LitElement) {
   @state()
   signaledHashes: Array<ActionHash> = [];
 
-  _allPosts = new StoreSubscriber(this, () => {
-    console.log('this.feedStore :>> ', this.feedStore);
-    return this.feedStore?.allPosts;
+  _allPostsForAssessment = new StoreSubscriber(this, () => {
+    console.log('get(this.feedStore?.allPostsForAssessment) :>> ', get(this.feedStore?.allPostsForAssessment));
+    return this.feedStore?.allPostsForAssessment;
   });
 
   async firstUpdated() {
@@ -61,7 +61,7 @@ export class AllPosts extends ScopedElementsMixin(LitElement) {
 
   renderList(hashes: [EntryHash, ActionHash][]) {
     if (hashes.length === 0) return html`<span>No posts found.</span>`;
-
+console.log('hashes :>> ', hashes);
     return html`
       <div style="display: flex; flex-direction: column">
         ${hashes.map(
@@ -88,7 +88,7 @@ export class AllPosts extends ScopedElementsMixin(LitElement) {
   }
 
   render() {
-    switch (this._allPosts.value.status) {
+    switch (this._allPostsForAssessment.value.status) {
       case 'pending':
         return html`<div
           style="display: flex; flex: 1; align-items: center; justify-content: center"
@@ -96,7 +96,7 @@ export class AllPosts extends ScopedElementsMixin(LitElement) {
           Loading!
         </div>`;
       case 'complete':
-        return this.renderList(this._allPosts.value.value as any);
+        return this.renderList(this._allPostsForAssessment.value.value as any);
       case 'error':
         return html`<div>"Error fetching the posts"</div>`;
     }
