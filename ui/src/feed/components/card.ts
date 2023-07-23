@@ -2,7 +2,6 @@ import { css, CSSResult, html, unsafeCSS } from "lit";
 import { customElement, property, query, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { NHComponent } from "neighbourhoods-design-system-components";
-import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 import './menu.js';
 
 @customElement("nh-applet-card")
@@ -25,13 +24,12 @@ export class NHCard extends NHComponent {
   @state()
   contextMenuVisible: boolean = false;
   toggleContextMenu () {
-    this.contextMenuVisible ? this._contextMenu.show() : this._contextMenu.hide()
+    
     this.contextMenuVisible = !this.contextMenuVisible;
-    const a = this._contextMenu.querySelector('panel');
-    debugger;
+    (this.renderRoot.querySelector(".context-menu") as HTMLElement).dataset.open = 'true';
   }
 
-  @query(".context-menu")
+  @query(".context-menu-dots")
   _contextMenu : any;
 
   render() {
@@ -48,12 +46,12 @@ export class NHCard extends NHComponent {
       >
         ${this.hasContextMenu
           ? html`<div class="context-menu" data-open=${this.contextMenuVisible} placement="top-right">
-                  <nav class="dots-context-menu" slot="trigger" @click=${() => {this.toggleContextMenu();}}>
+                  <nav class="context-menu-dots" @click=${() => {this.toggleContextMenu()}} >
                     <div class="menu-dot"></div>
                     <div class="menu-dot"></div>
                     <div class="menu-dot"></div>
                   </nav>
-                  <nh-menu .itemLabels=${["", "", ""]} .itemComponentProps=${{ size: "icon", iconImageB64: "" }} .direction=${"horizontal"}>
+                  <nh-menu  @mouseout=${() => {this.toggleContextMenu()}} .itemLabels=${["", "", ""]} .itemComponentProps=${{ size: "icon", iconImageB64: "" }} .direction=${"horizontal"}>
                   </nh-menu>
                 </div>`
           : html``}
@@ -149,9 +147,8 @@ export class NHCard extends NHComponent {
       div.context-menu {
         overflow: inherit;
         position: absolute;
-        margin: 0 0 0 auto;
-        
-        padding: 0 calc(1px * var(--nh-spacing-xl)) 0 0;
+        right: -82px;
+        top: 0px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -160,10 +157,20 @@ export class NHCard extends NHComponent {
         width: 56px;
         height: 40px;
       }
-      sl-dropdown[data-open=false] nh-menu {
-        border: 1px solid red;
+      .context-menu nh-menu {
+        transition: all 0.3s ease-in-out;
+        border: 1px solid transparent;
       }
-      .dots-context-menu {
+      .context-menu[data-open=true] nh-menu {
+        border: 1px solid var(--nh-theme-bg-muted);
+        border-radius: calc(1px * var(--nh-radii-md));
+      }
+      .context-menu[data-open=false] nh-menu {
+        visibility: hidden;
+        opacity: 0;
+        transition: all 0.3s ease-in-out;
+      }
+      .context-menu-dots {
         display: flex;
       }
       .menu-dot {
