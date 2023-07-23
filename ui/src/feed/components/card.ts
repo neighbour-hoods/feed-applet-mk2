@@ -1,7 +1,9 @@
 import { css, CSSResult, html, unsafeCSS } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, query, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { NHComponent } from "neighbourhoods-design-system-components";
+import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
+import './menu.js';
 
 @customElement("nh-applet-card")
 export class NHCard extends NHComponent {
@@ -20,6 +22,18 @@ export class NHCard extends NHComponent {
   @property()
   footerAlign: "l" | "r" | "c" = "c";
 
+  @state()
+  contextMenuVisible: boolean = false;
+  toggleContextMenu () {
+    this.contextMenuVisible ? this._contextMenu.show() : this._contextMenu.hide()
+    this.contextMenuVisible = !this.contextMenuVisible;
+    const a = this._contextMenu.querySelector('panel');
+    debugger;
+  }
+
+  @query(".context-menu")
+  _contextMenu : any;
+
   render() {
     return html`
       <div
@@ -33,11 +47,15 @@ export class NHCard extends NHComponent {
         })}"
       >
         ${this.hasContextMenu
-          ? html`<nav class="dots-context-menu">
-              <div class="menu-dot"></div>
-              <div class="menu-dot"></div>
-              <div class="menu-dot"></div>
-            </nav>`
+          ? html`<div class="context-menu" data-open=${this.contextMenuVisible} placement="top-right">
+                  <nav class="dots-context-menu" slot="trigger" @click=${() => {this.toggleContextMenu();}}>
+                    <div class="menu-dot"></div>
+                    <div class="menu-dot"></div>
+                    <div class="menu-dot"></div>
+                  </nav>
+                  <nh-menu .itemLabels=${["", "", ""]} .itemComponentProps=${{ size: "icon", iconImageB64: "" }} .direction=${"horizontal"}>
+                  </nh-menu>
+                </div>`
           : html``}
         <slot name="header">
           ${this.title ? html`<h2 class="title">${this.title}</h2>` : html``}
@@ -58,6 +76,9 @@ export class NHCard extends NHComponent {
   static styles: CSSResult[] = [
     super.styles as CSSResult,
     css`
+    :host {
+      --nh-menu-subtitle: #A89CB0;
+    }
       /* Layout */
       :root {
         display: flex;
@@ -125,13 +146,25 @@ export class NHCard extends NHComponent {
       }
 
       /* Context Menu */
-      
-      .dots-context-menu {
+      div.context-menu {
+        overflow: inherit;
         position: absolute;
+        margin: 0 0 0 auto;
+        
+        padding: 0 calc(1px * var(--nh-spacing-xl)) 0 0;
         display: flex;
-        top: calc(1px * var(--nh-spacing-xl));
-        right: calc(1px * var(--nh-spacing-xl));
-        height: 7px;
+        justify-content: center;
+        align-items: center;
+        background: transparent;
+        border: none;
+        width: 56px;
+        height: 40px;
+      }
+      sl-dropdown[data-open=false] nh-menu {
+        border: 1px solid red;
+      }
+      .dots-context-menu {
+        display: flex;
       }
       .menu-dot {
         width: 5px;

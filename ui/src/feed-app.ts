@@ -92,6 +92,7 @@ export class FeedApp extends NHComponent {
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
+        gap: calc(1px * var(--nh-spacing-lg));
       }
       .my-feed > * {
         width: 100%;

@@ -1,10 +1,6 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
-import {
-  AppAgentClient,
-  EntryHash,
-  ActionHash,
-} from '@holochain/client';
+import { AppAgentClient, EntryHash, ActionHash } from '@holochain/client';
 import { StoreSubscriber } from '@holochain-open-dev/stores';
 import { consume } from '@lit-labs/context';
 
@@ -38,7 +34,10 @@ export class AllPosts extends NHComponent {
   signaledHashes: Array<ActionHash> = [];
 
   _allPostsForAssessment = new StoreSubscriber(this, () => {
-    console.log('get(this.feedStore?.allPostsForAssessment) :>> ', get(this.feedStore?.allPostsForAssessment));
+    console.log(
+      'get(this.feedStore?.allPostsForAssessment) :>> ',
+      get(this.feedStore?.allPostsForAssessment)
+    );
     return this.feedStore?.allPostsForAssessment;
   });
 
@@ -57,32 +56,30 @@ export class AllPosts extends NHComponent {
 
   renderList(hashes: [EntryHash, ActionHash][]) {
     if (hashes.length === 0) return html`<span>No posts found.</span>`;
-console.log('hashes :>> ', hashes);
+    console.log('hashes :>> ', hashes);
     return html`
-      <div style="display: flex; flex-direction: column">
-        ${hashes.map(
+      <div class="posts-container" style="display: flex; flex-direction: column; gap: calc(1px * var(--nh-spacing-sm))">
+        ${hashes.reverse().map(
           ([entryHash, actionHash]) =>
             html`
-                <post-detail
-                  .postHash=${actionHash}
-                  style="margin-bottom: 16px;"
-                  @post-deleted=${() => {
-                    // this._fetchPosts.run();
-                    this.signaledHashes = [];
-                  }}
-                ></post-detail>
+              <post-detail
+                .postHash=${actionHash}
+                @post-deleted=${() => {
+                  // this._fetchPosts.run();
+                  this.signaledHashes = [];
+                }}
+              ></post-detail>
             `
         )}
       </div>
     `;
   }
 
-              
-//   <sensemake-resource
-//   .resourceEh=${entryHash}
-//   .resourceDefEh=${get(this.sensemakerStore.appletConfig())
-//     .resource_defs['post_item']}
-// ></sensemake-resource>
+  //   <sensemake-resource
+  //   .resourceEh=${entryHash}
+  //   .resourceDefEh=${get(this.sensemakerStore.appletConfig())
+  //     .resource_defs['post_item']}
+  // ></sensemake-resource>
   render() {
     switch (this._allPostsForAssessment.value.status) {
       case 'pending':

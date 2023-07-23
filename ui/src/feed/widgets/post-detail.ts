@@ -6,6 +6,8 @@ import { Task } from '@lit-labs/task';
 import { decode } from '@msgpack/msgpack';
 
 import './edit-post';
+import '../components/card';
+import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 
 import { clientContext, feedStoreContext } from '../../contexts';
 import { Post } from '../types';
@@ -68,23 +70,26 @@ export class PostDetail extends NHComponent {
     const post = decode((record.entry as any).Present.entry) as Post;
 
     return html`
-      <mwc-snackbar id="delete-error" leading>
-      </mwc-snackbar>
+      <nh-applet-card
+      .theme=${"dark"}
+      .heading=${"A post"}
+      .hasContextMenu=${true}
+      .hasPrimaryAction=${false}
+      .textSize=${"sm"}
+      .footerAlign=${"r"}
+    >
+      ${post.text}
+      <slot slot="footer" name="footer"></slot>
+    </nh-applet-card>
 
       <div style="display: flex; flex-direction: column">
       	<div style="display: flex; flex-direction: row">
-      	  <span style="flex: 1"></span>
-      	
           <mwc-icon-button style="margin-left: 8px" icon="edit" @click=${() => { this._editing = true; } }></mwc-icon-button>
           <mwc-icon-button style="margin-left: 8px" icon="delete" @click=${() => this.deletePost()}></mwc-icon-button>
           <mwc-icon-button-toggle style="margin-left: 8px" onIcon="favorite" offIcon="favorite_border"></mwc-icon-button-toggle>
           <mwc-icon-button-toggle style="margin-left: 8px" onIcon="heart_broken" offIcon="heart_broken_outlined"></mwc-icon-button-toggle>
         </div>
 
-        <div style="display: flex; flex-direction: row; margin-bottom: 16px">
-          <span style="margin-right: 4px"><strong>Text: </strong></span>
-          <span style="white-space: pre-line">${ post.text }</span>
-        </div>
 
       </div>
     `;
@@ -112,7 +117,7 @@ export class PostDetail extends NHComponent {
   render() {
     return this._fetchRecord.render({
       pending: () => html`<div style="display: flex; flex: 1; align-items: center; justify-content: center">
-        Loading!
+        <sl-spinner></sl-spinner>
       </div>`,
       complete: (maybeRecord) => this.renderPost(maybeRecord?.record),
       error: (e: any) => html`<span>Error fetching the post: ${e.data.data}</span>`
