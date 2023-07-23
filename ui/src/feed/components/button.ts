@@ -60,6 +60,7 @@ export class NHButton extends NHComponent {
         letter-spacing: var(--nh-letter-spacing-buttons);
         background-color: var(--nh-theme-accent-default);
         border: 1px solid transparent;
+        cursor: pointer;
       }
       button.icon {
         background-color: var(--nh-theme-bg-neutral);
@@ -70,6 +71,9 @@ export class NHButton extends NHComponent {
       }
       button.primary {
         background-color: var(--nh-theme-accent-default);
+      }
+      button.danger {
+        background-color: var(--nh-theme-error-emphasis);
       }
       button.stretch {
         width: 100%;
@@ -95,12 +99,13 @@ export class NHButton extends NHComponent {
       button.icon .button-inner img {
         with: auto;
       }
-      button.primary.icon {
+      button.primary.icon, button.danger.icon {
         height: 32px;
         width: 32px;
       }
       button.primary.icon img {
         height: 70%;
+        width: 40px;
       }
 
       button.icon .button-inner {
@@ -117,6 +122,9 @@ export class NHButton extends NHComponent {
       }
       button:hover, button.primary.icon:hover {
         background-color: var(--nh-theme-accent-muted);
+      }
+      button.danger:hover {
+        background-color: var(--nh-theme-error-muted);
       }
       button:active {
         background-color: var(--nh-theme-accent-emphasis);

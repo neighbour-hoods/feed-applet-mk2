@@ -7,12 +7,14 @@ import { decode } from '@msgpack/msgpack';
 
 import './edit-post';
 import '../components/card';
+import '../components/button';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 
 import { clientContext, feedStoreContext } from '../../contexts';
 import { Post } from '../types';
 import { FeedStore } from '../../feed-store';
 import { NHComponent } from 'neighbourhoods-design-system-components';
+import { backArrow, editIcon, trashIcon } from '../components/b64images';
 
 @customElement('post-detail')
 export class PostDetail extends NHComponent {
@@ -44,13 +46,7 @@ export class PostDetail extends NHComponent {
 
   async deletePost() {
     try {
-      await this.client.callZome({
-        cap_secret: null,
-        role_name: 'feed_applet',
-        zome_name: 'posts',
-        fn_name: 'delete_post',
-        payload: this.postHash,
-      });
+      await this.feedStore.service.deletePost(this.postHash);
       this.dispatchEvent(new CustomEvent('post-deleted', {
         bubbles: true,
         composed: true,
@@ -58,7 +54,7 @@ export class PostDetail extends NHComponent {
           postHash: this.postHash
         }
       }));
-      this._fetchRecord.run();
+      // this._fetchRecord.run();
     } catch (e: any) {
       const errorSnackbar = this.shadowRoot?.getElementById('delete-error') as any;
       errorSnackbar.labelText = `Error deleting the post: ${e.data.data}`;
@@ -79,13 +75,15 @@ export class PostDetail extends NHComponent {
       .footerAlign=${"r"}
     >
       ${post.text}
+      <div class="action-buttons" slot="context-menu" style="display: flex; gap: 2px; flex-direction: column;">
+        <nh-button .variant=${"primary"} .size=${"icon"} .iconImageB64=${editIcon} .clickHandler=${() => { this._editing = true}}>Edit</nh-button>
+        <nh-button .variant=${"danger"} .size=${"icon"} .iconImageB64=${trashIcon} .clickHandler=${() => { this.deletePost()}}>Delete</nh-button>
+      </div>
       <slot slot="footer" name="footer"></slot>
     </nh-applet-card>
 
       <div style="display: flex; flex-direction: column">
       	<div style="display: flex; flex-direction: row">
-          <mwc-icon-button style="margin-left: 8px" icon="edit" @click=${() => { this._editing = true; } }></mwc-icon-button>
-          <mwc-icon-button style="margin-left: 8px" icon="delete" @click=${() => this.deletePost()}></mwc-icon-button>
           <mwc-icon-button-toggle style="margin-left: 8px" onIcon="favorite" offIcon="favorite_border"></mwc-icon-button-toggle>
           <mwc-icon-button-toggle style="margin-left: 8px" onIcon="heart_broken" offIcon="heart_broken_outlined"></mwc-icon-button-toggle>
         </div>

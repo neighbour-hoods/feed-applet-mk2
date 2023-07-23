@@ -40,6 +40,7 @@ export class NHCard extends NHComponentShoelace {
             [this.direction]: !!this.direction,
           })}"
         >
+          <slot name="menu-items">
           ${this.itemLabels
             ? this.itemLabels.map(
                 (label, i) =>
@@ -60,6 +61,7 @@ export class NHCard extends NHComponentShoelace {
                   </${this.itemComponentTag}>`
               )
             : null}
+            </slot>
             ${this.addItemButton ? html`<nh-button class="add-menu-item" .variant=${"primary"} .size=${"icon"} .iconImageB64=${plusIcon}></nh-button>`: null}
           <slot name="extra-item"></slot>
         </div>
@@ -67,7 +69,7 @@ export class NHCard extends NHComponentShoelace {
       </div>
     `;
   }
-
+  
   static styles: CSSResult[] = [
     super.styles as CSSResult,
     css`

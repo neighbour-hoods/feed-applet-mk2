@@ -28,7 +28,6 @@ export class NHCard extends NHComponent {
     this.contextMenuVisible = !this.contextMenuVisible;
     (this.renderRoot.querySelector(".context-menu") as HTMLElement).dataset.open = 'true';
   }
-
   @query(".context-menu-dots")
   _contextMenu : any;
 
@@ -51,7 +50,8 @@ export class NHCard extends NHComponent {
                     <div class="menu-dot"></div>
                     <div class="menu-dot"></div>
                   </nav>
-                  <nh-menu  @mouseout=${() => {this.toggleContextMenu()}} .itemLabels=${["", "", ""]} .itemComponentProps=${{ size: "icon", iconImageB64: "" }} .direction=${"horizontal"}>
+                  <nh-menu @mouseleave=${() => {this.toggleContextMenu()}} .itemLabels=${["", "", ""]} .itemComponentProps=${{ size: "icon", iconImageB64: "" }} .direction=${"horizontal"}>
+                    <slot slot="menu-items" name="context-menu"></slot>
                   </nh-menu>
                 </div>`
           : html``}
@@ -147,7 +147,7 @@ export class NHCard extends NHComponent {
       div.context-menu {
         overflow: inherit;
         position: absolute;
-        right: -82px;
+        right: -20px;
         top: 0px;
         display: flex;
         justify-content: center;
