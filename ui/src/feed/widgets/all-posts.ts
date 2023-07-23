@@ -16,6 +16,7 @@ import {
 import { get } from 'svelte/store';
 import { SensemakeResource } from '../../sensemaker/sensemake-resource';
 import { NHComponent } from 'neighbourhoods-design-system-components';
+import { ContextView } from '../../sensemaker/context-view';
 
 @customElement('all-posts-widget')
 export class AllPosts extends NHComponent {
@@ -68,8 +69,7 @@ export class AllPosts extends NHComponent {
       </div>
     `;
   }
-
-  //   <sensemake-resource
+    //   <sensemake-resource
   //   .resourceEh=${entryHash}
   //   .resourceDefEh=${get(this.sensemakerStore.appletConfig())
   //     .resource_defs['post_item']}
@@ -91,7 +91,7 @@ export class AllPosts extends NHComponent {
 
   static get elementDefinitions() {
     return {
-      'sensemake-resource': SensemakeResource,
+      'sensemake-resource': SensemakeResource
     };
   }
 }

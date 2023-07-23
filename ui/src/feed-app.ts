@@ -15,6 +15,7 @@ import { NHComponent } from 'neighbourhoods-design-system-components';
 import { NHPageHeaderCard } from './feed/components/page-header-card';
 import { CreatePost } from './feed/widgets/create-post';
 import { AllPosts } from './feed/widgets/all-posts';
+import { ContextView } from './sensemaker/context-view';
 
 @customElement('feed-app')
 export class FeedApp extends NHComponent {
@@ -42,11 +43,13 @@ export class FeedApp extends NHComponent {
           <span slot="primary-action"></span>
           </nh-page-header-card>
         </header>
-        <div class="my-feed">
+        <div id="my-feed">
           <create-post-widget></create-post-widget>
           <all-posts-widget></all-posts-widget>
         </div>
-        <div id="content"></div>
+        <div id="contexts">
+          <context-view></context-view>
+        </div>
       </main>
     `;
   }
@@ -56,6 +59,7 @@ export class FeedApp extends NHComponent {
       'nh-page-header-card': NHPageHeaderCard,
       'create-post-widget': CreatePost,
       'all-posts-widget': AllPosts,
+      'context-view': ContextView,
     };
   }
 
@@ -84,7 +88,7 @@ export class FeedApp extends NHComponent {
         background-color: var(--nh-theme-bg-canvas);
         color: var(--nh-theme-fg-default);
       }
-      .my-feed {
+      #my-feed {
         height: 100%;
         width: 100%;
         grid-area: feed;
@@ -94,7 +98,10 @@ export class FeedApp extends NHComponent {
         align-items: center;
         gap: calc(1px * var(--nh-spacing-lg));
       }
-      .my-feed > * {
+      #contexts {
+        grid-area: contexts;
+      }
+      #my-feed > * {
         width: 100%;
       }
     `,
