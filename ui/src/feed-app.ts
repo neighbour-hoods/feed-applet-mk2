@@ -30,9 +30,11 @@ export class FeedApp extends NHComponent {
   @property()
   sensemakerStore!: SensemakerStore;
 
+  @state()
+  _selectedContext: string = "";
+
   render() {
     if (this.loading) return html` <sl-spinner></sl-spinner> `;
-
     return html`
       <main>
         <header>
@@ -48,8 +50,8 @@ export class FeedApp extends NHComponent {
           <create-post-widget></create-post-widget>
           <all-posts-widget></all-posts-widget>
         </div>
-        <context-selector></context-selector>
-        <context-view></context-view>
+        <context-selector @context-selected=${(e: CustomEvent) => this._selectedContext = (e as any).detail.contextName }></context-selector>
+        <context-view ></context-view>
     </main>
           `;
         }
@@ -79,12 +81,12 @@ export class FeedApp extends NHComponent {
         height: 100%;
         width: 100%;
         display: grid;
-        grid-template-columns: 40% 60%;
+        grid-template-columns:  minmax(12rem, 30%) minmax(4rem, 5%) minmax(12rem, 40%);
         grid-template-rows: 4rem auto;
-        grid-template-areas: "top-menu context-switch" "feed contexts";
+        grid-template-areas: "top-menu gap context-switch" "feed gap contexts";
         align-items: center;
         justify-content: center;
-        gap: calc(1px * var(--nh-spacing-lg)) calc(1px * var(--nh-spacing-3xl));
+        gap: calc(1px * var(--nh-spacing-lg)) 0;
 
         padding: calc(1px * var(--nh-spacing-sm)) calc(1px * var(--nh-spacing-4xl));
         background-color: var(--nh-theme-bg-canvas);

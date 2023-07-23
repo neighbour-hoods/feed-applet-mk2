@@ -1,11 +1,11 @@
-import { consume, provide } from '@lit-labs/context';
+import { consume } from '@lit-labs/context';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { LitElement, html, css } from 'lit';
 import { StoreSubscriber } from 'lit-svelte-stores';
+import { customElement } from 'lit/decorators.js';
 import { SensemakerStore, AppletConfig } from '@neighbourhoods/client';
 import { sensemakerStoreContext } from '../contexts';
 import '../feed/components/page-header-card';
-import { customElement } from 'lit/decorators.js';
 
 export const cleanForUI = (propertyName: string) =>
   propertyName.split('_').map(capitalize).join(' ');
@@ -28,18 +28,19 @@ export class ContextSelector extends ScopedElementsMixin(LitElement) {
         <nh-page-header-card
           slot="header"
           .heading=${cleanForUI(contextName)}
-        ></nh-page-header-card>
+        >
+          <nh-button slot="primary-action" .variant=${"primary"} .label=${"Select"} .size=${"md"} .clickHandler=${() => this.dispatchContextSelected(contextName)}></nh-button>
+        </nh-page-header-card>
       `
     )}
     `;
   }
   
-  dispatchContextSelected() {
-    this.dispatchEvent(new CustomEvent('context-selected'));
+  dispatchContextSelected(contextName: string) {
+    this.dispatchEvent(new CustomEvent('context-selected', {
+      detail: {contextName},
+      bubbles: true,
+      composed: true
+  }));
   }
-
-  static get scopedElements() {
-    return {};
-  }
-  static styles = css``;
 }
