@@ -51,7 +51,7 @@ export class FeedApp extends NHComponent {
           <all-posts-widget></all-posts-widget>
         </div>
         <context-selector @context-selected=${(e: CustomEvent) => this._selectedContext = (e as any).detail.contextName }></context-selector>
-        <context-view ></context-view>
+        <context-view .contextName=${this._selectedContext}></context-view>
     </main>
           `;
         }
@@ -84,7 +84,7 @@ export class FeedApp extends NHComponent {
         grid-template-columns:  minmax(12rem, 30%) minmax(4rem, 5%) minmax(12rem, 40%);
         grid-template-rows: 4rem auto;
         grid-template-areas: "top-menu gap context-switch" "feed gap contexts";
-        align-items: center;
+        align-items: start;
         justify-content: center;
         gap: calc(1px * var(--nh-spacing-lg)) 0;
 

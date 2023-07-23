@@ -22,13 +22,15 @@ export class ContextView extends ScopedElementsMixin(LitElement) {
     public sensemakerStore!: SensemakerStore
 
     @property()
-    contextName: string = "most_liked_posts";
+    contextName: string = "";
 
     postsInContext = new StoreSubscriber(this, () => this.feedStore.postFromEntryHashes(get(this.sensemakerStore.contextResults())[this.contextName]));
 
     render() {
+      if(this.contextName === "") return html`<p>No context selected.</p>`;
       let contexts = get(this.sensemakerStore.contextResults());
       const config = get(this.sensemakerStore.appletConfig());
+      console.log('context selected:>> ', this.contextName);
       console.log('contexts :>> ', contexts);
       console.log('config :>> ', config);
 
