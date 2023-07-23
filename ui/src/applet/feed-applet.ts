@@ -84,6 +84,8 @@ export class FeedApplet extends NHComponent {
         .dimensions['perceived_heat'];
       const averageHeatDimensionEh = get(this.sensemakerStore.appletConfig())
         .dimensions['average_heat'];
+        const a = get(this.sensemakerStore.appletConfig());
+        console.log('appletConfig :>> ', a);
       await this.sensemakerStore.getAssessmentsForResources({
         dimension_ehs: null,
         resource_ehs: allPostEntryHashes,

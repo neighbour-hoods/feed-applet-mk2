@@ -16,6 +16,7 @@ import { NHPageHeaderCard } from './feed/components/page-header-card';
 import { CreatePost } from './feed/widgets/create-post';
 import { AllPosts } from './feed/widgets/all-posts';
 import { ContextView } from './sensemaker/context-view';
+import { ContextSelector } from './sensemaker/context-selector';
 
 @customElement('feed-app')
 export class FeedApp extends NHComponent {
@@ -39,7 +40,7 @@ export class FeedApp extends NHComponent {
             slot="top-menu"
             .heading=${'Your Feed'}
           >
-          <span slot="secondary-action"></span>
+          <span slot="secondary-action" style="height: 3.5rem"></span>
           <span slot="primary-action"></span>
           </nh-page-header-card>
         </header>
@@ -47,12 +48,11 @@ export class FeedApp extends NHComponent {
           <create-post-widget></create-post-widget>
           <all-posts-widget></all-posts-widget>
         </div>
-        <div id="contexts">
-          <context-view></context-view>
-        </div>
-      </main>
-    `;
-  }
+        <context-selector></context-selector>
+        <context-view></context-view>
+    </main>
+          `;
+        }
   
   static get elementDefinitions() {
     return {
@@ -60,6 +60,7 @@ export class FeedApp extends NHComponent {
       'create-post-widget': CreatePost,
       'all-posts-widget': AllPosts,
       'context-view': ContextView,
+      'context-selector': ContextSelector,
     };
   }
 
@@ -83,6 +84,7 @@ export class FeedApp extends NHComponent {
         grid-template-areas: "top-menu context-switch" "feed contexts";
         align-items: center;
         justify-content: center;
+        gap: calc(1px * var(--nh-spacing-lg)) calc(1px * var(--nh-spacing-3xl));
 
         padding: calc(1px * var(--nh-spacing-sm)) calc(1px * var(--nh-spacing-4xl));
         background-color: var(--nh-theme-bg-canvas);
@@ -98,7 +100,11 @@ export class FeedApp extends NHComponent {
         align-items: center;
         gap: calc(1px * var(--nh-spacing-lg));
       }
-      #contexts {
+      context-selector {
+        grid-area: context-switch;
+        height: 3.5rem;
+      }
+      context-view {
         grid-area: contexts;
       }
       #my-feed > * {

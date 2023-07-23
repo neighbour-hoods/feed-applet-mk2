@@ -89,10 +89,11 @@ export class FeedStore {
   }
 
   postFromEntryHashes(entryHashes: EntryHash[]) {
+    if(!entryHashes) return;
+    debugger;
     const serializedEntryHashes = entryHashes.map(entryHash => encodeHashToBase64(entryHash));
     return derived(this.#postData, _ => {
       let posts: WrappedEntry<Post>[] = [];
-      debugger;
       // Object.values(lists).map(list => {
       //   tasks = [...tasks, ...list] 
       // })
