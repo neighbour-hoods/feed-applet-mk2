@@ -1,29 +1,41 @@
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { customElement, property, state } from "lit/decorators.js";
 import { LitElement, html, css, unsafeCSS } from "lit";
 import { sensemakerStoreContext, SensemakerStore, getLatestAssessment } from "@neighbourhoods/client";
 import { EntryHash, encodeHashToBase64, decodeHashFromBase64 } from "@holochain/client";
 import { StoreSubscriber } from "lit-svelte-stores";
 import { get } from "svelte/store";
-import { provide } from "@lit-labs/context";
-import { ScopedRegistryHost } from "@lit-labs/scoped-registry-mixin";
+import { consume } from "@lit-labs/context";
+import { Assessment } from '@neighbourhoods/sensemaker-lite-types';
 
 @customElement('sensemake-resource')
-export class SensemakeResource extends ScopedRegistryHost(LitElement) {
-    @provide({ context: sensemakerStoreContext })
+export class SensemakeResource extends ScopedElementsMixin(LitElement) {
+    @consume({ context: sensemakerStoreContext })
     @state()
-    public  sensemakerStore!: SensemakerStore
+    public sensemakerStore!: SensemakerStore
 
     @property()
     resourceEh!: EntryHash
 
     @property()
     resourceDefEh!: EntryHash
+    @property()
+    latestAssessmentValue!: object
 
     resourceAssessments = new StoreSubscriber(this, () => this.sensemakerStore.resourceAssessments());
     activeMethod = new StoreSubscriber(this, () => this.sensemakerStore.activeMethod());
 
+    emitAssessmentValue(value: any) {
+        if(this.latestAssessmentValue == value) return;
+        const options = {
+            detail: {assessmentValue: value},
+            bubbles: true,
+            composed: true
+        };
+        this.dispatchEvent(new CustomEvent('assessment-value', options))
+    }
+
     render() {
-        console.log('sensemake resource component')
         const activeMethodEh = this.activeMethod.value[encodeHashToBase64(this.resourceDefEh)]
         const { inputDimensionEh, outputDimensionEh } = get(this.sensemakerStore.methodDimensionMapping())[activeMethodEh];
         const assessDimensionWidgetType = (get(this.sensemakerStore.widgetRegistry()))[encodeHashToBase64(inputDimensionEh)].assess
@@ -37,6 +49,10 @@ export class SensemakeResource extends ScopedRegistryHost(LitElement) {
         assessDimensionWidget.sensemakerStore = this.sensemakerStore;
 
         const latestAssessment = get(this.sensemakerStore.myLatestAssessmentAlongDimension(encodeHashToBase64(this.resourceEh), encodeHashToBase64(inputDimensionEh)))
+        if(latestAssessment !== null && latestAssessment?.value) {
+            this.emitAssessmentValue(Object.values(latestAssessment.value)[0]);
+            this.latestAssessmentValue = latestAssessment.value;
+        }
         assessDimensionWidget.latestAssessment = latestAssessment;
 
         displayDimensionWidget.assessment = getLatestAssessment(
@@ -48,12 +64,9 @@ export class SensemakeResource extends ScopedRegistryHost(LitElement) {
 
         return html`
             <style>
-                ${unsafeCSS(assessWidgetStyles[1])}
                 ${unsafeCSS(displayWidgetStyles[1])}
             </style>
             <div class="sensemake-resource">
-                ${displayDimensionWidget.render()}
-                <slot></slot>
                 ${assessDimensionWidget.render()}
             </div>
         `
@@ -62,8 +75,8 @@ export class SensemakeResource extends ScopedRegistryHost(LitElement) {
         return [
             css`
             .sensemake-resource {
-                display: flex;
-                flex-direction: row;
+                display: grid;
+                place-content: center;
                 width: 100%;
                 height: 100%;
             }

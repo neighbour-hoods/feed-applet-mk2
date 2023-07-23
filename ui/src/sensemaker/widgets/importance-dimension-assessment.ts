@@ -34,9 +34,10 @@ export class ImportanceDimensionAssessment extends AssessDimensionWidget {
     }
 
     static styles = css`
-        .like-toggle {
-            display: flex;
-            flex-direction: row;
+        :root  * {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
         }
     `
 }

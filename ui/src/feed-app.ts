@@ -21,7 +21,7 @@ import { ContextSelector } from './sensemaker/context-selector';
 @customElement('feed-app')
 export class FeedApp extends NHComponent {
   @state() loading = false;
-
+  
   @provide({ context: feedStoreContext })
   @property()
   feedStore!: FeedStore;

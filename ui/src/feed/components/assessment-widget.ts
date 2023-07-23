@@ -11,6 +11,8 @@ export class NHAssessmentWidget extends NHComponentShoelace {
   iconImg!: string;
   @property()
   iconAlt!: string;
+  @property()
+  assessmentCount: number = 0;
   @queryAll(".assessment-icon-container")
   _containers!: HTMLElement[];
   @query(".assessment-background")
@@ -54,12 +56,14 @@ export class NHAssessmentWidget extends NHComponentShoelace {
             })}assessment-icon-container"
           >
             <div class="assessment-background"></div>
-            <img
+            <slot name="icon">
+              <img
               class="assessment-icon"
               src=${`data:image/png;base64,${this.iconImg}`}
               alt=${this.iconAlt}
-            />
-            <div class="assessment-community-counter">255</div>
+              />
+            </slot>
+            <div class="assessment-community-counter">${this.assessmentCount}</div>
           </div>
         </div>
         <nav class="assessment-widget-menu">
@@ -84,6 +88,10 @@ export class NHAssessmentWidget extends NHComponentShoelace {
         --border-r-tiny: 6px;
 
         --box-shadow-subtle-small: 0px 0px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      :host {
+        display: relative;
       }
 
       .assessment-widget-menu {
@@ -116,6 +124,7 @@ export class NHAssessmentWidget extends NHComponentShoelace {
         border-radius: var(--border-r-tiny);
         text-align: center;
         position: absolute;
+        bottom: -16px;
         opacity: 0;
         transition: margin var(--animation-short),
           opacity var(--animation-shortest);
@@ -128,6 +137,7 @@ export class NHAssessmentWidget extends NHComponentShoelace {
         height: 40px;
         margin-right: 4px;
         cursor: pointer;
+        z-index: 5;
         transition: background-color var(--animation-shortest);
       }
 
