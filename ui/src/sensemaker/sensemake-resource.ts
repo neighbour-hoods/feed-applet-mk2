@@ -25,10 +25,10 @@ export class SensemakeResource extends ScopedElementsMixin(LitElement) {
     resourceAssessments = new StoreSubscriber(this, () => this.sensemakerStore.resourceAssessments());
     activeMethod = new StoreSubscriber(this, () => this.sensemakerStore.activeMethod());
 
-    emitAssessmentValue(value: any) {
+    emitAssessmentValue(value: any, resourceEh: any) {
         if(this.latestAssessmentValue == value) return;
         const options = {
-            detail: {assessmentValue: value},
+            detail: {assessmentValue: value, resourceEh},
             bubbles: true,
             composed: true
         };
@@ -50,7 +50,7 @@ export class SensemakeResource extends ScopedElementsMixin(LitElement) {
 
         const latestAssessment = get(this.sensemakerStore.myLatestAssessmentAlongDimension(encodeHashToBase64(this.resourceEh), encodeHashToBase64(inputDimensionEh)))
         if(latestAssessment !== null && latestAssessment?.value) {
-            this.emitAssessmentValue(Object.values(latestAssessment.value)[0]);
+            this.emitAssessmentValue(Object.values(latestAssessment.value)[0], encodeHashToBase64(this.resourceEh));
             this.latestAssessmentValue = latestAssessment.value;
         }
         assessDimensionWidget.latestAssessment = latestAssessment;

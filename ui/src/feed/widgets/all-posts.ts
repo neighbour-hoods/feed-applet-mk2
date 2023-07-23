@@ -66,13 +66,20 @@ export class AllPosts extends NHComponent {
         ${hashes.reverse().map(
           ([entryHash, actionHash]) =>
             {
-              let value = 0;
               return html`
-              <post-detail .postHash=${actionHash}>
+              <post-detail .postHash=${actionHash} .postEh=${entryHash}>
               
                 <nh-assessment-widget
-                  @assessment-value=${(e: CustomEvent) => { value = (e as any).assessmentValue }}
-                  .assessmentCount=${value}
+                  @assessment-value=${function (e: CustomEvent) { 
+                    let {assessmentValue, resourceEh} = (e as any).detail; 
+                    let myHash = encodeHashToBase64((e as any).currentTarget.parentElement.postEh);
+                    if(myHash === resourceEh) {
+                      (e.currentTarget as any).assessmentCount = assessmentValue; 
+                      console.log('resource hash ', myHash, ' has count:>>', assessmentValue);
+                    }
+                  }
+                    }
+                  .assessmentCount=${0}
                   slot="footer" .name=${'ok'} .iconAlt=${""} .iconImg=${""}>
                   <sensemake-resource
                     slot="icon"

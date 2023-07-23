@@ -36,6 +36,7 @@ export class PostDetail extends NHComponent {
       newVal?.toString() !== oldVal?.toString(),
   })
   postHash!: ActionHash;
+  postEh!: EntryHash;
 
   @property()
   post!: Post;
