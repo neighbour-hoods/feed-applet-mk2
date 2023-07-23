@@ -1,3 +1,4 @@
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { customElement, property, state } from 'lit/decorators.js';
 import { LitElement, html, css } from 'lit';
 import { AppletInfo } from '@neighbourhoods/nh-launcher-applet';
@@ -6,8 +7,8 @@ import {
   appletConfig,
   ImportanceDimensionAssessment,
   TotalImportanceDimensionDisplay,
+  FeedApp,
 } from '../index';
-import '../feed-app';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import {
   AdminWebsocket,
@@ -18,9 +19,10 @@ import {
 } from '@holochain/client';
 import { SensemakerStore } from '@neighbourhoods/client';
 import { get } from 'svelte/store';
+import { NHComponent } from 'neighbourhoods-design-system-components';
 
 @customElement('feed-applet')
-export class FeedApplet extends LitElement {
+export class FeedApplet extends NHComponent {
   @property()
   appletAppInfo!: AppletInfo[];
 
@@ -107,10 +109,18 @@ export class FeedApplet extends LitElement {
       </div>`;
     return html`
       <feed-app
-        style="height: 100vh; width: 100vw; margin-bottom: 70px"
+        style="height: 100vh; width: calc(100vw - 16px); margin-bottom: 70px"
         .sensemakerStore=${this.sensemakerStore}
         .feedStore=${this.feedStore}
       ></feed-app>
     `;
   }
+
+
+  static get elementDefinitions() {
+    return {
+      'feed-app': FeedApp,
+    };
+  }
+
 }

@@ -1,7 +1,7 @@
 import { derived, get, Writable, writable } from 'svelte/store';
 import { AgentPubKey, AgentPubKeyB64, AppAgentClient, Record, AppSignal, AppWebsocket, CellId, encodeHashToBase64, EntryHash, ActionHash, DnaHash, RoleName } from '@holochain/client';
 import { FeedService } from './feed-service';
-import { PostsSignal, Post, WrappedEntry, EntryTypes } from './feed/pages/types';
+import { PostsSignal, Post, WrappedEntry, EntryTypes } from './feed/types';
 import { lazyLoadAndPoll, AsyncReadable } from "@holochain-open-dev/stores";
 import { EntryRecord, LazyHoloHashMap } from "@holochain-open-dev/utils";
 
@@ -18,14 +18,14 @@ export class FeedStore {
 
   allPosts = lazyLoadAndPoll(async () => {
     const records = await this.fetchAllPosts();
-    console.log('polling all post records :>> ', records);
+    // console.log('polling all post records :>> ', records);
     return records.map(r => r.entryHash);
   }, 4000);
 
   allPostsForAssessment = lazyLoadAndPoll(async () => {
     await this.fetchAllPosts();
     const tuples =get(await this.allPostEntryActionHashTuples());
-    console.log('polling all post eh/ah :>> ', tuples);
+    // console.log('polling all post eh/ah :>> ', tuples);
     return tuples
   }, 1000);
 

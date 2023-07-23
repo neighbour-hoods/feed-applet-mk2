@@ -10,7 +10,7 @@ export class NHButton extends NHComponent {
   @property()
   iconImageB64!: string;
   @property()
-  disabled: () => boolean = () => false;
+  disabled: boolean = false;
   @property()
   theme: string = "dark";
   @property()
@@ -22,20 +22,17 @@ export class NHButton extends NHComponent {
     | "neutral"
     | "warning"
     | "danger" = "neutral";
-  @query(".btn")
-  _button!: HTMLElement;
-
   @property()
-  onClick!: () => void;
+  clickHandler!: () => void;
 
   render() {
     return html`
       <button
-        @click=${() => console.log("click")}
         type="button"
+        @click=${() => this.clickHandler()}
         ?disabled=${this.disabled}
         class="btn${classMap({
-          disabled: this.disabled(),
+          disabled: this.disabled,
           light: this.theme == "light",
           dark: this.theme == "dark",
           [this.variant]: !!this.variant,

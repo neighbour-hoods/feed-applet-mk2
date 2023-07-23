@@ -1,15 +1,15 @@
-import { contextProvided } from "@lit-labs/context";
 import { customElement, property, state } from "lit/decorators.js";
-import { ScopedElementsMixin } from "@open-wc/scoped-elements";
 import { LitElement, html, css, unsafeCSS } from "lit";
 import { sensemakerStoreContext, SensemakerStore, getLatestAssessment } from "@neighbourhoods/client";
 import { EntryHash, encodeHashToBase64, decodeHashFromBase64 } from "@holochain/client";
 import { StoreSubscriber } from "lit-svelte-stores";
 import { get } from "svelte/store";
+import { provide } from "@lit-labs/context";
+import { ScopedRegistryHost } from "@lit-labs/scoped-registry-mixin";
 
 @customElement('sensemake-resource')
-export class SensemakeResource extends ScopedElementsMixin(LitElement) {
-    @contextProvided({ context: sensemakerStoreContext, subscribe: true })
+export class SensemakeResource extends ScopedRegistryHost(LitElement) {
+    @provide({ context: sensemakerStoreContext })
     @state()
     public  sensemakerStore!: SensemakerStore
 

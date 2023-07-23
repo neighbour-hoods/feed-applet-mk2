@@ -9,7 +9,7 @@ import { Snackbar } from '@material/mwc-snackbar';
 import '@material/mwc-textarea';
 
 import { clientContext } from '../../contexts';
-import { Post } from './types';
+import { Post } from '../types';
 
 @customElement('edit-post')
 export class EditPost extends LitElement {

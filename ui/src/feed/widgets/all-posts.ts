@@ -9,7 +9,7 @@ import { StoreSubscriber } from '@holochain-open-dev/stores';
 import { consume } from '@lit-labs/context';
 
 import { clientContext, feedStoreContext } from '../../contexts';
-import { PostsSignal } from './types';
+import { PostsSignal } from '../types';
 
 import './post-detail';
 import { FeedStore } from '../../feed-store';
@@ -21,7 +21,7 @@ import { get } from 'svelte/store';
 import { SensemakeResource } from '../../sensemaker/sensemake-resource';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 
-@customElement('all-posts')
+@customElement('all-posts-widget')
 export class AllPosts extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;
@@ -63,11 +63,6 @@ console.log('hashes :>> ', hashes);
         ${hashes.map(
           ([entryHash, actionHash]) =>
             html`
-              <sensemake-resource
-                .resourceEh=${entryHash}
-                .resourceDefEh=${get(this.sensemakerStore.appletConfig())
-                  .resource_defs['post_item']}
-              >
                 <post-detail
                   .postHash=${actionHash}
                   style="margin-bottom: 16px;"
@@ -76,13 +71,18 @@ console.log('hashes :>> ', hashes);
                     this.signaledHashes = [];
                   }}
                 ></post-detail>
-              </sensemake-resource>
             `
         )}
       </div>
     `;
   }
 
+              
+//   <sensemake-resource
+//   .resourceEh=${entryHash}
+//   .resourceDefEh=${get(this.sensemakerStore.appletConfig())
+//     .resource_defs['post_item']}
+// ></sensemake-resource>
   render() {
     switch (this._allPostsForAssessment.value.status) {
       case 'pending':

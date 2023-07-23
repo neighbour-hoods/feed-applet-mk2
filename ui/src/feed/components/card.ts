@@ -1,10 +1,10 @@
 import { css, CSSResult, html, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
-import { NHComponentShoelace } from "neighbourhoods-design-system-components";
+import { NHComponent } from "neighbourhoods-design-system-components";
 
-@customElement("nh-card")
-export class NHCard extends NHComponentShoelace {
+@customElement("nh-applet-card")
+export class NHCard extends NHComponent {
   @property()
   title!: string;
   @property()

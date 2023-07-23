@@ -8,7 +8,7 @@ import { decode } from '@msgpack/msgpack';
 import './edit-post';
 
 import { clientContext, feedStoreContext } from '../../contexts';
-import { Post } from './types';
+import { Post } from '../types';
 import { FeedStore } from '../../feed-store';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 

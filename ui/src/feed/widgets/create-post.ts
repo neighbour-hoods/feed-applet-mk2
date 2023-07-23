@@ -1,3 +1,4 @@
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { LitElement, html } from 'lit';
 import { state, customElement } from 'lit/decorators.js';
 import { AppAgentClient } from '@holochain/client';
@@ -5,13 +6,14 @@ import { consume } from '@lit-labs/context';
 
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { clientContext, feedStoreContext } from '../../contexts';
-import { Post } from './types';
+import { Post } from '../types';
 import { FeedStore } from '../../feed-store';
-import '../components/create-post';
-import '../components/button';
+import { NHCreatePost } from '../components/create-post';
+import { NHButton } from '../components/button';
+import { NHComponent } from 'neighbourhoods-design-system-components';
 
-@customElement('create-post')
-export class CreatePost extends LitElement {
+@customElement('create-post-widget')
+export class CreatePost extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 
@@ -52,24 +54,30 @@ export class CreatePost extends LitElement {
     }
   }
 
+  static get elementDefinitions() {
+    return {
+      'nh-create-post': NHCreatePost,
+      'nh-button': NHButton,
+    };
+  }
+
   render() {
     return html`
       <nh-create-post
         .prompt=${"What's on your mind?"}
         .placeholder=${'Type something...'}
-      >
+        .textAreaValue=${this._text}
+        .onChangeValue=${(e: CustomEvent) => { this._text = (e.target as any).value; console.log('this._text :>> ', this._text); }}
+        >
         <nh-button
           slot="footer"
+          .clickHandler=${() => {this.createPost()}}
           .size=${'md'}
           .label=${'Post'}
           .variant=${'primary'}
-          .onClick=${this.createPost()}
+          .disabled=${!this.isPostValid()}
         ></nh-button>
       </nh-create-post>
     `;
   }
 }
-
-// <mwc-textarea outlined label="Text" .value=${ this._text } @input=${(e: CustomEvent) => { this._text = (e.target as any).value;} } required></mwc-textarea>
-// .disabled=${!this.isPostValid()}
-// @click=${() => this.createPost()}

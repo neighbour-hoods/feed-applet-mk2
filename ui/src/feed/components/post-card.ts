@@ -1,7 +1,6 @@
 import { css, CSSResult, html, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { NHComponent } from "neighbourhoods-design-system-components";
-import "../card";
 import "../assessment-widget";
 import { NHCard } from "./card";
 import { NHAssessmentWidget } from "./assessment-widget";
@@ -25,7 +24,7 @@ export class NHPostCard extends NHComponent {
 
   render() {
     return html`
-      <nh-card
+      <nh-applet-card
         .theme=${"dark"}
         .heading=${this.title}
         .hasContextMenu=${true}
@@ -39,14 +38,14 @@ export class NHPostCard extends NHComponent {
           <slot name="image"></slot>
         </div>
         <nh-assessment-widget slot="footer" .name=${kebabCase(this.title)} .iconAlt=${`Assess post: "${this.title}"`} .iconImg=${this.iconImg}></nh-assessment-widget>
-      </nh-card>
+      </nh-applet-card>
     `;
   }
 
   static get elementDefinitions() {
     return {
       "nh-assessment-widget": NHAssessmentWidget,
-      "nh-card": NHCard,
+      "nh-applet-card": NHCard,
     };
   }
 
