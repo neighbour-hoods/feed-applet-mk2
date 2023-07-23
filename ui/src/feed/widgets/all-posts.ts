@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { AppAgentClient, EntryHash, ActionHash } from '@holochain/client';
-import { StoreSubscriber } from '@holochain-open-dev/stores';
+import { StoreSubscriber, TaskSubscriber } from '@holochain-open-dev/stores';
 import { consume } from '@lit-labs/context';
 
 import { clientContext, feedStoreContext } from '../../contexts';
@@ -34,11 +34,10 @@ export class AllPosts extends NHComponent {
   signaledHashes: Array<ActionHash> = [];
 
   _allPostsForAssessment = new StoreSubscriber(this, () => {
-    console.log(
-      'get(this.feedStore?.allPostsForAssessment) :>> ',
-      get(this.feedStore?.allPostsForAssessment)
-    );
     return this.feedStore?.allPostsForAssessment;
+  });
+  _fetchPosts = new StoreSubscriber(this, () => {
+    return this.feedStore?.allPosts;
   });
 
   async firstUpdated() {
@@ -56,7 +55,6 @@ export class AllPosts extends NHComponent {
 
   renderList(hashes: [EntryHash, ActionHash][]) {
     if (hashes.length === 0) return html`<span>No posts found.</span>`;
-    console.log('hashes :>> ', hashes);
     return html`
       <div class="posts-container" style="display: flex; flex-direction: column; gap: calc(1px * var(--nh-spacing-sm))">
         ${hashes.reverse().map(
@@ -64,10 +62,6 @@ export class AllPosts extends NHComponent {
             html`
               <post-detail
                 .postHash=${actionHash}
-                @post-deleted=${() => {
-                  // this._fetchPosts.run();
-                  this.signaledHashes = [];
-                }}
               ></post-detail>
             `
         )}

@@ -67,11 +67,11 @@ export class CreatePost extends NHComponent {
         .prompt=${"What's on your mind?"}
         .placeholder=${'Type something...'}
         .textAreaValue=${this._text}
-        .onChangeValue=${(e: CustomEvent) => { this._text = (e.target as any).value; console.log('this._text :>> ', this._text); }}
+        .onChangeValue=${(e: CustomEvent) => { this._text = (e.target as any).value; }}
         >
         <nh-button
           slot="footer"
-          .clickHandler=${() => {this.createPost()}}
+          .clickHandler=${() => {this.createPost(); this._text = '';}}
           .size=${'md'}
           .label=${'Post'}
           .variant=${'primary'}

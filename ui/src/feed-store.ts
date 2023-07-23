@@ -18,7 +18,7 @@ export class FeedStore {
 
   allPosts = lazyLoadAndPoll(async () => {
     const records = await this.fetchAllPosts();
-    // console.log('polling all post records :>> ', records);
+    console.log('polling all post records :>> ', records);
     return records.map(r => r.entryHash);
   }, 4000);
 
@@ -92,5 +92,16 @@ export class FeedStore {
     this.#postData.update(posts => [...posts, postRecord]);
     return postRecord as EntryRecord<Post>;
   }
-
+  
+  async updatePost(input: UpdatePostInput): Promise<EntryRecord<Post>> {
+    const postRecord = await this.service.updatePost(input.original_post_hash, input.previous_post_hash, input.updated_post);
+    this.#postData.update(posts => [...posts, postRecord]);
+    return postRecord as EntryRecord<Post>;
+  }
+  
+}
+interface UpdatePostInput {
+      original_post_hash: ActionHash
+      previous_post_hash: ActionHash,
+      updated_post: Post,
 }

@@ -72,6 +72,11 @@ export class NHButton extends NHComponent {
       button.primary {
         background-color: var(--nh-theme-accent-default);
       }
+      button.secondary, button.secondary:hover {
+        background-color: transparent;
+        border: 2px solid var(--nh-theme-accent-default);
+        color: var(--nh-theme-accent-default);
+      }
       button.danger {
         background-color: var(--nh-theme-error-emphasis);
       }
@@ -107,7 +112,7 @@ export class NHButton extends NHComponent {
         height: 70%;
         width: 40px;
       }
-
+      
       button.icon .button-inner {
         display: grid;
         gap: 0;
@@ -119,6 +124,10 @@ export class NHButton extends NHComponent {
       }
       button.icon:hover {
         background-color: var(--nh-theme-bg-subtle);
+      }
+      button.secondary:hover {
+        border-color: var(--nh-theme-accent-muted);
+        color: var(--nh-theme-accent-muted);
       }
       button:hover, button.primary.icon:hover {
         background-color: var(--nh-theme-accent-muted);

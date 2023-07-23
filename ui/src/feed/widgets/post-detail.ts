@@ -94,7 +94,7 @@ export class PostDetail extends NHComponent {
   }
   
   renderPost(maybeRecord: Record | undefined) {
-    if (!maybeRecord) return html`<span>The requested post was not found.</span>`;
+    if (!maybeRecord) return html`<span></span>`;
     
     if (this._editing) {
     	return html`<edit-post
