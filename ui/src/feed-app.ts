@@ -2,8 +2,9 @@ import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { provide } from '@lit-labs/context';
 
-import './feed/posts/all-posts';
-import './feed/posts/create-post';
+import './feed/pages/all-posts';
+import './feed/pages/create-post';
+import './feed/components/page-header-card';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import { feedStoreContext } from './contexts';
 import { FeedStore } from './feed-store';
@@ -28,7 +29,10 @@ export class FeedApp extends LitElement {
       `;
 
     return html`
-      <main>
+    <main>
+        <header>
+          <nh-page-header-card slot="header" .heading=${"Your Feed"}></nh-page-header-card>
+        </header>
         <create-post></create-post>
         <div id="content"></div>
       </main>
@@ -37,17 +41,14 @@ export class FeedApp extends LitElement {
   
   static styles = css`
     :host {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      height: 100%;
+      width: 100%;
+      display: grid;
       align-items: center;
-      justify-content: flex-start;
-      font-size: calc(10px + 2vmin);
-      color: #1a2b42;
-      max-width: 960px;
-      margin: 0 auto;
-      text-align: center;
-      background-color: var(--lit-element-background-color);
+      justify-content: center;
+      
+      background-color: var(--nh-theme-bg-canvas);
+      color: var(--nh-theme-fg-default);
     }
   `;
 }

@@ -22,6 +22,7 @@
     "@holochain-open-dev/utils": "^0.14.2",
     "@holochain/client": "0.12.0",
     "@lit-labs/context": "^0.2.0",
+    "@lit-labs/scoped-registry-mixin": "^1.0.1",
     "@lit-labs/task": "^2.0.0",
     "@material/mwc-button": "^0.27.0",
     "@material/mwc-checkbox": "^0.27.0",
@@ -35,12 +36,13 @@
     "@material/mwc-textarea": "^0.27.0",
     "@material/mwc-textfield": "^0.27.0",
     "@msgpack/msgpack": "^2.8.0",
-    "@neighbourhoods/nh-launcher-applet": "0.0.10",
     "@neighbourhoods/client": "^0.0.3",
-    "@open-wc/scoped-elements": "^2.2.0",
+    "@neighbourhoods/nh-launcher-applet": "0.0.10",
+    "@scoped-elements/shoelace": "^0.1.0",
     "@vaadin/date-time-picker": "^23.2.8",
     "lit": "^2.6.1",
-    "lit-svelte-stores": "0.2.5"
+    "lit-svelte-stores": "0.2.5",
+    "neighbourhoods-design-system-components": "^0.0.15"
   },
   "devDependencies": {
     "@open-wc/eslint-config": "^4.3.0",
@@ -49,9 +51,9 @@
     "bestzip": "^2.2.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
+    "open-cli": "^7.2.0",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
-    "open-cli": "^7.2.0",
     "typescript": "^4.5.5",
     "vite": "^4.0.0",
     "vite-plugin-checker": "^0.5.3"

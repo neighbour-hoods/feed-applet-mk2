@@ -4,20 +4,16 @@ import { EntryHash, Record, ActionHash, AppAgentClient, DnaHash } from '@holocha
 import { consume } from '@lit-labs/context';
 import { Task } from '@lit-labs/task';
 import { decode } from '@msgpack/msgpack';
-// import '@material/mwc-circular-progress';
-import '@material/mwc-icon-button';
-import '@material/mwc-icon-button-toggle';
-import '@material/mwc-snackbar';
-import { Snackbar } from '@material/mwc-snackbar';
 
 import './edit-post';
 
 import { clientContext, feedStoreContext } from '../../contexts';
 import { Post } from './types';
 import { FeedStore } from '../../feed-store';
+import { NHComponent } from 'neighbourhoods-design-system-components';
 
 @customElement('post-detail')
-export class PostDetail extends LitElement {
+export class PostDetail extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 
@@ -62,7 +58,7 @@ export class PostDetail extends LitElement {
       }));
       this._fetchRecord.run();
     } catch (e: any) {
-      const errorSnackbar = this.shadowRoot?.getElementById('delete-error') as Snackbar;
+      const errorSnackbar = this.shadowRoot?.getElementById('delete-error') as any;
       errorSnackbar.labelText = `Error deleting the post: ${e.data.data}`;
       errorSnackbar.show();
     }

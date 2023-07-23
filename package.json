@@ -33,6 +33,7 @@
   "dependencies": {
     "@holochain/client": "^0.15.0",
     "@neighbourhoods/sensemaker-lite-types": "^0.4.0",
+    "@webcomponents/custom-elements": "^1.6.0",
     "vitest": "^0.32.2"
   }
 }

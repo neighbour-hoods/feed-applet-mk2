@@ -21,7 +21,7 @@ const feedApplet: NhLauncherApplet = {
   ): Promise<AppletRenderers> {
     return {
       full(element: HTMLElement, registry: CustomElementRegistry) {
-        registry.define("feed-applet", FeedApplet);
+        registry?.define("feed-applet", FeedApplet);
         element.innerHTML = `<feed-applet></feed-applet>`;
         const appletElement = element.querySelector("feed-applet") as any;
         appletElement.appWebsocket = appWebsocket;

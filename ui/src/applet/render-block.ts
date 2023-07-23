@@ -1,12 +1,14 @@
 import { ref } from "lit/directives/ref.js";
-import { ScopedElementsMixin } from "@open-wc/scoped-elements";
-import { css, html, LitElement } from "lit";
-import { property } from "lit/decorators.js";
+import { css, html, LitElement, PropertyValueMap } from "lit";
+import { customElement, property, query } from "lit/decorators.js";
 import { Renderer } from "@neighbourhoods/nh-launcher-applet";
 
-export class RenderBlock extends ScopedElementsMixin(LitElement) {
+@customElement('render-block')
+export class RenderBlock extends LitElement {
   @property()
   renderer!: Renderer;
+  @query("#root-element")
+  _e!: Element;
 
   //@ts-ignore
   get registry() {
@@ -20,16 +22,19 @@ export class RenderBlock extends ScopedElementsMixin(LitElement) {
     this.__registry = registry;
   }
 
-  renderRenderer(element: Element | undefined) {
-    if (element) {
-      this.renderer(element as HTMLElement, this.registry);
+  renderRenderer() {
+    if (this._e) {
+      this.renderer(this._e as HTMLElement, this.registry);
     }
   }
 
+  protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
+    this.renderRenderer()
+  }
   render() {
     return html`<div
+      id="root-element"
       style="display: contents"
-      ${ref((e) => this.renderRenderer(e))}
     ></div>`;
   }
 

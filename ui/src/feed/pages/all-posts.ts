@@ -2,16 +2,11 @@ import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import {
   AppAgentClient,
-  AgentPubKey,
   EntryHash,
   ActionHash,
-  Record,
-  NewEntryAction,
 } from '@holochain/client';
 import { StoreSubscriber } from '@holochain-open-dev/stores';
 import { consume } from '@lit-labs/context';
-
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 import { clientContext, feedStoreContext } from '../../contexts';
 import { PostsSignal } from './types';
@@ -24,9 +19,10 @@ import {
 } from '@neighbourhoods/client';
 import { get } from 'svelte/store';
 import { SensemakeResource } from '../../sensemaker/sensemake-resource';
+import { NHComponent } from 'neighbourhoods-design-system-components';
 
 @customElement('all-posts')
-export class AllPosts extends ScopedElementsMixin(LitElement) {
+export class AllPosts extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 
@@ -102,7 +98,7 @@ console.log('hashes :>> ', hashes);
     }
   }
 
-  static get scopedElements() {
+  static get elementDefinitions() {
     return {
       'sensemake-resource': SensemakeResource,
     };

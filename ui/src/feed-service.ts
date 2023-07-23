@@ -1,5 +1,5 @@
 import { ActionHash, AgentPubKey, Record, AppAgentCallZomeRequest, Entry, AppAgentClient, AppWebsocket, CallZomeRequest, CellId, RoleName } from '@holochain/client';
-import { Post, WrappedEntry, EntryTypes } from './feed/posts/types';
+import { Post, WrappedEntry, EntryTypes } from './feed/pages/types';
 import { isSignalFromCellWithRole, EntryRecord, ZomeClient } from '@holochain-open-dev/utils';
 
 export class FeedService {

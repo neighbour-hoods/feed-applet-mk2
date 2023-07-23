@@ -71,8 +71,5 @@ export class SensemakeResource extends ScopedElementsMixin(LitElement) {
                 flex: 1;
             }
         `]};
-    static get scopedElements() {
-        return {
-        }
-    }
+
 }

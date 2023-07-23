@@ -1,20 +1,19 @@
 import { customElement, query } from "lit/decorators.js";
-import { ScopedElementsMixin } from "@open-wc/scoped-elements";
 import { LitElement, html, css } from "lit";
-import { TextField, Button } from '@scoped-elements/material-web'
+import '@shoelace-style/shoelace/dist/components/input/input.js';
 
 @customElement('create-or-join-nh')
-export class CreateOrJoinNh extends ScopedElementsMixin(LitElement) {
+export class CreateOrJoinNh extends LitElement {
     @query('#ca-pubkey')
     input!: HTMLInputElement;
 
     render() {
         return html`
             <div class="nh-creation-container">
-                <mwc-button outlined=true @click=${this.dispatchCreateNeighbourhood}>Create Neighbourhood</mwc-button>
+                <button outlined=true @click=${this.dispatchCreateNeighbourhood}>Create Neighbourhood</button>
                 <div>
-                    <mwc-textfield id="ca-pubkey" placeholder=${`community activator pubkey`}></mwc-textfield>
-                    <mwc-button outlined=true @click=${this.dispatchJoinNeighbourhood}>Join Neighbourhood</mwc-button>
+                    <sl-input id="ca-pubkey" placeholder=${`community activator pubkey`}></sl-input>
+                    <button outlined=true @click=${this.dispatchJoinNeighbourhood}>Join Neighbourhood</button>
                 </div>
             </div>
         `
@@ -35,13 +34,6 @@ export class CreateOrJoinNh extends ScopedElementsMixin(LitElement) {
             console.log('ca key', newValue)
             this.dispatchEvent(new CustomEvent('join-nh', options))
             this.input.value = ''
-        }
-    }
-
-    static get scopedElements() {
-        return {
-            'mwc-textfield': TextField,
-            'mwc-button': Button,
         }
     }
 

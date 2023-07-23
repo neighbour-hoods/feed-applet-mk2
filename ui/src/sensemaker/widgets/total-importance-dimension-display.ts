@@ -16,7 +16,7 @@ export class TotalImportanceDimensionDisplay extends DisplayDimensionWidget {
                     </div>
                 `
     }
-    static get scopedElements() {
+    static get elementDefinitions() {
         return {
         }
     }

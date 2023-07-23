@@ -13,19 +13,19 @@ import {
   CellId,
   ClonedCell,
 } from '@holochain/client';
-import '@material/mwc-circular-progress';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { FeedStore } from './feed-store';
-import { CreateOrJoinNh } from './create-or-join-nh';
 import { SensemakerStore } from '@neighbourhoods/client';
 import { appletConfig } from './appletConfig'
 import feedApplet from './applet-index'
 import { AppletInfo, AppletRenderers } from '@neighbourhoods/nh-launcher-applet';
-import { RenderBlock } from "./applet/render-block";
+import './create-or-join-nh';
+import "./applet/render-block";
 import { getCellId } from './utils';
+import { NHComponent } from 'neighbourhoods-design-system-components';
 
 @customElement('applet-test-harness')
-export class AppletTestHarness extends ScopedElementsMixin(LitElement) {
+export class AppletTestHarness extends LitElement {
   @state() loading = true;
   @state() actionHash: ActionHash | undefined;
   @state() currentSelectedList: string | undefined;
@@ -146,7 +146,7 @@ export class AppletTestHarness extends ScopedElementsMixin(LitElement) {
   render() {
     if (this.isSensemakerCloned && this.loading)
       return html`
-        <mwc-circular-progress indeterminate></mwc-circular-progress>
+        Loading
       `;
     if (!this.isSensemakerCloned)
       return html`
@@ -174,12 +174,12 @@ export class AppletTestHarness extends ScopedElementsMixin(LitElement) {
     console.log("appInfo", this.appInfo)
   }
 
-  static get scopedElements() {
-    return {
-      'create-or-join-nh': CreateOrJoinNh,
-      'render-block': RenderBlock,
-    };
-  }
+  // static get elementDefinitions() {
+  //   return {
+  //     'create-or-join-nh': CreateOrJoinNh,
+  //     'render-block': RenderBlock,
+  //   };
+  // }
 
   static styles = css`
     .home-page {
