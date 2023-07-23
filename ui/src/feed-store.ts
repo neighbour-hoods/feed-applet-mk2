@@ -87,6 +87,19 @@ export class FeedStore {
       return allPostsEhs
     })
   }
+
+  postFromEntryHashes(entryHashes: EntryHash[]) {
+    const serializedEntryHashes = entryHashes.map(entryHash => encodeHashToBase64(entryHash));
+    return derived(this.#postData, _ => {
+      let posts: WrappedEntry<Post>[] = [];
+      debugger;
+      // Object.values(lists).map(list => {
+      //   tasks = [...tasks, ...list] 
+      // })
+      return posts.filter(post => serializedEntryHashes.includes(encodeHashToBase64(post.entry_hash)))
+    })
+  }
+
   async createPost(input: Post): Promise<EntryRecord<Post>> {
     const postRecord = await this.service.createPost(input);
     this.#postData.update(posts => [...posts, postRecord]);

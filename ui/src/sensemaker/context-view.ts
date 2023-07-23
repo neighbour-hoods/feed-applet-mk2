@@ -9,6 +9,7 @@ import { SensemakeResource } from "./sensemake-resource";
 import { StoreSubscriber } from "lit-svelte-stores";
 import { FeedStore } from "../feed-store";
 import { feedStoreContext, sensemakerStoreContext } from "../contexts";
+import { Post } from "../feed/types";
 
 @customElement('context-view')
 export class ContextView extends ScopedElementsMixin(LitElement) {
@@ -23,24 +24,25 @@ export class ContextView extends ScopedElementsMixin(LitElement) {
     @property()
     contextName!: string;
 
-    // tasksInContext = new StoreSubscriber(this, () => this.feedStore.tasksFromEntryHashes(get(this.sensemakerStore.contextResults())[this.contextName]));
+    postsInContext = new StoreSubscriber(this, () => this.feedStore.tasksFromEntryHashes(get(this.sensemakerStore.contextResults())[this.contextName]));
+
     render() {
         // consider using `repeat()` instead of `map()`
-        return html`hello world!`
-        // return html`
-        //     ${this.tasksInContext.value.map((task) => html`
-        //         <sensemake-resource class="sensemake-resource"
-        //             .resourceEh=${task.entry_hash} 
-        //             .resourceDefEh=${get(this.sensemakerStore.appletConfig()).resource_defs["task_item"]}
-        //         >
-        //             <task-item 
-        //                 .task=${task} 
-        //                 .completed=${('Complete' in task.entry.status)} 
-        //             ></task-item>
-        //         </sensemake-resource>
-        //     `)}
-        // `
-    }
+        return html`
+            ${(this.postsInContext.value as any).map((post: Post) => html`
+              ${post} 1
+            `)}
+            `
+          }
+          // <sensemake-resource class="sensemake-resource"
+          //     .resourceEh=${task.entry_hash} 
+          //     .resourceDefEh=${get(this.sensemakerStore.appletConfig()).resource_defs["task_item"]}
+          // >
+          //     <task-item 
+          //         .task=${task} 
+          //         .completed=${('Complete' in task.entry.status)} 
+          //     ></task-item>
+          // </sensemake-resource>
     static get scopedElements() {
         return {
             'sensemake-resource': SensemakeResource,
