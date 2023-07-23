@@ -1,16 +1,10 @@
 import { LitElement, css, html } from 'lit';
-import { contextProvider } from '@lit-labs/context';
 import { customElement, property, state } from 'lit/decorators.js';
-import {
-  AppAgentClient,
-  AppInfo,
-  AdminWebsocket,
-  AppWebsocket,
-} from '@holochain/client';
 import { provide } from '@lit-labs/context';
 
 import './feed/posts/all-posts';
 import './feed/posts/create-post';
+import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import { feedStoreContext } from './contexts';
 import { FeedStore } from './feed-store';
 import { SensemakerStore, sensemakerStoreContext } from '@neighbourhoods/client';
@@ -27,30 +21,20 @@ export class FeedApp extends LitElement {
   @property()
   sensemakerStore!: SensemakerStore;
 
-  async firstUpdated() {
-  }
-
   render() {
     if (this.loading)
       return html`
-        Loading from App!
+        <sl-spinner></sl-spinner>
       `;
 
     return html`
       <main>
-        <h1>Feed Applet</h1>
         <create-post></create-post>
-        <div id="content"><all-posts></all-posts></div>
+        <div id="content"></div>
       </main>
     `;
   }
-
-  // static get scopedElements() {
-  //   return {
-  //     'all-posts': AllPosts,
-  //     'create-post': CreatePost,
-  //   };
-  // }
+  
   static styles = css`
     :host {
       min-height: 100vh;
@@ -64,19 +48,6 @@ export class FeedApp extends LitElement {
       margin: 0 auto;
       text-align: center;
       background-color: var(--lit-element-background-color);
-    }
-
-    main {
-      flex-grow: 1;
-    }
-
-    .app-footer {
-      font-size: calc(12px + 0.5vmin);
-      align-items: center;
-    }
-
-    .app-footer a {
-      margin-left: 5px;
     }
   `;
 }
