@@ -5,7 +5,8 @@ import { StoreSubscriber } from 'lit-svelte-stores';
 import { customElement, state } from 'lit/decorators.js';
 import { SensemakerStore, AppletConfig } from '@neighbourhoods/client';
 import { sensemakerStoreContext } from '../contexts';
-import '../feed/components/page-header-card';
+import { NHButton } from '../feed/components/button';
+import { NHPageHeaderCard } from '../feed/components/page-header-card';
 
 export const cleanForUI = (propertyName: string) =>
   propertyName.split('_').map(capitalize).join(' ');
@@ -36,8 +37,8 @@ export class ContextSelector extends ScopedElementsMixin(LitElement) {
           slot="header"
           .heading=${cleanForUI(contexts[this.activeContextIndex])}
         >
-          <nh-button slot="secondary-action" .variant=${"secondary"} .label=${"Cycle"} .size=${"md"} .clickHandler=${() => this._selectedContext = contexts[this.activeContextIndex + 1]}></nh-button>
-          <nh-button slot="primary-action" .variant=${"primary"} .label=${"Calculate"} .size=${"md"} .clickHandler=${() => this.dispatchContextSelected(contexts[this.activeContextIndex])}></nh-button>
+          <nh-button-applet slot="secondary-action" .variant=${"secondary"} .label=${"Cycle"} .size=${"md"} .clickHandler=${() => this._selectedContext = contexts[this.activeContextIndex + 1]}></nh-button-applet>
+          <nh-button-applet slot="primary-action" .variant=${"primary"} .label=${"Calculate"} .size=${"md"} .clickHandler=${() => this.dispatchContextSelected(contexts[this.activeContextIndex])}></nh-button-applet>
         </nh-page-header-card>
       `
     
@@ -50,4 +51,11 @@ export class ContextSelector extends ScopedElementsMixin(LitElement) {
       composed: true
   }));
   }
+  static get elementDefinitions() {
+    return {
+      'nh-button-applet': NHButton,
+      'nh-page-header-card': NHPageHeaderCard,
+    };
+  }
+
 }

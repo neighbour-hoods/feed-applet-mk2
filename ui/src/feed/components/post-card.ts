@@ -1,7 +1,6 @@
 import { css, CSSResult, html, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { NHComponent } from "neighbourhoods-design-system-components";
-import "../assessment-widget";
 import { NHCard } from "./card";
 import { NHAssessmentWidget } from "./assessment-widget";
 import { pearImg } from "./b64images";

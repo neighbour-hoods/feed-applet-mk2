@@ -1,11 +1,11 @@
 import { css, CSSResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { NHComponent } from "neighbourhoods-design-system-components";
-import '@shoelace-style/shoelace/dist/components/textarea/textarea.js';
+import { NHComponent, NHComponentShoelace } from "neighbourhoods-design-system-components";
 import { NHCard } from "./card";
+import { SlTextarea } from "@scoped-elements/shoelace";
 
 @customElement("nh-create-post")
-export class NHCreatePost extends NHComponent {
+export class NHCreatePost extends NHComponentShoelace {
   @property()
   prompt!: string;
   @property()
@@ -25,7 +25,7 @@ export class NHCreatePost extends NHComponent {
         .textSize=${"sm"}
         .footerAlign=${"r"}
       >
-          <sl-textarea required @sl-input=${(e: CustomEvent) => this.onChangeValue(e)} value=${this.textAreaValue} filled placeholder=${this.placeholder} resize="auto"></sl-textarea>
+          <textarea required @input=${(e: CustomEvent) => this.onChangeValue(e)} value=${this.textAreaValue} filled placeholder=${this.placeholder}></textarea>
           <slot slot="footer" name="footer"></slot>
       </nh-applet-card>
     `;
@@ -34,6 +34,7 @@ export class NHCreatePost extends NHComponent {
   static get elementDefinitions() {
     return {
       'nh-applet-card': NHCard,
+      'sl-textarea': SlTextarea
     };
   }
 
@@ -46,18 +47,19 @@ export class NHCreatePost extends NHComponent {
         display: flex;
       }
 
-      sl-textarea::part(textarea) {
+      textarea {
         padding: calc(1px * var(--nh-spacing-sm));
         
         color:  var(--nh-theme-fg-default);
         background: var(--nh-theme-bg-surface);
+        font-size : calc(1px * var(--nh-font-size-md));
+        width: 100%;
+        resize: none;
+        border: 1px solid var(--nh-theme-bg-subtle);
       }
       
-      sl-textarea::part(textarea):active {
+      textarea:hover {
         border: 1px solid var(--nh-theme-bg-surface);
-      }
-      sl-textarea::part(base) {
-        --sl-input-font-size-medium : calc(1px * var(--nh-font-size-md));
       }
     `,
   ];

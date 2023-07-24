@@ -21,9 +21,9 @@ import {
 import { get } from 'svelte/store';
 import { SensemakeResource } from '../../sensemaker/sensemake-resource';
 import { NHComponent } from 'neighbourhoods-design-system-components';
-import '../components/assessment-widget';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { Task } from '@lit-labs/task';
+import { NHAssessmentWidget } from '../components/assessment-widget';
 
 @customElement('all-posts-widget')
 export class AllPosts extends NHComponent {
@@ -132,6 +132,7 @@ export class AllPosts extends NHComponent {
   static get elementDefinitions() {
     return {
       'sensemake-resource': SensemakeResource,
+      'nh-assessment-widget': NHAssessmentWidget,
     };
   }
 }

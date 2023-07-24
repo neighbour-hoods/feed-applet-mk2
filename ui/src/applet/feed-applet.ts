@@ -9,7 +9,6 @@ import {
   TotalImportanceDimensionDisplay,
   FeedApp,
 } from '../index';
-import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import {
   AdminWebsocket,
   AppWebsocket,
@@ -107,7 +106,7 @@ export class FeedApplet extends NHComponent {
       return html`<div
         style="display: flex; flex: 1; flex-direction: row; align-items: center; justify-content: center"
       >
-        <sl-spinner></sl-spinner>
+        Loading...
       </div>`;
     return html`
       <feed-app

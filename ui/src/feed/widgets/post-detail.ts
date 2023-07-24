@@ -12,15 +12,14 @@ import { Task } from '@lit-labs/task';
 import { decode } from '@msgpack/msgpack';
 
 import './edit-post';
-import '../components/card';
-import '../components/button';
-import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 
 import { clientContext, feedStoreContext } from '../../contexts';
 import { Post } from '../types';
 import { FeedStore } from '../../feed-store';
 import { NHComponent } from 'neighbourhoods-design-system-components';
-import { backArrow, editIcon, trashIcon } from '../components/b64images';
+import { editIcon, trashIcon } from '../components/b64images';
+import { NHButton } from '../components/button';
+import { NHCard } from '../components/card';
 
 @customElement('post-detail')
 export class PostDetail extends NHComponent {
@@ -94,12 +93,12 @@ export class PostDetail extends NHComponent {
     >
       ${post.text}
       <div class="action-buttons" slot="context-menu" style="display: flex; gap: 2px; flex-direction: column;">
-        <nh-button .variant=${'primary'} .size=${'icon'} .iconImageB64=${editIcon} .clickHandler=${() => {
+        <nh-button-applet .variant=${'primary'} .size=${'icon'} .iconImageB64=${editIcon} .clickHandler=${() => {
       this._editing = true;
-    }}>Edit</nh-button>
-        <nh-button .variant=${'danger'} .size=${'icon'} .iconImageB64=${trashIcon} .clickHandler=${() => {
+    }}>Edit</nh-button-applet>
+        <nh-button-applet .variant=${'danger'} .size=${'icon'} .iconImageB64=${trashIcon} .clickHandler=${() => {
       this.deletePost();
-    }}>Delete</nh-button>
+    }}>Delete</nh-button-applet>
       </div>
       <slot slot="footer" name="footer"></slot>
     </nh-applet-card>
@@ -132,11 +131,18 @@ export class PostDetail extends NHComponent {
       pending: () => html`<div
         style="display: flex; flex: 1; align-items: center; justify-content: center"
       >
-        <sl-spinner></sl-spinner>
+        Loading...
       </div>`,
       complete: maybeRecord => this.renderPost(maybeRecord?.record),
       error: (e: any) =>
         html`<span>Error fetching the post: ${e.data.data}</span>`,
     });
   }
+  static get elementDefinitions() {
+    return {
+      'nh-button-applet': NHButton,
+      'nh-applet-card': NHCard,
+    };
+  }
+
 }

@@ -15,7 +15,7 @@
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "build": "tsc && vite build --mode production",
     "build:watch": "rimraf dist && vite build --mode development --config vite.config.js -w",
-    "package:ui": "rimraf ui.zip && npm run build && cd ./dist && bestzip ../ui.zip index.js icon.png"
+    "package:ui": "rimraf ui.zip && npm run build && cd ./dist && bestzip ../ui.zip index.js icon.svg"
   },
   "dependencies": {
     "@holochain-open-dev/stores": "^0.5.4",
@@ -24,17 +24,6 @@
     "@lit-labs/context": "^0.2.0",
     "@lit-labs/scoped-registry-mixin": "^1.0.1",
     "@lit-labs/task": "^2.0.0",
-    "@material/mwc-button": "^0.27.0",
-    "@material/mwc-checkbox": "^0.27.0",
-    "@material/mwc-circular-progress": "^0.27.0",
-    "@material/mwc-formfield": "^0.27.0",
-    "@material/mwc-icon-button": "^0.27.0",
-    "@material/mwc-icon-button-toggle": "^0.27.0",
-    "@material/mwc-select": "^0.27.0",
-    "@material/mwc-slider": "^0.27.0",
-    "@material/mwc-snackbar": "^0.27.0",
-    "@material/mwc-textarea": "^0.27.0",
-    "@material/mwc-textfield": "^0.27.0",
     "@msgpack/msgpack": "^2.8.0",
     "@neighbourhoods/client": "^0.0.3",
     "@neighbourhoods/nh-launcher-applet": "0.0.10",

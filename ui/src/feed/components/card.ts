@@ -2,7 +2,7 @@ import { css, CSSResult, html, unsafeCSS } from "lit";
 import { customElement, property, query, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { NHComponent } from "neighbourhoods-design-system-components";
-import './menu.js';
+import { NHMenu } from "./menu";
 
 @customElement("nh-applet-card")
 export class NHCard extends NHComponent {
@@ -70,6 +70,12 @@ export class NHCard extends NHComponent {
       </div>
     `;
   }
+  static get elementDefinitions() {
+    return {
+      'nh-menu': NHMenu,
+    };
+  }
+
 
   static styles: CSSResult[] = [
     super.styles as CSSResult,

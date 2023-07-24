@@ -56,7 +56,7 @@ export class CreatePost extends NHComponent {
   static get elementDefinitions() {
     return {
       'nh-create-post': NHCreatePost,
-      'nh-button': NHButton,
+      'nh-button-applet': NHButton,
     };
   }
 
@@ -68,14 +68,14 @@ export class CreatePost extends NHComponent {
         .textAreaValue=${this._text}
         .onChangeValue=${(e: CustomEvent) => { this._text = (e.target as any).value; }}
         >
-        <nh-button
+        <nh-button-applet
           slot="footer"
           .clickHandler=${() => {this.createPost(); this._text = '';}}
           .size=${'md'}
           .label=${'Post'}
           .variant=${'primary'}
           .disabled=${!this.isPostValid()}
-        ></nh-button>
+        ></nh-button-applet>
       </nh-create-post>
     `;
   }

@@ -3,21 +3,20 @@ import { html as litHtml, literal } from "lit/static-html.js";
 import { customElement, property } from "lit/decorators.js";
 import { NHComponentShoelace } from "neighbourhoods-design-system-components";
 import { classMap } from "lit/directives/class-map.js";
-import "./button";
-import "./tab-button";
 import { plusIcon } from "./b64images";
+import { NHButton } from "./button";
 
 export const capitalize = (part: string) =>
   part[0].toUpperCase() + part.slice(1);
 
 @customElement("nh-menu")
-export class NHCard extends NHComponentShoelace {
+export class NHMenu extends NHComponentShoelace {
   @property()
   direction: "vertical" | "horizontal" = "horizontal";
   @property()
   itemLabels: string[] = ["Button 1", "Button 2", "Button 3"];
   @property()
-  itemComponentTag: any = literal`nh-button`;
+  itemComponentTag: any = literal`nh-button-applet`;
   @property()
   itemComponentProps: any = { size: "md", iconImageB64: "" };
   @property()
@@ -62,13 +61,19 @@ export class NHCard extends NHComponentShoelace {
               )
             : null}
             </slot>
-            ${this.addItemButton ? html`<nh-button class="add-menu-item" .variant=${"primary"} .size=${"icon"} .iconImageB64=${plusIcon}></nh-button>`: null}
+            ${this.addItemButton ? html`<nh-button-applet class="add-menu-item" .variant=${"primary"} .size=${"icon"} .iconImageB64=${plusIcon}></nh-button-applet>`: null}
           <slot name="extra-item"></slot>
         </div>
         <slot name="actions"></slot>
       </div>
     `;
   }
+  static get elementDefinitions() {
+    return {
+      'nh-button-applet': NHButton,
+    };
+  }
+
   
   static styles: CSSResult[] = [
     super.styles as CSSResult,

@@ -1,6 +1,5 @@
 import { customElement, query } from "lit/decorators.js";
 import { LitElement, html, css } from "lit";
-import '@shoelace-style/shoelace/dist/components/input/input.js';
 
 @customElement('create-or-join-nh')
 export class CreateOrJoinNh extends LitElement {
@@ -12,7 +11,7 @@ export class CreateOrJoinNh extends LitElement {
             <div class="nh-creation-container">
                 <button outlined=true @click=${this.dispatchCreateNeighbourhood}>Create Neighbourhood</button>
                 <div>
-                    <sl-input id="ca-pubkey" placeholder=${`community activator pubkey`}></sl-input>
+                    <input id="ca-pubkey" placeholder=${`community activator pubkey`}></input>
                     <button outlined=true @click=${this.dispatchJoinNeighbourhood}>Join Neighbourhood</button>
                 </div>
             </div>

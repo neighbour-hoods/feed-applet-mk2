@@ -1,9 +1,7 @@
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { CSSResult, LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { provide } from '@lit-labs/context';
 
-import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import './fonts.css';
 import { feedStoreContext } from './contexts';
 import { FeedStore } from './feed-store';
@@ -41,7 +39,7 @@ export class FeedApp extends NHComponent {
   );
 
   render() {
-    if (this.loading) return html` <sl-spinner></sl-spinner> `;
+    if (this.loading) return html`Loading...`;
     return html`
       <main>
         <header>
