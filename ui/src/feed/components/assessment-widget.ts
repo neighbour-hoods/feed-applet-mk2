@@ -187,7 +187,8 @@ export class NHAssessmentWidget extends NHComponentShoelace {
       }
 
       .assessment-icon {
-        width: 32px;
+        width: 48px;
+        height: 48px;
         margin: 4px;
         z-index: 2;
         position: absolute;

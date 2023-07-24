@@ -1,6 +1,11 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
-import { AppAgentClient, EntryHash, ActionHash, encodeHashToBase64 } from '@holochain/client';
+import {
+  AppAgentClient,
+  EntryHash,
+  ActionHash,
+  encodeHashToBase64,
+} from '@holochain/client';
 import { StoreSubscriber, TaskSubscriber } from '@holochain-open-dev/stores';
 import { consume } from '@lit-labs/context';
 
@@ -31,7 +36,9 @@ export class AllPosts extends NHComponent {
   @property()
   sensemakerStore!: SensemakerStore;
 
-  activeMethod = new StoreSubscriber(this, () => this.sensemakerStore.activeMethod());
+  activeMethod = new StoreSubscriber(this, () =>
+    this.sensemakerStore.activeMethod()
+  );
 
   @state()
   signaledHashes: Array<ActionHash> = [];
@@ -53,6 +60,7 @@ export class AllPosts extends NHComponent {
         payload.action.hashed.hash,
         ...this.signaledHashes,
       ];
+      console.log('signaledHashes :>> ', this.signaledHashes);
     });
   }
 
@@ -63,36 +71,38 @@ export class AllPosts extends NHComponent {
         class="posts-container"
         style="display: flex; flex-direction: column; gap: calc(1px * var(--nh-spacing-sm))"
       >
-        ${hashes.reverse().map(
-          ([entryHash, actionHash]) =>
-            {
-              return html`
+        ${hashes.reverse().map(([entryHash, actionHash]) => {
+          return html`
               <post-detail .postHash=${actionHash} .postEh=${entryHash}>
               
                 <nh-assessment-widget
-                  @assessment-value=${function (e: CustomEvent) { 
-                    let {assessmentValue, resourceEh} = (e as any).detail; 
-                    let myHash = encodeHashToBase64((e as any).currentTarget.parentElement.postEh);
-                    if(myHash === resourceEh) {
-                      (e.currentTarget as any).assessmentCount = assessmentValue; 
-                      console.log('resource hash ', myHash, ' has count:>>', assessmentValue);
+                  @set-initial-assessment-value=${function (e: CustomEvent) {
+                    let { assessmentValue, resourceEh } = (e as any).detail;
+                    let myHash = encodeHashToBase64(
+                      (e as any).currentTarget.parentElement.postEh
+                    );
+                    if (myHash === resourceEh) {
+                      (e.currentTarget as any).assessmentCount =
+                        assessmentValue;
                     }
-                  }
-                    }
+                  }}
                   .assessmentCount=${0}
-                  slot="footer" .name=${'ok'} .iconAlt=${""} .iconImg=${""}>
+                  slot="footer" .name=${'ok'} .iconAlt=${''} .iconImg=${''}>
                   <sensemake-resource
                     slot="icon"
                     style="z-index: 1; position: relative;"
                     .resourceEh=${entryHash}
-                    .resourceDefEh=${get(this.sensemakerStore.appletConfig())
-                      .resource_defs['post_item']}
+                    .resourceDefEh=${
+                      get(this.sensemakerStore.appletConfig()).resource_defs[
+                        'post_item'
+                      ]
+                    }
                   >
                   </nh-assessment-widget>
                   </sensemake-resource>
               </post-detail>
-            `}
-        )}
+            `;
+        })}
       </div>
     `;
   }

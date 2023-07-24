@@ -34,17 +34,16 @@ export class CreatePost extends NHComponent {
     try {
       const record: EntryRecord<Post> = await this.feedStore.service.createPost(
         post
-      );
-
-      this.dispatchEvent(
-        new CustomEvent('post-created', {
-          composed: true,
-          bubbles: true,
-          detail: {
-            postHash: record.actionHash,
-          },
-        })
-      );
+        );
+        this.dispatchEvent(
+          new CustomEvent('post-created', {
+            composed: true,
+            bubbles: true,
+            detail: {
+              postHash: record.actionHash,
+            },
+          })
+        );
     } catch (e: any) {
       const errorSnackbar = this.shadowRoot?.getElementById(
         'create-error'

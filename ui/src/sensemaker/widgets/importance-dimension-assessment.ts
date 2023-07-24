@@ -1,12 +1,12 @@
 import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { EntryHash } from '@holochain/client';
-import { AssessDimensionWidget, RangeValue, SensemakerStore, sensemakerStoreContext } from '@neighbourhoods/client';
-import { contextProvided } from '@lit-labs/context';
+import { AssessDimensionWidget, SensemakerStore, sensemakerStoreContext } from '@neighbourhoods/client';
+import { provide } from '@lit-labs/context';
 
 @customElement('like-dimension-assessment')
 export class ImportanceDimensionAssessment extends AssessDimensionWidget {
-    @contextProvided({ context: sensemakerStoreContext, subscribe: true })
+    @provide({ context: sensemakerStoreContext })
     @state()
     sensemakerStore!: SensemakerStore;
     
@@ -28,7 +28,7 @@ export class ImportanceDimensionAssessment extends AssessDimensionWidget {
     render() {
         return html`
             <div class="like-toggle">
-                <div @click=${() => this.assessResource({ Integer: 1 })}>❤️</div>
+                <div @click=${() => {this.assessResource({ Integer: 1 })}}>❤️</div>
             </div>
         `
     }
