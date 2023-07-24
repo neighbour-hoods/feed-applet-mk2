@@ -8,6 +8,7 @@ import './fonts.css';
 import { feedStoreContext } from './contexts';
 import { FeedStore } from './feed-store';
 import {
+  AppletConfig,
   SensemakerStore,
   sensemakerStoreContext,
 } from '@neighbourhoods/client';
@@ -17,6 +18,8 @@ import { CreatePost } from './feed/widgets/create-post';
 import { AllPosts } from './feed/widgets/all-posts';
 import { ContextView } from './sensemaker/context-view';
 import { ContextSelector } from './sensemaker/context-selector';
+import { StoreSubscriber } from 'lit-svelte-stores';
+import { classMap } from 'lit/directives/class-map.js';
 
 @customElement('feed-app')
 export class FeedApp extends NHComponent {
@@ -32,6 +35,10 @@ export class FeedApp extends NHComponent {
 
   @state()
   _selectedContext: string = "";
+  
+  contexts: StoreSubscriber<AppletConfig> = new StoreSubscriber(this, () =>
+    this.sensemakerStore.appletConfig()
+  );
 
   render() {
     if (this.loading) return html` <sl-spinner></sl-spinner> `;
@@ -49,13 +56,26 @@ export class FeedApp extends NHComponent {
         <div id="my-feed">
           <create-post-widget @post-created=${function (e: CustomEvent){
             ((e.currentTarget as HTMLElement).nextElementSibling as any)._fetchPosts.run();
-            // ((((e.currentTarget as HTMLElement).parentElement as HTMLElement).nextElementSibling as HTMLElement).nextElementSibling as any).fetchPosts.run();
+            console.log(((((e.currentTarget as HTMLElement).parentElement as HTMLElement).nextElementSibling as HTMLElement).nextElementSibling as HTMLElement));
           }}></create-post-widget>
           <all-posts-widget></all-posts-widget>
         </div>
-        <context-selector @context-selected=${(e: CustomEvent) => this._selectedContext = (e as any).detail.contextName }></context-selector>
-        <context-view .contextName=${this._selectedContext}></context-view>
-    </main>
+        <context-selector .selectedContextName=${this._selectedContext} @context-selected=${(e: CustomEvent) => {
+          this._selectedContext = (e as any).detail.contextName;
+          [...((e.currentTarget as HTMLElement).nextElementSibling as any).children].forEach((view: any) => view.requestUpdate("contextName"));
+        }}></context-selector>
+        <div class="contexts-carousel">
+          ${Object.keys(this.contexts?.value?.cultural_contexts).map(
+            contextName => html`<context-view
+              class=${classMap({
+                active: this._selectedContext == contextName
+              })}
+              .selected=${this._selectedContext == contextName}
+              .contextName=${contextName}>
+            </context-view>`)}
+          </div>
+      </main>
+
           `;
         }
   
@@ -109,8 +129,21 @@ export class FeedApp extends NHComponent {
         grid-area: context-switch;
         height: 3.5rem;
       }
-      context-view {
+      .contexts-carousel {
         grid-area: contexts;
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      .contexts-carousel > context-view {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: none;
+        width: 100%;
+      }
+      .contexts-carousel > context-view.active {
+        display: block;
       }
       #my-feed > * {
         width: 100%;

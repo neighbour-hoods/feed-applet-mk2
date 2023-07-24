@@ -43,12 +43,23 @@ const totalLikesMethod: ConfigMethod = {
 const likesThreshold: ConfigThreshold = {
     "dimension": totalLikesDimension,
     "kind": { "GreaterThan": null },
+    "value": { "Integer": 3 }
+}
+const noLikesThreshold: ConfigThreshold = {
+    "dimension": totalLikesDimension,
+    "kind": { "GreaterThan": null },
     "value": { "Integer": 0 }
 }
 const mostLikedPostsContext: ConfigCulturalContext = {
-    "name": "most_liked_posts",
+    "name": "most_liked_posts_(>3)",
     "resource_def": postItemResourceDef,
     "thresholds": [likesThreshold],
+    "order_by": [[totalLikesDimension, { "Biggest": null }]]
+}
+const likedPostsContext: ConfigCulturalContext = {
+    "name": "liked_posts",
+    "resource_def": postItemResourceDef,
+    "thresholds": [noLikesThreshold],
     "order_by": [[totalLikesDimension, { "Biggest": null }]]
 }
 const appletConfigInput: AppletConfigInput = {
@@ -57,7 +68,7 @@ const appletConfigInput: AppletConfigInput = {
     "dimensions": [likeDimension, totalLikesDimension],
     "resource_defs": [postItemResourceDef],
     "methods": [totalLikesMethod],
-    "cultural_contexts": [mostLikedPostsContext]
+    "cultural_contexts": [mostLikedPostsContext, likedPostsContext]
 }
 
 const appletConfig: CreateAppletConfigInput = {

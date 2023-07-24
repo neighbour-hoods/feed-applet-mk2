@@ -2,7 +2,7 @@ import { consume } from '@lit-labs/context';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { LitElement, html, css } from 'lit';
 import { StoreSubscriber } from 'lit-svelte-stores';
-import { customElement } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { SensemakerStore, AppletConfig } from '@neighbourhoods/client';
 import { sensemakerStoreContext } from '../contexts';
 import '../feed/components/page-header-card';
@@ -17,23 +17,30 @@ export class ContextSelector extends ScopedElementsMixin(LitElement) {
   @consume({ context: sensemakerStoreContext })
   sensemakerStore!: SensemakerStore;
 
-  contexts: StoreSubscriber<AppletConfig> = new StoreSubscriber(this, () =>
+  config: StoreSubscriber<AppletConfig> = new StoreSubscriber(this, () =>
     this.sensemakerStore.appletConfig()
   );
+  @state()
+  _selectedContext: string = "";
+  @state()
+  activeContextIndex!: number;
 
   render() {
+    const contexts = Object.keys(this.config?.value?.cultural_contexts);
+    this.activeContextIndex = contexts.findIndex((contextName: string) => this._selectedContext == contextName);
+    if(this.activeContextIndex == -1) {
+      this.activeContextIndex = 0; // cycles index back around
+    }
     return html`
-    ${Object.keys(this.contexts?.value?.cultural_contexts).map(
-      contextName => html`
         <nh-page-header-card
           slot="header"
-          .heading=${cleanForUI(contextName)}
+          .heading=${cleanForUI(contexts[this.activeContextIndex])}
         >
-          <nh-button slot="primary-action" .variant=${"primary"} .label=${"Select"} .size=${"md"} .clickHandler=${() => this.dispatchContextSelected(contextName)}></nh-button>
+          <nh-button slot="secondary-action" .variant=${"secondary"} .label=${"Cycle"} .size=${"md"} .clickHandler=${() => this._selectedContext = contexts[this.activeContextIndex + 1]}></nh-button>
+          <nh-button slot="primary-action" .variant=${"primary"} .label=${"Calculate"} .size=${"md"} .clickHandler=${() => this.dispatchContextSelected(contexts[this.activeContextIndex])}></nh-button>
         </nh-page-header-card>
       `
-    )}
-    `;
+    
   }
   
   dispatchContextSelected(contextName: string) {

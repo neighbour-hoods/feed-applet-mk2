@@ -51,7 +51,7 @@ export class AllPosts extends NHComponent {
   _fetchPosts = new Task(this, ([]) => this.feedStore.fetchAllPosts() as Promise<Array<EntryRecord<Post>>>, () => []);
 
   async firstUpdated() {
-    this.client.on('signal', signal => {
+    this?.client && this.client.on('signal', signal => {
       if (signal.zome_name !== 'posts') return;
       const payload = signal.payload as PostsSignal;
       if (payload.type !== 'EntryCreated') return;
