@@ -67,10 +67,8 @@ export class SensemakeResource extends ScopedElementsMixin(LitElement) {
                 this.emitAssessmentValue(this.latestAssessmentValue, encodeHashToBase64(this.resourceEh), true);
             }
         } else {
-            if(latestIncrementalAssessment !== null) {
-                let value = (Object.values((latestIncrementalAssessment as any).value)[0]);
+                let value = latestIncrementalAssessment !== null ? (Object.values((latestIncrementalAssessment as any).value)[0]) : 1;
                 this.emitAssessmentValue(value , encodeHashToBase64(this.resourceEh), false);
-            }
         }
         return this.latestAssessmentValue;
     }
@@ -97,7 +95,7 @@ export class SensemakeResource extends ScopedElementsMixin(LitElement) {
     render() {
         if(!this.widgets?.assessDimensionWidget) return html``
         return html`
-            <div class="sensemake-resource" @click=${() => {console.log('sensemake reource clicked'); this.calculateLatestAssessment(false)}}>
+            <div class="sensemake-resource" @click=${() => {this.calculateLatestAssessment(false)}}>
                 ${this.widgets.assessDimensionWidget.render()}
             </div>
         `;

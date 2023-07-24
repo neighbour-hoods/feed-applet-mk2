@@ -95,7 +95,6 @@ export class AllPosts extends NHComponent {
                         assessmentValue;
                     }
                   }}
-                  .assessmentCount=${0}
                   slot="footer" .name=${'ok'} .iconAlt=${''} .iconImg=${''}>
                   <sensemake-resource
                     slot="icon"
