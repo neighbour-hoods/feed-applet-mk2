@@ -10,7 +10,7 @@ import { StoreSubscriber, TaskSubscriber } from '@holochain-open-dev/stores';
 import { consume } from '@lit-labs/context';
 
 import { clientContext, feedStoreContext } from '../../contexts';
-import { PostsSignal } from '../types';
+import { Post, PostsSignal } from '../types';
 
 import './post-detail';
 import { FeedStore } from '../../feed-store';
@@ -22,6 +22,8 @@ import { get } from 'svelte/store';
 import { SensemakeResource } from '../../sensemaker/sensemake-resource';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 import '../components/assessment-widget';
+import { EntryRecord } from '@holochain-open-dev/utils';
+import { Task } from '@lit-labs/task';
 
 @customElement('all-posts-widget')
 export class AllPosts extends NHComponent {
@@ -46,9 +48,7 @@ export class AllPosts extends NHComponent {
   _allPostsForAssessment = new StoreSubscriber(this, () => {
     return this.feedStore?.allPostsForAssessment;
   });
-  _fetchPosts = new StoreSubscriber(this, () => {
-    return this.feedStore?.allPosts;
-  });
+  _fetchPosts = new Task(this, ([]) => this.feedStore.fetchAllPosts() as Promise<Array<EntryRecord<Post>>>, () => []);
 
   async firstUpdated() {
     this.client.on('signal', signal => {
@@ -60,7 +60,6 @@ export class AllPosts extends NHComponent {
         payload.action.hashed.hash,
         ...this.signaledHashes,
       ];
-      console.log('signaledHashes :>> ', this.signaledHashes);
     });
   }
 
@@ -71,7 +70,7 @@ export class AllPosts extends NHComponent {
         class="posts-container"
         style="display: flex; flex-direction: column; gap: calc(1px * var(--nh-spacing-sm))"
       >
-        ${hashes.reverse().map(([entryHash, actionHash]) => {
+        ${hashes.map(([entryHash, actionHash]) => {
           return html`
               <post-detail .postHash=${actionHash} .postEh=${entryHash}>
               
@@ -83,6 +82,16 @@ export class AllPosts extends NHComponent {
                     );
                     if (myHash === resourceEh) {
                       (e.currentTarget as any).assessmentCount =
+                        assessmentValue;
+                    }
+                  }}
+                  @update-assessment-value=${function (e: CustomEvent) {
+                    let { assessmentValue, resourceEh } = (e as any).detail;
+                    let myHash = encodeHashToBase64(
+                      (e as any).currentTarget.parentElement.postEh
+                    );
+                    if (myHash === resourceEh) {
+                      (e.currentTarget as any).assessmentCount +=
                         assessmentValue;
                     }
                   }}

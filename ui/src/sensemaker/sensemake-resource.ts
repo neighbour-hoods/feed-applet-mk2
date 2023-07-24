@@ -25,7 +25,7 @@ export class SensemakeResource extends ScopedElementsMixin(LitElement) {
     outputDimensionEh!: EntryHash
 
     @state()
-    latestAssessmentValue!: object
+    latestAssessmentValue!: any
 
     @state()
     widgets!: { assessDimensionWidget: any, displayDimensionWidget: any }
@@ -37,7 +37,6 @@ export class SensemakeResource extends ScopedElementsMixin(LitElement) {
     activeMethod = new StoreSubscriber(this, () => this.sensemakerStore.activeMethod());
 
     emitAssessmentValue(value: any, resourceEh: any, initial: boolean = true) {
-        if(this.latestAssessmentValue == value) return;
         const options = {
             detail: {assessmentValue: value, resourceEh},
             bubbles: true,
@@ -58,15 +57,22 @@ export class SensemakeResource extends ScopedElementsMixin(LitElement) {
         return {assessDimensionWidget, displayDimensionWidget};
     }
 
-    calculateLatestAssessment(inputDimensionEh: EntryHash) {
-        const initial = !this?.latestAssessmentValue;
-        const latestAssessment = get(this.sensemakerStore.myLatestAssessmentAlongDimension(encodeHashToBase64(this.resourceEh), encodeHashToBase64(this.outputDimensionEh)))
-        if(latestAssessment !== null && latestAssessment?.value) {
-            console.log('latestAssessment :>> ', latestAssessment);
-            this.emitAssessmentValue(Object.values(latestAssessment.value)[0], encodeHashToBase64(this.resourceEh));
-            this.latestAssessmentValue = latestAssessment.value;
+    calculateLatestAssessment(initial: boolean = !this?.latestAssessmentValue) {
+
+        const latestTotalAssessment = get(this.sensemakerStore.myLatestAssessmentAlongDimension(encodeHashToBase64(this.resourceEh), encodeHashToBase64(this.outputDimensionEh)))
+        const latestIncrementalAssessment = get(this.sensemakerStore.myLatestAssessmentAlongDimension(encodeHashToBase64(this.resourceEh), encodeHashToBase64(this.inputDimensionEh)))
+        if(initial) {
+            if(latestTotalAssessment !== null) {   
+                this.latestAssessmentValue = (Object.values(latestTotalAssessment.value as any)[0]);
+                this.emitAssessmentValue(this.latestAssessmentValue, encodeHashToBase64(this.resourceEh), true);
+            }
+        } else {
+            if(latestIncrementalAssessment !== null) {
+                let value = (Object.values((latestIncrementalAssessment as any).value)[0]);
+                this.emitAssessmentValue(value , encodeHashToBase64(this.resourceEh), false);
+            }
         }
-        return latestAssessment;
+        return this.latestAssessmentValue;
     }
 
     protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
@@ -81,7 +87,7 @@ export class SensemakeResource extends ScopedElementsMixin(LitElement) {
         if(!dimensionEhs) return;
         this.inputDimensionEh = dimensionEhs.inputDimensionEh; 
         this.outputDimensionEh = dimensionEhs.outputDimensionEh;
-        this.widgets.assessDimensionWidget.latestAssessment = this.calculateLatestAssessment(this.inputDimensionEh);
+        this.widgets.assessDimensionWidget.latestAssessment = this.calculateLatestAssessment(true);
         this.widgets.displayDimensionWidget.assessment = getLatestAssessment(
             this.resourceAssessments.value[encodeHashToBase64(this.resourceEh)] ? this.resourceAssessments.value[encodeHashToBase64(this.resourceEh)] : [], 
             encodeHashToBase64(this.outputDimensionEh)
@@ -91,7 +97,7 @@ export class SensemakeResource extends ScopedElementsMixin(LitElement) {
     render() {
         if(!this.widgets?.assessDimensionWidget) return html``
         return html`
-            <div class="sensemake-resource" @click=${() =>this.calculateLatestAssessment(this.inputDimensionEh)}>
+            <div class="sensemake-resource" @click=${() => {console.log('sensemake reource clicked'); this.calculateLatestAssessment(false)}}>
                 ${this.widgets.assessDimensionWidget.render()}
             </div>
         `;
