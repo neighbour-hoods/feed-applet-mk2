@@ -1,15 +1,16 @@
-import { LitElement, css, html } from "lit";
+import { LitElement, PropertyValueMap, css, html } from "lit";
 import { consume, provide } from "@lit-labs/context";
 import { customElement, property, state } from "lit/decorators.js";
 
 import { ScopedElementsMixin } from "@open-wc/scoped-elements";
 import { get } from "svelte/store";
-import { SensemakerStore } from "@neighbourhoods/client";
+import { ComputeContextInput, SensemakerStore } from "@neighbourhoods/client";
 import { SensemakeResource } from "./sensemake-resource";
 import { StoreSubscriber } from "lit-svelte-stores";
 import { FeedStore } from "../feed-store";
 import { feedStoreContext, sensemakerStoreContext } from "../contexts";
 import { Post } from "../feed/types";
+import { ActionHash, EntryHash, encodeHashToBase64 } from "@holochain/client";
 
 @customElement('context-view')
 export class ContextView extends ScopedElementsMixin(LitElement) {
@@ -24,33 +25,83 @@ export class ContextView extends ScopedElementsMixin(LitElement) {
     @property()
     contextName: string = "";
 
-    postsInContext = new StoreSubscriber(this, () => this.feedStore.postFromEntryHashes(get(this.sensemakerStore.contextResults())[this.contextName]));
+    @state()
+    _filteredEntryHashes: EntryHash[] = [];
+
+    _postsInContext = new StoreSubscriber(this, () => this.feedStore.entryActionHashTuplesFromEntryHashes(this._filteredEntryHashes), () => [this._filteredEntryHashes]);
+
+    _allPostsForAssessment = new StoreSubscriber(this, () => {
+        return this.feedStore?.allPostsForAssessment;
+    });
+
+    async updated(_changedProperties: any) {
+        if(this.contextName === "" || typeof _changedProperties.get("contextName") == 'undefined') return 
+        
+        const config = get(this.sensemakerStore.appletConfig());
+        const resourceEhs : any = (this._allPostsForAssessment.value).status == 'complete' ? this._allPostsForAssessment.value.value.map(([eH, aH]) => eH) : [];
+        
+        const input : ComputeContextInput = { resource_ehs: resourceEhs, context_eh: config.cultural_contexts[this.contextName], can_publish_result: true} 
+        this._filteredEntryHashes = await this.sensemakerStore.computeContext(this.contextName, input);
+    }
+
+    renderList(hashes: [EntryHash, ActionHash][]) {
+        if (hashes.length === 0) return html`<span>No posts found.</span>`;
+        return html`
+        <div
+        class="posts-container"
+        style="display: flex; flex-direction: column; gap: calc(1px * var(--nh-spacing-sm))"
+        >
+        ${hashes.map(([entryHash, actionHash]) => {
+            return html`
+                <post-detail .postHash=${actionHash} .postEh=${entryHash}>
+                
+                <nh-assessment-widget
+                    @set-initial-assessment-value=${function (e: CustomEvent) {
+                    let { assessmentValue, resourceEh } = (e as any).detail;
+                    let myHash = encodeHashToBase64(
+                        (e as any).currentTarget.parentElement.postEh
+                    );
+                    if (myHash === resourceEh) {
+                        (e.currentTarget as any).assessmentCount =
+                        assessmentValue;
+                    }
+                    }}
+                    @update-assessment-value=${function (e: CustomEvent) {
+                    let { assessmentValue, resourceEh } = (e as any).detail;
+                    let myHash = encodeHashToBase64(
+                        (e as any).currentTarget.parentElement.postEh
+                    );
+                    if (myHash === resourceEh) {
+                        (e.currentTarget as any).assessmentCount +=
+                        assessmentValue;
+                    }
+                    }}
+                    slot="footer" .name=${'ok'} .iconAlt=${''} .iconImg=${''}>
+                    <sensemake-resource
+                    slot="icon"
+                    style="z-index: 1; position: relative;"
+                    .resourceEh=${entryHash}
+                    .resourceDefEh=${
+                        get(this.sensemakerStore.appletConfig()).resource_defs[
+                        'post_item'
+                        ]
+                    }
+                    >
+                    </nh-assessment-widget>
+                    </sensemake-resource>
+                </post-detail>
+            `;
+        })}
+        </div>`;
+    }
 
     render() {
-      if(this.contextName === "") return html`<p>No context selected.</p>`;
-      let contexts = get(this.sensemakerStore.contextResults());
-      const config = get(this.sensemakerStore.appletConfig());
-      console.log('context selected:>> ', this.contextName);
-      console.log('contexts :>> ', contexts);
-      console.log('config :>> ', config);
-
-      console.log('contexts :>> ', contexts);
-        // consider using `repeat()` instead of `map()`
-        return html`
-        `
-      }
-      // ${(this.postsInContext.value as any).map((post: Post) => html`
-      //   ${post} 1
-      // `)}
-          // <sensemake-resource class="sensemake-resource"
-          //     .resourceEh=${task.entry_hash} 
-          //     .resourceDefEh=${get(this.sensemakerStore.appletConfig()).resource_defs["task_item"]}
-          // >
-          //     <task-item 
-          //         .task=${task} 
-          //         .completed=${('Complete' in task.entry.status)} 
-          //     ></task-item>
-          // </sensemake-resource>
+    if(this.contextName === "") return html`<p>No context selected.</p>`;
+    const records = (this._postsInContext?.value as any);
+    if(!records) return html`<p>No context results.</p>`;
+    return this.renderList(records);
+    }
+    
     static get scopedElements() {
         return {
             'sensemake-resource': SensemakeResource,

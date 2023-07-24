@@ -47,7 +47,10 @@ export class FeedApp extends NHComponent {
           </nh-page-header-card>
         </header>
         <div id="my-feed">
-          <create-post-widget @post-created=${function (e: CustomEvent){((e.currentTarget as HTMLElement).nextElementSibling as any)._fetchPosts.run()}}></create-post-widget>
+          <create-post-widget @post-created=${function (e: CustomEvent){
+            ((e.currentTarget as HTMLElement).nextElementSibling as any)._fetchPosts.run();
+            // ((((e.currentTarget as HTMLElement).parentElement as HTMLElement).nextElementSibling as HTMLElement).nextElementSibling as any).fetchPosts.run();
+          }}></create-post-widget>
           <all-posts-widget></all-posts-widget>
         </div>
         <context-selector @context-selected=${(e: CustomEvent) => this._selectedContext = (e as any).detail.contextName }></context-selector>

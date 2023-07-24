@@ -62,7 +62,6 @@ export class FeedStore {
   async fetchAllPosts(): Promise<Array<EntryRecord<Post>>> {
     const fetchedPosts = await this.service.fetchAllPosts();
     this.#postData.update(posts => ([
-      // ...posts,
       ...fetchedPosts,
     ]));
     return get(this.#postData);
@@ -88,16 +87,11 @@ export class FeedStore {
     })
   }
 
-  postFromEntryHashes(entryHashes: EntryHash[]) {
-    if(!entryHashes) return;
-    debugger;
+  entryActionHashTuplesFromEntryHashes(entryHashes: EntryHash[]) {
+    if(!entryHashes || !entryHashes.length) return;
     const serializedEntryHashes = entryHashes.map(entryHash => encodeHashToBase64(entryHash));
-    return derived(this.#postData, _ => {
-      let posts: WrappedEntry<Post>[] = [];
-      // Object.values(lists).map(list => {
-      //   tasks = [...tasks, ...list] 
-      // })
-      return posts.filter(post => serializedEntryHashes.includes(encodeHashToBase64(post.entry_hash)))
+    return derived(this.allPostEntryActionHashTuples(), recordTuples => {
+      return recordTuples.filter(tuple => serializedEntryHashes.includes(encodeHashToBase64(tuple[0])))
     })
   }
 
