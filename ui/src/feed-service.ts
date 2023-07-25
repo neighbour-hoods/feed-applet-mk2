@@ -3,7 +3,7 @@ import { Post, WrappedEntry, EntryTypes } from './feed/types';
 import { isSignalFromCellWithRole, EntryRecord, ZomeClient } from '@holochain-open-dev/utils';
 
 export class FeedService {
-  constructor(public client: AppWebsocket, public cellId: CellId, public roleName: RoleName, public zomeName = 'posts') {}
+  constructor(public client: AppAgentClient, public cellId: CellId, public roleName: RoleName, public zomeName = 'posts') {}
 
   /** Post */
 

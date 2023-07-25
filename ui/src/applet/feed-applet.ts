@@ -9,13 +9,7 @@ import {
   TotalImportanceDimensionDisplay,
   FeedApp,
 } from '../index';
-import {
-  AdminWebsocket,
-  AppWebsocket,
-  CellType,
-  ProvisionedCell,
-  encodeHashToBase64,
-} from '@holochain/client';
+import { AppAgentClient, AppWebsocket, CellId, CellType, ProvisionedCell, encodeHashToBase64 } from "@holochain/client";
 import { SensemakerStore } from '@neighbourhoods/client';
 import { get } from 'svelte/store';
 import { NHComponent } from 'neighbourhoods-design-system-components';
@@ -29,7 +23,7 @@ export class FeedApplet extends ScopedElementsMixin(NHComponent) {
   appWebsocket!: AppWebsocket;
 
   @property()
-  adminWebsocket!: AdminWebsocket;
+  appAgentWebsocket!: AppAgentClient;
 
   @property()
   sensemakerStore!: SensemakerStore;
@@ -48,9 +42,9 @@ export class FeedApplet extends ScopedElementsMixin(NHComponent) {
       const feedCellInfo = (
         cellInfo as { [CellType.Provisioned]: ProvisionedCell }
       ).provisioned;
-      await this.adminWebsocket.authorizeSigningCredentials(
-        feedCellInfo.cell_id
-      );
+      // await this.adminWebsocket.authorizeSigningCredentials(
+      //   feedCellInfo.cell_id
+      // );
 
       await this.sensemakerStore.registerApplet(appletConfig);
 
@@ -71,7 +65,7 @@ export class FeedApplet extends ScopedElementsMixin(NHComponent) {
       );
       const appWs = this.appWebsocket;
       this.feedStore = new FeedStore(
-        this.appWebsocket,
+        this.appAgentWebsocket,
         feedCellInfo.cell_id,
         appletRoleName
       );

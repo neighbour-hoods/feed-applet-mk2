@@ -1,5 +1,6 @@
 import {
   AdminWebsocket,
+  AppAgentClient,
   AppWebsocket,
   CellType,
   ProvisionedCell,
@@ -14,10 +15,10 @@ import { FeedApplet } from "./applet/feed-applet";
 
 const feedApplet: NhLauncherApplet = {
   async appletRenderers(
-    appWebsocket: AppWebsocket,
-    adminWebsocket: AdminWebsocket,
     weStore: WeServices,
-    appletAppInfo: AppletInfo[]
+    appletAppInfo: AppletInfo[],
+    appWebsocket: AppWebsocket,
+    appAgentWebsocket: AppAgentClient,
   ): Promise<AppletRenderers> {
     return {
       full(element: HTMLElement, registry: CustomElementRegistry) {
@@ -25,7 +26,7 @@ const feedApplet: NhLauncherApplet = {
         element.innerHTML = `<feed-applet></feed-applet>`;
         const appletElement = element.querySelector("feed-applet") as any;
         appletElement.appWebsocket = appWebsocket;
-        appletElement.adminWebsocket = adminWebsocket;
+        appletElement.appAgentWebsocket = appAgentWebsocket;
         appletElement.appletAppInfo = appletAppInfo;
         appletElement.sensemakerStore = weStore.sensemakerStore;
       },
