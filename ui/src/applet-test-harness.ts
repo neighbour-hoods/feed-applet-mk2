@@ -105,7 +105,7 @@ export class AppletTestHarness extends NHComponent {
     const appAgentWebsocket: AppAgentWebsocket = await AppAgentWebsocket.connect(`ws://localhost:9001`, "feed-sensemaker");
     this._sensemakerStore = new SensemakerStore(appAgentWebsocket, clonedSensemakerRoleName);
     // @ts-ignore
-    this.renderers = await feedApplet.appletRenderers(this.appWebsocket, this.adminWebsocket, { sensemakerStore: this._sensemakerStore }, this.appletInfo);
+    this.renderers = await feedApplet.appletRenderers({ sensemakerStore: this._sensemakerStore }, this.appletInfo, this.appWebsocket, appAgentWebsocket);
   }
   async cloneSensemakerCell(ca_pubkey: string) {
     const clonedSensemakerCell: ClonedCell = await this.appWebsocket.createCloneCell({
