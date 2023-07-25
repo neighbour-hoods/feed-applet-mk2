@@ -19,7 +19,7 @@ export class ContextSelector extends ScopedElementsMixin(LitElement) {
   sensemakerStore!: SensemakerStore;
 
   config: StoreSubscriber<AppletConfig> = new StoreSubscriber(this, () =>
-    this.sensemakerStore.appletConfig()
+    this.sensemakerStore.flattenedAppletConfigs()
   );
   @state()
   _selectedContext: string = "";

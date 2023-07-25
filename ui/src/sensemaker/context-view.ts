@@ -40,7 +40,7 @@ export class ContextView extends ScopedElementsMixin(LitElement) {
     });
     async updated(_changedProperties: any,) {
         if(this.contextName === "" || typeof _changedProperties.get("selected") == 'undefined') return 
-        const config = get(this.sensemakerStore.appletConfig());
+        const config = get(this.sensemakerStore.flattenedAppletConfigs());
         const resourceEhs : any = (this._allPostsForAssessment.value).status == 'complete' ? this._allPostsForAssessment.value.value.map(([eH, aH]) => eH) : [];
         const input : ComputeContextInput = { resource_ehs: resourceEhs, context_eh: config.cultural_contexts[this.contextName], can_publish_result: false} 
         this._filteredEntryHashes = await this.sensemakerStore.computeContext(this.contextName, input);
@@ -84,7 +84,7 @@ export class ContextView extends ScopedElementsMixin(LitElement) {
                     style="z-index: 1; position: relative;"
                     .resourceEh=${entryHash}
                     .resourceDefEh=${
-                        get(this.sensemakerStore.appletConfig()).resource_defs[
+                        get(this.sensemakerStore.flattenedAppletConfigs()).resource_defs[
                         'post_item'
                         ]
                     }

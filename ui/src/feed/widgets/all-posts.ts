@@ -11,7 +11,7 @@ import { consume } from '@lit-labs/context';
 
 import { clientContext, feedStoreContext } from '../../contexts';
 import { Post, PostsSignal } from '../types';
-
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import './post-detail';
 import { FeedStore } from '../../feed-store';
 import {
@@ -26,7 +26,7 @@ import { Task } from '@lit-labs/task';
 import { NHAssessmentWidget } from '../components/assessment-widget';
 
 @customElement('all-posts-widget')
-export class AllPosts extends NHComponent {
+export class AllPosts extends ScopedElementsMixin(NHComponent) {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 
@@ -101,7 +101,7 @@ export class AllPosts extends NHComponent {
                     style="z-index: 1; position: relative;"
                     .resourceEh=${entryHash}
                     .resourceDefEh=${
-                      get(this.sensemakerStore.appletConfig()).resource_defs[
+                      (get(this.sensemakerStore.flattenedAppletConfigs())as any).resource_defs[
                         'post_item'
                       ]
                     }

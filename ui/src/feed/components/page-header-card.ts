@@ -2,9 +2,10 @@ import { css, CSSResult, html, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { NHComponent } from "neighbourhoods-design-system-components";
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 @customElement("nh-page-header-card")
-export class NHPageHeaderCard extends NHComponent {
+export class NHPageHeaderCard extends ScopedElementsMixin(NHComponent) {
   @property()
   heading!: string;
   @property()

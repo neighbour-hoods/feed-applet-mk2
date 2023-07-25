@@ -25,7 +25,7 @@
     "@lit-labs/scoped-registry-mixin": "^1.0.1",
     "@lit-labs/task": "^2.0.0",
     "@msgpack/msgpack": "^2.8.0",
-    "@neighbourhoods/client": "^0.0.3",
+    "@neighbourhoods/client": "^0.0.4",
     "@neighbourhoods/nh-launcher-applet": "0.0.10",
     "@scoped-elements/shoelace": "^0.1.0",
     "@vaadin/date-time-picker": "^23.2.8",

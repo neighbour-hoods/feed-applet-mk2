@@ -20,9 +20,10 @@ import { NHComponent } from 'neighbourhoods-design-system-components';
 import { editIcon, trashIcon } from '../components/b64images';
 import { NHButton } from '../components/button';
 import { NHCard } from '../components/card';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 @customElement('post-detail')
-export class PostDetail extends NHComponent {
+export class PostDetail extends ScopedElementsMixin(NHComponent) {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 

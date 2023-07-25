@@ -1,7 +1,7 @@
 import { CSSResult, LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { provide } from '@lit-labs/context';
-
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import './fonts.css';
 import { feedStoreContext } from './contexts';
 import { FeedStore } from './feed-store';
@@ -20,7 +20,7 @@ import { StoreSubscriber } from 'lit-svelte-stores';
 import { classMap } from 'lit/directives/class-map.js';
 
 @customElement('feed-app')
-export class FeedApp extends NHComponent {
+export class FeedApp extends ScopedElementsMixin(NHComponent) {
   @state() loading = false;
   
   @provide({ context: feedStoreContext })
@@ -34,8 +34,8 @@ export class FeedApp extends NHComponent {
   @state()
   _selectedContext: string = "";
   
-  contexts: StoreSubscriber<AppletConfig> = new StoreSubscriber(this, () =>
-    this.sensemakerStore.appletConfig()
+  configs: StoreSubscriber<AppletConfig> = new StoreSubscriber(this, () =>
+    this.sensemakerStore.flattenedAppletConfigs()
   );
 
   render() {
@@ -63,7 +63,7 @@ export class FeedApp extends NHComponent {
           [...((e.currentTarget as HTMLElement).nextElementSibling as any).children].forEach((view: any) => view.requestUpdate("contextName"));
         }}></context-selector>
         <div class="contexts-carousel">
-          ${Object.keys(this.contexts?.value?.cultural_contexts).map(
+          ${Object.keys(this.configs?.value?.cultural_contexts).map(
             contextName => html`<context-view
               class=${classMap({
                 active: this._selectedContext == contextName

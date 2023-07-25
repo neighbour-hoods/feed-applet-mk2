@@ -25,7 +25,7 @@ import { RenderBlock } from './applet/render-block';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 
 @customElement('applet-test-harness')
-export class AppletTestHarness extends NHComponent {
+export class AppletTestHarness extends ScopedElementsMixin(NHComponent) {
   @state() loading = true;
   @state() actionHash: ActionHash | undefined;
   @state() currentSelectedList: string | undefined;
@@ -105,7 +105,7 @@ export class AppletTestHarness extends NHComponent {
     const appAgentWebsocket: AppAgentWebsocket = await AppAgentWebsocket.connect(`ws://localhost:9001`, "feed-sensemaker");
     this._sensemakerStore = new SensemakerStore(appAgentWebsocket, clonedSensemakerRoleName);
     // @ts-ignore
-    this.renderers = await feedApplet.appletRenderers({ sensemakerStore: this._sensemakerStore }, this.appletInfo, this.appWebsocket, appAgentWebsocket);
+    this.renderers = await feedApplet.appletRenderers(this.appWebsocket, this.adminWebsocket, { sensemakerStore: this._sensemakerStore }, this.appletInfo)// { sensemakerStore: this._sensemakerStore }, this.appletInfo, this.appWebsocket, appAgentWebsocket);
   }
   async cloneSensemakerCell(ca_pubkey: string) {
     const clonedSensemakerCell: ClonedCell = await this.appWebsocket.createCloneCell({

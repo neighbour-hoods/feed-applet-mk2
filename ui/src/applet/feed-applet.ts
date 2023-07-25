@@ -21,7 +21,7 @@ import { get } from 'svelte/store';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 
 @customElement('feed-applet')
-export class FeedApplet extends NHComponent {
+export class FeedApplet extends ScopedElementsMixin(NHComponent) {
   @property()
   appletAppInfo!: AppletInfo[];
 
@@ -54,13 +54,16 @@ export class FeedApplet extends NHComponent {
 
       await this.sensemakerStore.registerApplet(appletConfig);
 
+      const config = get(this.sensemakerStore.flattenedAppletConfigs());
+      console.log('feed appletConfig :>> ', config);
+
       await this.sensemakerStore.registerWidget(
         [
           encodeHashToBase64(
-            get(this.sensemakerStore.appletConfig()).dimensions['like']
+            get(this.sensemakerStore.flattenedAppletConfigs()).dimensions['like']
           ),
           encodeHashToBase64(
-            get(this.sensemakerStore.appletConfig()).dimensions['total_likes']
+            get(this.sensemakerStore.flattenedAppletConfigs()).dimensions['total_likes']
           ),
         ],
         TotalImportanceDimensionDisplay,
@@ -74,17 +77,7 @@ export class FeedApplet extends NHComponent {
       );
       const allTasks = await this.feedStore.fetchAllPosts();
       const allPostEntryHashes = get(this.feedStore.allPostEntryHashes());
-      const importanceDimensionEh = get(this.sensemakerStore.appletConfig())
-        .dimensions['importance'];
-      const totalImportanceDimensionEh = get(
-        this.sensemakerStore.appletConfig()
-      ).dimensions['total_importance'];
-      const perceivedHeatDimensionEh = get(this.sensemakerStore.appletConfig())
-        .dimensions['perceived_heat'];
-      const averageHeatDimensionEh = get(this.sensemakerStore.appletConfig())
-        .dimensions['average_heat'];
-        const a = get(this.sensemakerStore.appletConfig());
-        console.log('appletConfig :>> ', a);
+      
       await this.sensemakerStore.getAssessmentsForResources({
         dimension_ehs: null,
         resource_ehs: allPostEntryHashes,

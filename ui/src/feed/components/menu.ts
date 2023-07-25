@@ -5,12 +5,13 @@ import { NHComponentShoelace } from "neighbourhoods-design-system-components";
 import { classMap } from "lit/directives/class-map.js";
 import { plusIcon } from "./b64images";
 import { NHButton } from "./button";
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 export const capitalize = (part: string) =>
   part[0].toUpperCase() + part.slice(1);
 
 @customElement("nh-menu")
-export class NHMenu extends NHComponentShoelace {
+export class NHMenu extends ScopedElementsMixin(NHComponentShoelace) {
   @property()
   direction: "vertical" | "horizontal" = "horizontal";
   @property()
