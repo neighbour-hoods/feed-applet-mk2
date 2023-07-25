@@ -6,7 +6,7 @@ import { NHMenu } from "./menu";
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 @customElement("nh-applet-card")
-export class NHCard extends ScopedElementsMixin(NHComponent) {
+export class NHCard extends NHComponent {
   @property()
   title!: string;
   @property()

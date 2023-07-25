@@ -11,7 +11,7 @@ export const capitalize = (part: string) =>
   part[0].toUpperCase() + part.slice(1);
 
 @customElement("nh-menu")
-export class NHMenu extends ScopedElementsMixin(NHComponentShoelace) {
+export class NHMenu extends NHComponentShoelace {
   @property()
   direction: "vertical" | "horizontal" = "horizontal";
   @property()

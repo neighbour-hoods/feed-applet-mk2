@@ -23,7 +23,7 @@ import { NHCard } from '../components/card';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 @customElement('post-detail')
-export class PostDetail extends ScopedElementsMixin(NHComponent) {
+export class PostDetail extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 

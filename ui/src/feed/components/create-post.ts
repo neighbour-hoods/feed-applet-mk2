@@ -6,7 +6,7 @@ import { SlTextarea } from "@scoped-elements/shoelace";
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 @customElement("nh-create-post")
-export class NHCreatePost extends ScopedElementsMixin(NHComponentShoelace) {
+export class NHCreatePost extends NHComponentShoelace {
   @property()
   prompt!: string;
   @property()

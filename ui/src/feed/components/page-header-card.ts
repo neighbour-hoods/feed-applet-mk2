@@ -5,7 +5,7 @@ import { NHComponent } from "neighbourhoods-design-system-components";
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 @customElement("nh-page-header-card")
-export class NHPageHeaderCard extends ScopedElementsMixin(NHComponent) {
+export class NHPageHeaderCard extends NHComponent {
   @property()
   heading!: string;
   @property()

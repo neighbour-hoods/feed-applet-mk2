@@ -13,7 +13,7 @@ import { NHButton } from '../components/button';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 
 @customElement('create-post-widget')
-export class CreatePost extends ScopedElementsMixin(NHComponent) {
+export class CreatePost extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 

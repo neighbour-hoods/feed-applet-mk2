@@ -5,7 +5,7 @@ import { NHComponentShoelace } from "neighbourhoods-design-system-components";
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 @customElement("nh-assessment-widget")
-export class NHAssessmentWidget extends ScopedElementsMixin(NHComponentShoelace) {
+export class NHAssessmentWidget extends NHComponentShoelace {
   @property()
   name!: string;
   @property()

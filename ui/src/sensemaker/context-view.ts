@@ -2,18 +2,17 @@ import { LitElement, PropertyValueMap, css, html } from "lit";
 import { consume, provide } from "@lit-labs/context";
 import { customElement, property, state } from "lit/decorators.js";
 
-import { ScopedElementsMixin } from "@open-wc/scoped-elements";
 import { get } from "svelte/store";
 import { ComputeContextInput, SensemakerStore } from "@neighbourhoods/client";
 import { SensemakeResource } from "./sensemake-resource";
 import { StoreSubscriber } from "lit-svelte-stores";
 import { FeedStore } from "../feed-store";
 import { feedStoreContext, sensemakerStoreContext } from "../contexts";
-import { Post } from "../feed/types";
 import { ActionHash, EntryHash, encodeHashToBase64 } from "@holochain/client";
+import { ScopedRegistryHost } from "@lit-labs/scoped-registry-mixin";
 
 @customElement('context-view')
-export class ContextView extends ScopedElementsMixin(LitElement) {
+export class ContextView extends ScopedRegistryHost(LitElement) {
     @consume({ context: feedStoreContext })
     @state()
     public feedStore!: FeedStore
@@ -38,6 +37,7 @@ export class ContextView extends ScopedElementsMixin(LitElement) {
     private _allPostsForAssessment = new StoreSubscriber(this, () => {
         return this.feedStore?.allPostsForAssessment;
     });
+
     async updated(_changedProperties: any,) {
         if(this.contextName === "" || typeof _changedProperties.get("selected") == 'undefined') return 
         const config = get(this.sensemakerStore.flattenedAppletConfigs());
@@ -99,11 +99,15 @@ export class ContextView extends ScopedElementsMixin(LitElement) {
 
     render() {
         if(this.contextName === "") return html`<p>No context selected.</p>`;
+
         const allContextRecords = (this._postsInContext?.value as any);
         console.log('this._contextResults?.value :>> ', this._contextResults?.value);
+
         if(!allContextRecords || !this._contextResults?.value[this.contextName]) return html`<p>No context results.</p>`;
+        
         const contextResultEntryHashes = this._contextResults?.value[this.contextName].map(eH => encodeHashToBase64(eH));
         console.log('allContextRecords.filter((record: [EntryHash, ActionHash]) =>contextResultEntryHashes.includes(encodeHashToBase64(record[0])) ) :>> ', allContextRecords.filter((record: [EntryHash, ActionHash]) =>contextResultEntryHashes.includes(encodeHashToBase64(record[0])) ));
+
         return this.renderList(allContextRecords.filter((record: [EntryHash, ActionHash]) =>contextResultEntryHashes.includes(encodeHashToBase64(record[0])) ));
     }
     

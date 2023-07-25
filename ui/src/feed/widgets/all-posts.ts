@@ -26,7 +26,7 @@ import { Task } from '@lit-labs/task';
 import { NHAssessmentWidget } from '../components/assessment-widget';
 
 @customElement('all-posts-widget')
-export class AllPosts extends ScopedElementsMixin(NHComponent) {
+export class AllPosts extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 

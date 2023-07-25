@@ -1,4 +1,3 @@
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { customElement, property, state } from "lit/decorators.js";
 import { LitElement, html, css, unsafeCSS, PropertyValueMap } from "lit";
 import { sensemakerStoreContext, SensemakerStore, getLatestAssessment } from "@neighbourhoods/client";
@@ -7,9 +6,10 @@ import { StoreSubscriber } from "lit-svelte-stores";
 import { get } from "svelte/store";
 import { consume } from "@lit-labs/context";
 import { Assessment } from '@neighbourhoods/sensemaker-lite-types';
+import { NHComponent } from "neighbourhoods-design-system-components";
 
 @customElement('sensemake-resource')
-export class SensemakeResource extends ScopedElementsMixin(LitElement) {
+export class SensemakeResource extends NHComponent {
     @consume({ context: sensemakerStoreContext })
     @state()
     public sensemakerStore!: SensemakerStore
@@ -58,7 +58,6 @@ export class SensemakeResource extends ScopedElementsMixin(LitElement) {
     }
 
     calculateLatestAssessment(initial: boolean = !this?.latestAssessmentValue) {
-
         const latestTotalAssessment = get(this.sensemakerStore.myLatestAssessmentAlongDimension(encodeHashToBase64(this.resourceEh), encodeHashToBase64(this.outputDimensionEh)))
         const latestIncrementalAssessment = get(this.sensemakerStore.myLatestAssessmentAlongDimension(encodeHashToBase64(this.resourceEh), encodeHashToBase64(this.inputDimensionEh)))
         if(initial) {
@@ -87,9 +86,9 @@ export class SensemakeResource extends ScopedElementsMixin(LitElement) {
         this.outputDimensionEh = dimensionEhs.outputDimensionEh;
         this.widgets.assessDimensionWidget.latestAssessment = this.calculateLatestAssessment(true);
         this.widgets.displayDimensionWidget.assessment = getLatestAssessment(
-            this.resourceAssessments.value[encodeHashToBase64(this.resourceEh)] ? this.resourceAssessments.value[encodeHashToBase64(this.resourceEh)] : [], 
-            encodeHashToBase64(this.outputDimensionEh)
-            );
+        this.resourceAssessments.value[encodeHashToBase64(this.resourceEh)] ? this.resourceAssessments.value[encodeHashToBase64(this.resourceEh)] : [], 
+        encodeHashToBase64(this.outputDimensionEh)
+        );
     }
 
     render() {

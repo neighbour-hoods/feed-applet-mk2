@@ -1,4 +1,3 @@
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { customElement, property, state } from 'lit/decorators.js';
 import { LitElement, html, css } from 'lit';
 import { AppletInfo } from '@neighbourhoods/nh-launcher-applet';
@@ -15,7 +14,7 @@ import { get } from 'svelte/store';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 
 @customElement('feed-applet')
-export class FeedApplet extends ScopedElementsMixin(NHComponent) {
+export class FeedApplet extends LitElement {
   @property()
   appletAppInfo!: AppletInfo[];
 
@@ -42,9 +41,8 @@ export class FeedApplet extends ScopedElementsMixin(NHComponent) {
       const feedCellInfo = (
         cellInfo as { [CellType.Provisioned]: ProvisionedCell }
       ).provisioned;
-      // await this.adminWebsocket.authorizeSigningCredentials(
-      //   feedCellInfo.cell_id
-      // );
+      const installAppId =  feedAppletInfo.appInfo.installed_app_id;
+      appletConfig.applet_config_input.name = installAppId;
 
       await this.sensemakerStore.registerApplet(appletConfig);
 
@@ -87,7 +85,7 @@ export class FeedApplet extends ScopedElementsMixin(NHComponent) {
       color: #777;
     }
   `;
-
+  
   render() {
     if (!this.loaded)
       return html`<div

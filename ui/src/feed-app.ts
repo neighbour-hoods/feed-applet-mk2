@@ -18,9 +18,10 @@ import { ContextView } from './sensemaker/context-view';
 import { ContextSelector } from './sensemaker/context-selector';
 import { StoreSubscriber } from 'lit-svelte-stores';
 import { classMap } from 'lit/directives/class-map.js';
+import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 
 @customElement('feed-app')
-export class FeedApp extends ScopedElementsMixin(NHComponent) {
+export class FeedApp extends NHComponent {
   @state() loading = false;
   
   @provide({ context: feedStoreContext })

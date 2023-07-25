@@ -1,5 +1,4 @@
 import { consume } from '@lit-labs/context';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { LitElement, html, css } from 'lit';
 import { StoreSubscriber } from 'lit-svelte-stores';
 import { customElement, state } from 'lit/decorators.js';
@@ -7,6 +6,7 @@ import { SensemakerStore, AppletConfig } from '@neighbourhoods/client';
 import { sensemakerStoreContext } from '../contexts';
 import { NHButton } from '../feed/components/button';
 import { NHPageHeaderCard } from '../feed/components/page-header-card';
+import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 
 export const cleanForUI = (propertyName: string) =>
   propertyName.split('_').map(capitalize).join(' ');
@@ -14,7 +14,7 @@ export const cleanForUI = (propertyName: string) =>
 export const capitalize = (part: string) => part[0].toUpperCase() + part.slice(1);
 
 @customElement("context-selector")
-export class ContextSelector extends ScopedElementsMixin(LitElement) {
+export class ContextSelector extends ScopedRegistryHost(LitElement) {
   @consume({ context: sensemakerStoreContext })
   sensemakerStore!: SensemakerStore;
 
