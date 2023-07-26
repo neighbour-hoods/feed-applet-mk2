@@ -28,17 +28,47 @@ export class ContextSelector extends ScopedRegistryHost(LitElement) {
 
   render() {
     const contexts = Object.keys(this.config?.value?.cultural_contexts);
-    this.activeContextIndex = contexts.findIndex((contextName: string) => this._selectedContext == contextName);
-    if(this.activeContextIndex == -1) {
-      this.activeContextIndex = 0; // cycles index back around
+    if(!this.activeContextIndex){
+      this.activeContextIndex = contexts.findIndex((contextName: string) => this._selectedContext == contextName);
+      
+      if(this.activeContextIndex == -1) {
+        this.activeContextIndex = 0; // cycles index back around
+      }
+      this.dispatchContextSelected(contexts[this.activeContextIndex])
     }
+console.log('this._selectedContext :>> ', this._selectedContext);
     return html`
         <nh-page-header-card
+          style="height: 7rem; display: block"
           slot="header"
-          .heading=${cleanForUI(contexts[this.activeContextIndex])}
+          .heading=${this._selectedContext ? cleanForUI(contexts[this.activeContextIndex]) : '-'}
         >
-          <nh-applet-button slot="secondary-action" .variant=${"secondary"} .label=${"Cycle"} .size=${"md"} .clickHandler=${() => this._selectedContext = contexts[this.activeContextIndex + 1]}></nh-applet-button>
-          <nh-applet-button slot="primary-action" .variant=${"primary"} .label=${"Calculate"} .size=${"md"} .clickHandler=${() => this.dispatchContextSelected(contexts[this.activeContextIndex])}></nh-applet-button>
+          <nh-applet-button slot="secondary-action" .disabled=${this.activeContextIndex == 0} .variant=${"secondary"} .label=${"Previous"} .size=${"md"} .clickHandler=${() => {
+            const newIndex = Math.max.apply(null, [0, this.activeContextIndex - 1]);
+            if(newIndex !== this.activeContextIndex) {
+              this._selectedContext = contexts[newIndex];
+              this.activeContextIndex = newIndex;
+              this.dispatchContextSelected(contexts[this.activeContextIndex]);
+              this.dispatchEvent(new CustomEvent('enter-left', {
+                bubbles: true,
+                composed: true
+            }));
+            }
+          }
+          }></nh-applet-button>
+          <nh-applet-button slot="primary-action" .disabled=${this.activeContextIndex == contexts.length - 1} .variant=${"primary"} .label=${"Next"} .size=${"md"} .clickHandler=${() => {
+            const newIndex = Math.min.apply(null, [ Object.keys(this.config?.value?.cultural_contexts).length - 1, this.activeContextIndex + 1]);
+            if(newIndex !== this.activeContextIndex) {
+              this._selectedContext = contexts[newIndex];
+              this.activeContextIndex = newIndex;
+              this.dispatchContextSelected(contexts[this.activeContextIndex]);
+              this.dispatchEvent(new CustomEvent('enter-right', {
+                bubbles: true,
+                composed: true
+            }));
+            }
+          }
+          }></nh-applet-button>
         </nh-page-header-card>
       `
     

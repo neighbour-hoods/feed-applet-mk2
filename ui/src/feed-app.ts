@@ -62,12 +62,16 @@ export class FeedApp extends NHComponent {
         <context-selector .selectedContextName=${this._selectedContext} @context-selected=${(e: CustomEvent) => {
           this._selectedContext = (e as any).detail.contextName;
           [...((e.currentTarget as HTMLElement).nextElementSibling as any).children].forEach((view: any) => view.requestUpdate("contextName"));
-        }}></context-selector>
+        }}
+        class="moveFromLeft"
+        @enter-left=${(e: CustomEvent) => { (e.currentTarget as any).classList.toggle("moveFromLeft");(e.currentTarget as any).classList.toggle("moveFromRight")}}
+        @enter-right=${(e: CustomEvent) => { (e.currentTarget as any).classList.toggle("moveFromRight");(e.currentTarget as any).classList.toggle("moveFromLeft")}}
+        ></context-selector>
         <div class="contexts-carousel">
           ${Object.keys(this.configs?.value?.cultural_contexts).map(
             contextName => html`<context-view
               class=${classMap({
-                active: this._selectedContext == contextName
+                active: this._selectedContext == contextName,
               })}
               .selected=${this._selectedContext == contextName}
               .contextName=${contextName}>
@@ -104,7 +108,7 @@ export class FeedApp extends NHComponent {
         width: 100%;
         display: grid;
         grid-template-columns:  minmax(12rem, 30%) minmax(4rem, 5%) minmax(12rem, 40%);
-        grid-template-rows: 4rem auto;
+        grid-template-rows: minmax(2rem, 8rem) auto;
         grid-template-areas: "top-menu gap context-switch" "feed gap contexts";
         align-items: start;
         justify-content: center;
@@ -114,7 +118,7 @@ export class FeedApp extends NHComponent {
         background-color: var(--nh-theme-bg-canvas);
         color: var(--nh-theme-fg-default);
       }
-      #my-feed::-webkit-scrollbar  {
+      #my-feed::-webkit-scrollbar, .contexts-carousel::-webkit-scrollbar   {
         width: 0;
       }
       #my-feed {
@@ -128,17 +132,19 @@ export class FeedApp extends NHComponent {
         gap: calc(1px * var(--nh-spacing-lg));
         overflow-y: auto;
         overflow-x: hidden;
-        
+        padding-right: 3rem;
       }
       context-selector {
         grid-area: context-switch;
-        height: 3.5rem;
+        height: 7rem;
       }
       .contexts-carousel {
         grid-area: contexts;
         position: relative;
         width: 100%;
         height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
       }
       .contexts-carousel > context-view {
         position: absolute;
@@ -153,6 +159,27 @@ export class FeedApp extends NHComponent {
       #my-feed > * {
         width: 100%;
       }
+
+      /* Transitions */
+      .moveFromRight + .contexts-carousel context-view {
+        -webkit-animation: moveFromRight .6s ease both;
+        animation: moveFromRight .6s ease both;
+      }.moveFromLeft + .contexts-carousel context-view {
+        -webkit-animation: moveFromLeft .6s ease both;
+        animation: moveFromLeft .6s ease both;
+      }
+      @-webkit-keyframes moveFromRight {
+        from { -webkit-transform: translateX(100%); }
+      }
+      @keyframes moveFromRight {
+        from { -webkit-transform: translateX(100%); transform: translateX(100%); }
+      }@-webkit-keyframes moveFromLeft {
+        from { -webkit-transform: translateX(-100%); }
+      }
+      @keyframes moveFromLeft {
+        from { -webkit-transform: translateX(-100%); transform: translateX(-100%); }
+      }
+      
     `,
   ];
 }

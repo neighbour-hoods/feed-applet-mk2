@@ -37,15 +37,17 @@ export class ContextView extends ScopedRegistryHost(LitElement) {
     private _allPostsForAssessment = new StoreSubscriber(this, () => {
         return this.feedStore?.allPostsForAssessment;
     });
-
+    
     async updated(_changedProperties: any,) {
         if(this.contextName === "" || typeof _changedProperties.get("selected") == 'undefined') return 
+        
         const config = get(this.sensemakerStore.flattenedAppletConfigs());
         const resourceEhs : any = (this._allPostsForAssessment.value).status == 'complete' ? this._allPostsForAssessment.value.value.map(([eH, aH]) => eH) : [];
         const input : ComputeContextInput = { resource_ehs: resourceEhs, context_eh: config.cultural_contexts[this.contextName], can_publish_result: false} 
+        
         this._filteredEntryHashes = await this.sensemakerStore.computeContext(this.contextName, input);
     }
-
+    
     renderList(hashes: [EntryHash, ActionHash][]) {
         if (hashes.length === 0) return html`<span>No posts found.</span>`;
         return html`
@@ -101,12 +103,10 @@ export class ContextView extends ScopedRegistryHost(LitElement) {
         if(this.contextName === "") return html`<p>No context selected.</p>`;
 
         const allContextRecords = (this._postsInContext?.value as any);
-        console.log('this._contextResults?.value :>> ', this._contextResults?.value);
 
         if(!allContextRecords || !this._contextResults?.value[this.contextName]) return html`<p>No context results.</p>`;
         
         const contextResultEntryHashes = this._contextResults?.value[this.contextName].map(eH => encodeHashToBase64(eH));
-        console.log('allContextRecords.filter((record: [EntryHash, ActionHash]) =>contextResultEntryHashes.includes(encodeHashToBase64(record[0])) ) :>> ', allContextRecords.filter((record: [EntryHash, ActionHash]) =>contextResultEntryHashes.includes(encodeHashToBase64(record[0])) ));
 
         return this.renderList(allContextRecords.filter((record: [EntryHash, ActionHash]) =>contextResultEntryHashes.includes(encodeHashToBase64(record[0])) ));
     }

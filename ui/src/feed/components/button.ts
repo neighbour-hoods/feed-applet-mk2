@@ -138,9 +138,11 @@ export class NHButton extends NHComponent {
       button:active {
         background-color: var(--nh-theme-accent-emphasis);
       }
-      button.disabled {
+      button.disabled, button.disabled:hover {
         color: var(--nh-theme-fg-on-disabled);
         background-color: var(--nh-theme-fg-disabled);
+        border: 1px solid var(--nh-theme-fg-disabled);
+        cursor: initial;
       }
       button.sm {
         line-height: var(--nh-line-heights-headlines-default);
