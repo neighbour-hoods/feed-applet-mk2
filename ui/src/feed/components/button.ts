@@ -3,7 +3,7 @@ import { customElement, property, query } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { NHComponent } from "neighbourhoods-design-system-components";
 
-@customElement("nh-button-applet")
+@customElement("nh-applet-button")
 export class NHButton extends NHComponent {
   @property()
   label!: string;

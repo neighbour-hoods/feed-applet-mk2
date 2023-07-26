@@ -3,7 +3,6 @@ import { customElement, property, query, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { NHComponent } from "neighbourhoods-design-system-components";
 import { NHMenu } from "./menu";
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 @customElement("nh-applet-card")
 export class NHCard extends NHComponent {

@@ -11,8 +11,6 @@ import { consume } from '@lit-labs/context';
 import { Task } from '@lit-labs/task';
 import { decode } from '@msgpack/msgpack';
 
-import './edit-post';
-
 import { clientContext, feedStoreContext } from '../../contexts';
 import { Post } from '../types';
 import { FeedStore } from '../../feed-store';
@@ -20,10 +18,10 @@ import { NHComponent } from 'neighbourhoods-design-system-components';
 import { editIcon, trashIcon } from '../components/b64images';
 import { NHButton } from '../components/button';
 import { NHCard } from '../components/card';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { EditPost } from './edit-post';
 
-@customElement('post-detail')
-export class PostDetail extends NHComponent {
+@customElement('post-detail-widget')
+export class PostDetailWidget extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 
@@ -94,12 +92,12 @@ export class PostDetail extends NHComponent {
     >
       ${post.text}
       <div class="action-buttons" slot="context-menu" style="display: flex; gap: 2px; flex-direction: column;">
-        <nh-button-applet .variant=${'primary'} .size=${'icon'} .iconImageB64=${editIcon} .clickHandler=${() => {
+        <nh-applet-button .variant=${'primary'} .size=${'icon'} .iconImageB64=${editIcon} .clickHandler=${() => {
       this._editing = true;
-    }}>Edit</nh-button-applet>
-        <nh-button-applet .variant=${'danger'} .size=${'icon'} .iconImageB64=${trashIcon} .clickHandler=${() => {
+    }}>Edit</nh-applet-button>
+        <nh-applet-button .variant=${'danger'} .size=${'icon'} .iconImageB64=${trashIcon} .clickHandler=${() => {
       this.deletePost();
-    }}>Delete</nh-button-applet>
+    }}>Delete</nh-applet-button>
       </div>
       <slot slot="footer" name="footer"></slot>
     </nh-applet-card>
@@ -107,10 +105,10 @@ export class PostDetail extends NHComponent {
   }
 
   renderPost(maybeRecord: Record | undefined) {
-    if (!maybeRecord) return html`<span></span>`;
+    if (!maybeRecord) return html`<span>No record found</span>`;
 
     if (this._editing) {
-      return html`<edit-post
+      return html`<edit-post-widget
         .originalPostHash=${this.postHash}
         .currentRecord=${maybeRecord}
         @post-updated=${async () => {
@@ -121,9 +119,8 @@ export class PostDetail extends NHComponent {
           this._editing = false;
         }}
         style="display: flex; flex: 1;"
-      ></edit-post>`;
+      ></edit-post-widget>`;
     }
-
     return this.renderDetail(maybeRecord);
   }
 
@@ -141,8 +138,9 @@ export class PostDetail extends NHComponent {
   }
   static get elementDefinitions() {
     return {
-      'nh-button-applet': NHButton,
+      'nh-applet-button': NHButton,
       'nh-applet-card': NHCard,
+      'edit-post-widget': EditPost,
     };
   }
 

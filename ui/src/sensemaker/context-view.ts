@@ -55,7 +55,7 @@ export class ContextView extends ScopedRegistryHost(LitElement) {
         >
         ${hashes.map(([entryHash, actionHash]) => {
             return html`
-                <post-detail .postHash=${actionHash} .postEh=${entryHash}>
+                <post-detail-widget .postHash=${actionHash} .postEh=${entryHash}>
                 
                 <nh-assessment-widget
                     @set-initial-assessment-value=${function (e: CustomEvent) {
@@ -91,7 +91,7 @@ export class ContextView extends ScopedRegistryHost(LitElement) {
                     >
                     </nh-assessment-widget>
                     </sensemake-resource>
-                </post-detail>
+                </post-detail-widget>
             `;
         })}
         </div>`;

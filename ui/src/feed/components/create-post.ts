@@ -26,7 +26,7 @@ export class NHCreatePost extends NHComponentShoelace {
         .textSize=${"sm"}
         .footerAlign=${"r"}
       >
-          <textarea required @input=${(e: CustomEvent) => this.onChangeValue(e)} value=${this.textAreaValue} filled placeholder=${this.placeholder}></textarea>
+          <sl-textarea required @sl-input=${(e: CustomEvent) => this.onChangeValue(e)} value=${this.textAreaValue} filled placeholder=${this.placeholder}></sl-textarea>
           <slot slot="footer" name="footer"></slot>
       </nh-applet-card>
     `;
@@ -48,19 +48,18 @@ export class NHCreatePost extends NHComponentShoelace {
         display: flex;
       }
 
-      textarea {
+      sl-textarea::part(textarea) {
         padding: calc(1px * var(--nh-spacing-sm));
         
         color:  var(--nh-theme-fg-default);
         background: var(--nh-theme-bg-surface);
-        font-size : calc(1px * var(--nh-font-size-md));
-        width: 100%;
-        resize: none;
-        border: 1px solid var(--nh-theme-bg-subtle);
       }
       
-      textarea:hover {
+      sl-textarea::part(textarea):active {
         border: 1px solid var(--nh-theme-bg-surface);
+      }
+      sl-textarea::part(base) {
+        --sl-input-font-size-medium : calc(1px * var(--nh-font-size-md));
       }
     `,
   ];

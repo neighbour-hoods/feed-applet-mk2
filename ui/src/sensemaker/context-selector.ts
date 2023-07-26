@@ -37,8 +37,8 @@ export class ContextSelector extends ScopedRegistryHost(LitElement) {
           slot="header"
           .heading=${cleanForUI(contexts[this.activeContextIndex])}
         >
-          <nh-button-applet slot="secondary-action" .variant=${"secondary"} .label=${"Cycle"} .size=${"md"} .clickHandler=${() => this._selectedContext = contexts[this.activeContextIndex + 1]}></nh-button-applet>
-          <nh-button-applet slot="primary-action" .variant=${"primary"} .label=${"Calculate"} .size=${"md"} .clickHandler=${() => this.dispatchContextSelected(contexts[this.activeContextIndex])}></nh-button-applet>
+          <nh-applet-button slot="secondary-action" .variant=${"secondary"} .label=${"Cycle"} .size=${"md"} .clickHandler=${() => this._selectedContext = contexts[this.activeContextIndex + 1]}></nh-applet-button>
+          <nh-applet-button slot="primary-action" .variant=${"primary"} .label=${"Calculate"} .size=${"md"} .clickHandler=${() => this.dispatchContextSelected(contexts[this.activeContextIndex])}></nh-applet-button>
         </nh-page-header-card>
       `
     
@@ -53,7 +53,7 @@ export class ContextSelector extends ScopedRegistryHost(LitElement) {
   }
   static get elementDefinitions() {
     return {
-      'nh-button-applet': NHButton,
+      'nh-applet-button': NHButton,
       'nh-page-header-card': NHPageHeaderCard,
     };
   }

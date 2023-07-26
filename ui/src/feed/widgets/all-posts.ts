@@ -11,8 +11,6 @@ import { consume } from '@lit-labs/context';
 
 import { clientContext, feedStoreContext } from '../../contexts';
 import { Post, PostsSignal } from '../types';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
-import './post-detail';
 import { FeedStore } from '../../feed-store';
 import {
   SensemakerStore,
@@ -24,6 +22,7 @@ import { NHComponent } from 'neighbourhoods-design-system-components';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { Task } from '@lit-labs/task';
 import { NHAssessmentWidget } from '../components/assessment-widget';
+import { PostDetailWidget } from './post-detail';
 
 @customElement('all-posts-widget')
 export class AllPosts extends NHComponent {
@@ -72,8 +71,7 @@ export class AllPosts extends NHComponent {
       >
         ${hashes.map(([entryHash, actionHash]) => {
           return html`
-              <post-detail .postHash=${actionHash} .postEh=${entryHash}>
-              
+              <post-detail-widget .postHash=${actionHash} .postEh=${entryHash}>
                 <nh-assessment-widget
                   @set-initial-assessment-value=${function (e: CustomEvent) {
                     let { assessmentValue, resourceEh } = (e as any).detail;
@@ -108,7 +106,7 @@ export class AllPosts extends NHComponent {
                   >
                   </nh-assessment-widget>
                   </sensemake-resource>
-              </post-detail>
+              </post-detail-widget>
             `;
         })}
       </div>
@@ -133,6 +131,7 @@ export class AllPosts extends NHComponent {
     return {
       'sensemake-resource': SensemakeResource,
       'nh-assessment-widget': NHAssessmentWidget,
+      'post-detail-widget': PostDetailWidget,
     };
   }
 }

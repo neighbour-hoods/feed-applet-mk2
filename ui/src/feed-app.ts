@@ -114,6 +114,9 @@ export class FeedApp extends NHComponent {
         background-color: var(--nh-theme-bg-canvas);
         color: var(--nh-theme-fg-default);
       }
+      #my-feed::-webkit-scrollbar  {
+        width: 0;
+      }
       #my-feed {
         height: 100%;
         width: 100%;
@@ -123,6 +126,9 @@ export class FeedApp extends NHComponent {
         justify-content: flex-start;
         align-items: center;
         gap: calc(1px * var(--nh-spacing-lg));
+        overflow-y: auto;
+        overflow-x: hidden;
+        
       }
       context-selector {
         grid-area: context-switch;

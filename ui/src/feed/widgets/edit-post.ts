@@ -17,9 +17,10 @@ import { FeedStore } from '../../feed-store';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { NHButton } from '../components/button';
 import { NHCreatePost } from '../components/create-post';
+import { NHComponent } from 'neighbourhoods-design-system-components';
 
-@customElement('edit-post')
-export class EditPost extends LitElement {
+@customElement('edit-post-widget')
+export class EditPost extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;
   
@@ -113,7 +114,7 @@ export class EditPost extends LitElement {
           class="action-buttons"
           style="display: flex; gap: 2px; flex-direction: row;"
         >
-          <nh-button-applet
+          <nh-applet-button
             .clickHandler=${() =>
               this.dispatchEvent(
                 new CustomEvent('edit-canceled', {
@@ -125,8 +126,8 @@ export class EditPost extends LitElement {
             .label=${'Cancel'}
             .variant=${'secondary'}
             .disabled=${false}
-          ></nh-button-applet>
-          <nh-button-applet
+          ></nh-applet-button>
+          <nh-applet-button
             .clickHandler=${() => {
               try {
                 this.updatePost();
@@ -143,14 +144,14 @@ export class EditPost extends LitElement {
             .label=${'Save'}
             .variant=${'primary'}
             .disabled=${!this.isPostValid()}
-          ></nh-button-applet>
+          ></nh-applet-button>
         </div>
       </nh-create-post>
     `;
   }
   static get elementDefinitions() {
     return {
-      'nh-button-applet': NHButton,
+      'nh-applet-button': NHButton,
       'nh-create-post': NHCreatePost,
     };
   }

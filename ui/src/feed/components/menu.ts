@@ -17,7 +17,7 @@ export class NHMenu extends NHComponentShoelace {
   @property()
   itemLabels: string[] = ["Button 1", "Button 2", "Button 3"];
   @property()
-  itemComponentTag: any = literal`nh-button-applet`;
+  itemComponentTag: any = literal`nh-applet-button`;
   @property()
   itemComponentProps: any = { size: "md", iconImageB64: "" };
   @property()
@@ -62,7 +62,7 @@ export class NHMenu extends NHComponentShoelace {
               )
             : null}
             </slot>
-            ${this.addItemButton ? html`<nh-button-applet class="add-menu-item" .variant=${"primary"} .size=${"icon"} .iconImageB64=${plusIcon}></nh-button-applet>`: null}
+            ${this.addItemButton ? html`<nh-applet-button class="add-menu-item" .variant=${"primary"} .size=${"icon"} .iconImageB64=${plusIcon}></nh-applet-button>`: null}
           <slot name="extra-item"></slot>
         </div>
         <slot name="actions"></slot>
@@ -71,7 +71,7 @@ export class NHMenu extends NHComponentShoelace {
   }
   static get elementDefinitions() {
     return {
-      'nh-button-applet': NHButton,
+      'nh-applet-button': NHButton,
     };
   }
 
