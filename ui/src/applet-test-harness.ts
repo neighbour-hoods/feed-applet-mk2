@@ -21,7 +21,6 @@ import feedApplet from './applet-index'
 import { AppletInfo, AppletRenderers } from '@neighbourhoods/nh-launcher-applet';
 import { getCellId } from './utils';
 import { CreateOrJoinNh } from './create-or-join-nh';
-import { RenderBlock } from './applet/render-block';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 import './feed/components/post-display-wrapper'
 import { ref } from "lit/directives/ref.js";
@@ -173,12 +172,12 @@ export class AppletTestHarness extends NHComponent {
       <main>
         <h3>My Pubkey: ${this.agentPubkey}</h3>
         <div class="home-page">
-        <render-block
-            .renderer=${this.renderers.full}
-
+        
+        <div class="home-page"
+          ${ref((e) => this.renderers.full(e as HTMLElement, customElements))}
             @post-hash-created=${(e: CustomEvent) => { console.log('post created with hash:', e.detail.hash); this.postHash = e.detail.hash }}
             style="flex: 1"
-        ></render-block>
+        ></div>
         <div class="app-footer">
           ${this.postHash ? (this.renderers as any).resourceRenderers["post"](document.body, this.postHash) : html``}
         </div>
@@ -199,7 +198,6 @@ export class AppletTestHarness extends NHComponent {
   static get elementDefinitions() {
     return {
       'create-or-join-nh': CreateOrJoinNh,
-      'render-block': RenderBlock,
     };
   }
 
