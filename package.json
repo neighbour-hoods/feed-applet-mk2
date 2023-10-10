@@ -7,6 +7,7 @@
     "nh-launcher-applet"
   ],
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "start": "AGENTS=2 npm run network",
     "dev": "AGENTS=2 npm run network:dev",
     "network:dev": "hc s clean && npm run build:test-happ && UI_PORT=8888 concurrently \"open-cli http://localhost:8888 && cd ui && npm start\" \"ADMIN_PORT=9000 HC_PORT=9001 npm run start:dev\"",
@@ -14,7 +15,7 @@
     "network": "hc s clean && npm run build:test-happ && concurrently \"npm run build:watch -w ui\" \"npm run launch:happ\"",
     "test": "npm run build:happ && npm t -w tests",
     "launch:happ": "RUST_LOG=warn echo \"pass\" | hc launch --piped -n $AGENTS ./workdir/sensemaker-enabled/feed-sensemaker.happ --ui-path ui/dist network mdns",
-    "package": "npm run build:happ && npm run package:ui -w ui && hc web-app pack workdir",
+    "package": "npm run build:happ && cd ui && npm run package && cd .. && hc web-app pack workdir",
     "build:happ": "npm run build:dnas && hc app pack ./workdir",
     "build:test-happ": "npm run download-sensemaker && npm run build:dnas && hc app pack ./workdir/sensemaker-enabled",
     "build:dnas": "npm run build:zomes && hc dna pack ./dna/workdir",
