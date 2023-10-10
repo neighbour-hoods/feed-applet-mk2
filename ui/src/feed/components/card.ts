@@ -103,7 +103,7 @@ export class NHCard extends NHComponent {
         background-color: var(--nh-theme-bg-neutral);
       }
       .container.dark {
-        background-color: var(--nh-theme-bg-subtle);
+        background-color: var(--nh-theme-bg-surface);
       }
       
       /* Headings */

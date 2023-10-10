@@ -54,7 +54,7 @@ export class NHPageHeaderCard extends NHComponent {
         background-color: var(--nh-theme-bg-muted);
       }
       .container.dark {
-        background-color: var(--nh-theme-bg-subtle);
+        background-color: var(--nh-theme-bg-surface);
       }
       
       /* Headings */
@@ -70,18 +70,16 @@ export class NHPageHeaderCard extends NHComponent {
       
       /* Content */
       
-      .content {
-        
-      }
-      .content.noheading {
-        
-      }
       
       /* Actions */
       
       
       /* Slot specific */
       
+      :host([slot="nav"]) .container {
+        padding: calc(1px * var(--nh-spacing-sm)) calc(1px * var(--nh-spacing-sm));
+        background-color: transparent;
+      }
       :host([slot="top-menu"]) .container {
         padding: 0;
         grid-template-area: "top";
