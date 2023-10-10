@@ -1,36 +1,54 @@
 import {
-  AdminWebsocket,
   AppAgentClient,
-  AppWebsocket,
-  CellType,
-  ProvisionedCell,
+  EntryHash,
 } from "@holochain/client";
 import {
-  NhLauncherApplet,
+  NeighbourhoodApplet,
   AppletRenderers,
-  WeServices,
+  NeighbourhoodServices,
   AppletInfo,
 } from "@neighbourhoods/nh-launcher-applet";
-import { FeedApplet } from "./applet/feed-applet";
 
-const feedApplet: NhLauncherApplet = {
+import { ImportanceDimensionAssessment, TotalImportanceDimensionDisplay } from "./sensemaker/widgets";
+
+import { FeedApplet } from "./applet/feed-applet";
+import { appletConfig } from "./appletConfig";
+import { html, render } from "lit";
+
+const feedApplet: NeighbourhoodApplet = {
+  appletConfig: appletConfig,
+  widgetPairs: [
+    {
+      assess: ImportanceDimensionAssessment,
+      display: TotalImportanceDimensionDisplay,
+      compatibleDimensions: ["importance", "total_importance"],
+    }
+  ],
   async appletRenderers(
-    weStore: WeServices,
-    appletAppInfo: AppletInfo[],
-    appWebsocket: AppWebsocket,
     appAgentWebsocket: AppAgentClient,
+    weStore: NeighbourhoodServices,
+    appletAppInfo: AppletInfo[],
   ): Promise<AppletRenderers> {
     return {
       full(element: HTMLElement, registry: CustomElementRegistry) {
         registry?.define("feed-applet", FeedApplet);
         element.innerHTML = `<feed-applet></feed-applet>`;
         const appletElement = element.querySelector("feed-applet") as any;
-        appletElement.appWebsocket = appWebsocket;
         appletElement.appAgentWebsocket = appAgentWebsocket;
         appletElement.appletAppInfo = appletAppInfo;
         appletElement.sensemakerStore = weStore.sensemakerStore;
       },
-      blocks: [],
+      resourceRenderers: {
+        "post": (element: HTMLElement, resourceHash: EntryHash) => {
+          console.log('trying to render post', resourceHash) 
+          render(html`
+            <task-display-wrapper
+              .resourceHash=${resourceHash}
+              .appAgentWebsocket=${appAgentWebsocket}
+            ></task-display-wrapper>
+          `, element)
+        }
+      }
     };
   },
 };
