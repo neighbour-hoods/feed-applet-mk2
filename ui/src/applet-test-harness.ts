@@ -25,6 +25,7 @@ import { RenderBlock } from './applet/render-block';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 import './feed/components/post-display-wrapper'
 import { ref } from "lit/directives/ref.js";
+import { get } from '@holochain-open-dev/stores';
 
 @customElement('applet-test-harness')
 export class AppletTestHarness extends NHComponent {
@@ -114,6 +115,14 @@ export class AppletTestHarness extends NHComponent {
     this._sensemakerStore = new SensemakerStore(appAgentWebsocket, clonedSensemakerRoleName);
     // @ts-ignore
     this.renderers = await feedApplet.appletRenderers(appAgentWebsocket, { sensemakerStore: this._sensemakerStore }, this.appletInfo);
+    await this._sensemakerStore.registerApplet(feedApplet.appletConfig)
+    feedApplet.widgetPairs.map((widgetPair) => {
+      this._sensemakerStore.registerWidget(
+        widgetPair.compatibleDimensions.map((dimensionName: string) => encodeHashToBase64(get(this._sensemakerStore.flattenedAppletConfigs()).dimensions[dimensionName])),
+        widgetPair.display,
+        widgetPair.assess,
+      ) 
+    });
   }
   async cloneSensemakerCell(ca_pubkey: string) {
     const clonedSensemakerCell: ClonedCell = await this.appWebsocket.createCloneCell({
