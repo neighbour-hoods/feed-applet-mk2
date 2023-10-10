@@ -23,6 +23,8 @@ import { getCellId } from './utils';
 import { CreateOrJoinNh } from './create-or-join-nh';
 import { RenderBlock } from './applet/render-block';
 import { NHComponent } from 'neighbourhoods-design-system-components';
+import './feed/components/post-display-wrapper'
+import { ref } from "lit/directives/ref.js";
 
 @customElement('applet-test-harness')
 export class AppletTestHarness extends NHComponent {
@@ -54,6 +56,11 @@ export class AppletTestHarness extends NHComponent {
   renderers!: AppletRenderers;
   appletInfo!: AppletInfo[];
 
+  @state()
+  postHash?: ActionHash;
+  
+  appAgentWebsocket!: AppAgentWebsocket;
+
 
   async firstUpdated() {
     // connect to holochain conductor and set up websocket connections
@@ -71,7 +78,7 @@ export class AppletTestHarness extends NHComponent {
 
       // mocking what gets passed to the applet
       this.appletInfo = [{
-        weInfo: {
+        neighbourhoodInfo: {
             logoSrc: "",
             name: ""
         },
@@ -103,9 +110,10 @@ export class AppletTestHarness extends NHComponent {
 
   async initializeSensemakerStore(clonedSensemakerRoleName: string) {
     const appAgentWebsocket: AppAgentWebsocket = await AppAgentWebsocket.connect(`ws://localhost:9001`, "feed-sensemaker");
+    this.appAgentWebsocket = appAgentWebsocket;
     this._sensemakerStore = new SensemakerStore(appAgentWebsocket, clonedSensemakerRoleName);
     // @ts-ignore
-    this.renderers = await feedApplet.appletRenderers({ sensemakerStore: this._sensemakerStore }, this.appletInfo, this.appWebsocket, appAgentWebsocket);
+    this.renderers = await feedApplet.appletRenderers(appAgentWebsocket, { sensemakerStore: this._sensemakerStore }, this.appletInfo);
   }
   async cloneSensemakerCell(ca_pubkey: string) {
     const clonedSensemakerCell: ClonedCell = await this.appWebsocket.createCloneCell({
@@ -158,8 +166,13 @@ export class AppletTestHarness extends NHComponent {
         <div class="home-page">
         <render-block
             .renderer=${this.renderers.full}
+
+            @post-hash-created=${(e: CustomEvent) => { console.log('post created with hash:', e.detail.hash); this.postHash = e.detail.hash }}
             style="flex: 1"
         ></render-block>
+        <div class="app-footer">
+          ${this.postHash ? (this.renderers as any).resourceRenderers["post"](document.body, this.postHash) : html``}
+        </div>
         </div>
       </main>
     `;
