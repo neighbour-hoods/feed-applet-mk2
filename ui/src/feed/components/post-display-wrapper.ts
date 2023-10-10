@@ -8,7 +8,7 @@ import { NHPostCard } from "./post-card";
 
 export class PostDisplayWrapper extends ScopedElementsMixin(LitElement) {
     @property()
-    resourceHash!: ActionHash;
+    resourceHash!: EntryHash;
 
     @property()
     appAgentWebsocket!: AppAgentClient;
@@ -21,9 +21,9 @@ export class PostDisplayWrapper extends ScopedElementsMixin(LitElement) {
     protected async firstUpdated() {
         const req: AppAgentCallZomeRequest = {
             cap_secret: null,
-            role_name: "todo_lists",
-            zome_name: "todo",
-            fn_name: "get_latest_task",
+            role_name: "feed",
+            zome_name: "posts",
+            fn_name: "get_latest_post_with_eh",
             payload: this.resourceHash,
           }
         const post = await this.appAgentWebsocket.callZome(req);
