@@ -42,10 +42,10 @@ const feedApplet: NeighbourhoodApplet = {
         "post": (element: HTMLElement, resourceHash: EntryHash) => {
           console.log('trying to render post', resourceHash) 
           render(html`
-            <task-display-wrapper
+            <post-display-wrapper
               .resourceHash=${resourceHash}
               .appAgentWebsocket=${appAgentWebsocket}
-            ></task-display-wrapper>
+            ></post-display-wrapper>
           `, element)
         }
       }
