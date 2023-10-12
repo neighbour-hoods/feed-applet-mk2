@@ -100,14 +100,14 @@ export default class NHPostCard extends NHComponent {
         height: 30px;
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        gap: 4px;
       }
 
       .skeleton-row {
         width: 100%;
-        height: 14px;
+        height: 13px;
         display: flex;
-        gap: 2px;
+        gap: 4px;
       }
 
       .skeleton-part {
