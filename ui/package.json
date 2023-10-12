@@ -32,7 +32,8 @@
     "@vaadin/date-time-picker": "^23.2.8",
     "lit": "^2.6.1",
     "lit-svelte-stores": "0.2.5",
-    "neighbourhoods-design-system-components": "^0.0.15"
+    "neighbourhoods-design-system-components": "^0.0.15",
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@open-wc/eslint-config": "^4.3.0",
