@@ -39,8 +39,9 @@ const feedApplet: NeighbourhoodApplet = {
         appletElement.sensemakerStore = weStore.sensemakerStore;
       },
       resourceRenderers: {
-        "post": (element: HTMLElement, resourceHash: EntryHash) => {
-          console.log('trying to render post', resourceHash) 
+        "post_item": (element: HTMLElement, resourceHash: EntryHash) => {
+          console.log('trying to render post', resourceHash)
+
           render(html`
             <post-display-wrapper
               .resourceHash=${resourceHash}
