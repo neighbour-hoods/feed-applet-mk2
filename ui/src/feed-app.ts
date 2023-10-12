@@ -1,7 +1,6 @@
 import { CSSResult, LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { provide } from '@lit-labs/context';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import './fonts.css';
 import { feedStoreContext } from './contexts';
 import { FeedStore } from './feed-store';
@@ -18,9 +17,7 @@ import { ContextView } from './sensemaker/context-view';
 import { ContextSelector } from './sensemaker/context-selector';
 import { StoreSubscriber } from 'lit-svelte-stores';
 import { classMap } from 'lit/directives/class-map.js';
-import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 
-@customElement('feed-app')
 export class FeedApp extends NHComponent {
   @state() loading = false;
   

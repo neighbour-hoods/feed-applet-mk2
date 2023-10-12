@@ -4,8 +4,8 @@ import { AppletInfo } from '@neighbourhoods/nh-launcher-applet';
 import {
   FeedStore,
   appletConfig,
-  ImportanceDimensionAssessment,
-  TotalImportanceDimensionDisplay,
+  LikeDimensionAssessment,
+  TotalLikesDimensionAssessment,
   FeedApp,
 } from '../index';
 import { AppAgentClient, AppWebsocket, CellId, CellType, ProvisionedCell, encodeHashToBase64 } from "@holochain/client";
@@ -13,8 +13,7 @@ import { SensemakerStore } from '@neighbourhoods/client';
 import { get } from 'svelte/store';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 
-@customElement('feed-applet')
-export class FeedApplet extends LitElement {
+export class FeedApplet extends NHComponent {
   @property()
   appletAppInfo!: AppletInfo[];
 
@@ -42,7 +41,7 @@ export class FeedApplet extends LitElement {
         cellInfo as { [CellType.Provisioned]: ProvisionedCell }
       ).provisioned;
       const installAppId =  feedAppletInfo.appInfo.installed_app_id;
-      appletConfig.applet_config_input.name = installAppId;
+      appletConfig.name = installAppId;
 
       await this.sensemakerStore.registerApplet(appletConfig);
 
@@ -58,8 +57,8 @@ export class FeedApplet extends LitElement {
             get(this.sensemakerStore.flattenedAppletConfigs()).dimensions['total_likes']
           ),
         ],
-        TotalImportanceDimensionDisplay,
-        ImportanceDimensionAssessment
+        TotalLikesDimensionAssessment,
+        LikeDimensionAssessment
       );
       const appWs = this.appWebsocket;
       this.feedStore = new FeedStore(

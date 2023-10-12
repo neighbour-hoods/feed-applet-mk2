@@ -6,15 +6,14 @@ import { SensemakerStore, AppletConfig } from '@neighbourhoods/client';
 import { sensemakerStoreContext } from '../contexts';
 import { NHButton } from '../feed/components/button';
 import { NHPageHeaderCard } from '../feed/components/page-header-card';
-import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
+import { NHComponent } from 'neighbourhoods-design-system-components';
 
 export const cleanForUI = (propertyName: string) =>
   propertyName.split('_').map(capitalize).join(' ');
 
 export const capitalize = (part: string) => part[0].toUpperCase() + part.slice(1);
 
-@customElement("context-selector")
-export class ContextSelector extends ScopedRegistryHost(LitElement) {
+export class ContextSelector extends NHComponent {
   @consume({ context: sensemakerStoreContext })
   sensemakerStore!: SensemakerStore;
 

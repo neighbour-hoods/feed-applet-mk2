@@ -4,7 +4,6 @@ import { classMap } from "lit/directives/class-map.js";
 import { NHComponent } from "neighbourhoods-design-system-components";
 import { NHMenu } from "./menu";
 
-@customElement("nh-applet-card")
 export class NHCard extends NHComponent {
   @property()
   title!: string;

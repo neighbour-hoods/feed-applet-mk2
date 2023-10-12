@@ -1,4 +1,3 @@
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import {
@@ -26,7 +25,6 @@ import './feed/components/post-display-wrapper'
 import { ref } from "lit/directives/ref.js";
 import { get } from '@holochain-open-dev/stores';
 
-@customElement('applet-test-harness')
 export class AppletTestHarness extends NHComponent {
   @state() loading = true;
   @state() actionHash: ActionHash | undefined;
@@ -124,7 +122,7 @@ export class AppletTestHarness extends NHComponent {
     });
   }
   async cloneSensemakerCell(ca_pubkey: string) {
-    const clonedSensemakerCell: ClonedCell = await this.appWebsocket.createCloneCell({
+    const clonedSensemakerCell: ClonedCell = await this.appAgentWebsocket.createCloneCell({
       app_id: 'feed-sensemaker',
       role_name: "sensemaker",
       modifiers: {

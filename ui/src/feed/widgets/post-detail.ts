@@ -20,7 +20,6 @@ import { NHButton } from '../components/button';
 import { NHCard } from '../components/card';
 import { EditPost } from './edit-post';
 
-@customElement('post-detail-widget')
 export class PostDetailWidget extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;

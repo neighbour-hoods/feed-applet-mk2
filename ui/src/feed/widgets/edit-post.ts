@@ -19,7 +19,6 @@ import { NHButton } from '../components/button';
 import { NHCreatePost } from '../components/create-post';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 
-@customElement('edit-post-widget')
 export class EditPost extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;

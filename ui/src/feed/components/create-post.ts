@@ -3,9 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { NHComponent, NHComponentShoelace } from "neighbourhoods-design-system-components";
 import { NHCard } from "./card";
 import { SlTextarea } from "@scoped-elements/shoelace";
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
-@customElement("nh-create-post")
 export class NHCreatePost extends NHComponentShoelace {
   @property()
   prompt!: string;

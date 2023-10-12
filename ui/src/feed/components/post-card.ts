@@ -10,7 +10,6 @@ const kebabCase = (str: string) => str
     ?.join('-')
     .toLowerCase();
 
-@customElement("nh-post-card")
 export class NHPostCard extends NHComponent {
   @property()
   title!: string;

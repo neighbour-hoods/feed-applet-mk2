@@ -1,4 +1,3 @@
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { LitElement, html } from 'lit';
 import { state, customElement } from 'lit/decorators.js';
 import { AppAgentClient } from '@holochain/client';
@@ -12,7 +11,6 @@ import { NHCreatePost } from '../components/create-post';
 import { NHButton } from '../components/button';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 
-@customElement('create-post-widget')
 export class CreatePost extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;
