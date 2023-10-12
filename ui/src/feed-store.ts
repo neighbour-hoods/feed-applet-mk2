@@ -10,7 +10,7 @@ export class FeedStore {
 
   /** Post */
 
-  posts = new LazyHoloHashMap((postHash: ActionHash) =>
+  post = new LazyHoloHashMap((postHash: ActionHash) =>
     lazyLoadAndPoll(async () => this.service.fetchPost(postHash), 4000)
   );
   
