@@ -12,13 +12,14 @@ import { Task } from '@lit-labs/task';
 import { decode } from '@msgpack/msgpack';
 
 import { clientContext, feedStoreContext } from '../../contexts';
-import { Post } from '../types';
+import { Post } from '../posts/types';
 import { FeedStore } from '../../feed-store';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 import { editIcon, trashIcon } from '../components/b64images';
 import { NHButton } from '../components/button';
 import { NHCard } from '../components/card';
 import { EditPost } from './edit-post';
+import NHPostCard from '../components/post-card';
 
 export class PostDetailWidget extends NHComponent {
   @consume({ context: clientContext })
@@ -67,7 +68,6 @@ export class PostDetailWidget extends NHComponent {
           },
         })
       );
-      // this._fetchRecord.run();
     } catch (e: any) {
       const errorSnackbar = this.shadowRoot?.getElementById(
         'delete-error'
@@ -81,15 +81,11 @@ export class PostDetailWidget extends NHComponent {
     const post = decode((record.entry as any).Present.entry) as Post;
 
     return html`
-      <nh-applet-card
+      <nh-post-card
       .theme=${'dark'}
-      .heading=${'A post'}
-      .hasContextMenu=${true}
-      .hasPrimaryAction=${false}
-      .textSize=${'md'}
-      .footerAlign=${'l'}
+      .title=${post.title}
+      .textContent=${post.text_content}
     >
-      ${post.text}
       <div class="action-buttons" slot="context-menu" style="display: flex; gap: 2px; flex-direction: column;">
         <nh-applet-button .variant=${'primary'} .size=${'icon'} .iconImageB64=${editIcon} .clickHandler=${() => {
       this._editing = true;
@@ -98,8 +94,8 @@ export class PostDetailWidget extends NHComponent {
       this.deletePost();
     }}>Delete</nh-applet-button>
       </div>
-      <slot slot="footer" name="footer"></slot>
-    </nh-applet-card>
+      <img src=${`data:image/png;base64,${post.image_content}`} slot="image"/>
+    </nh-post-card>
     `;
   }
 
@@ -138,7 +134,7 @@ export class PostDetailWidget extends NHComponent {
   static get elementDefinitions() {
     return {
       'nh-applet-button': NHButton,
-      'nh-applet-card': NHCard,
+      'nh-post-card': NHPostCard,
       'edit-post-widget': EditPost,
     };
   }
