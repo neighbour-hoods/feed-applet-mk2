@@ -1,12 +1,12 @@
 import { contextProvided } from "@lit-labs/context";
 import { property, state } from "lit/decorators.js";
-import { ScopedElementsMixin } from "@open-wc/scoped-elements";
 import { LitElement, html, css, PropertyValueMap } from "lit";
 import { Post, WrappedEntry, WrappedPostWithAssessment } from "../types";
 import { ActionHash, AppAgentCallZomeRequest, AppAgentClient, EntryHash } from "@holochain/client";
 import { NHPostCard } from "./post-card";
+import { NHComponent } from "neighbourhoods-design-system-components";
 
-export class PostDisplayWrapper extends ScopedElementsMixin(LitElement) {
+export class PostDisplayWrapper extends NHComponent {
     @property()
     resourceHash!: EntryHash;
 
@@ -43,10 +43,8 @@ export class PostDisplayWrapper extends ScopedElementsMixin(LitElement) {
         }
     }
 
-    static get scopedElements() {
-        return {
-            "post-card": NHPostCard,
-        }
+    static elementDefinitions = {
+        "post-card": NHPostCard,
     }
 }
 
