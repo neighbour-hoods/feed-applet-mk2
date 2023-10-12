@@ -31,7 +31,18 @@ export default class NHPostCard extends NHComponent {
         .hasPrimaryAction=${false}
         .footerAlign=${"l"}
         class="nested-card"
-      ><sl-skeleton effect="sheen" class="skeleton-part"></sl-skeleton></nh-card>`
+      ><div class="skeleton-container">
+        <div class="skeleton-row">
+          <sl-skeleton effect="sheen" class="skeleton-part" style="flex: ${Math.floor(Math.random() * 3) + 1}"></sl-skeleton>
+          <sl-skeleton effect="sheen" class="skeleton-part" style="flex: ${Math.floor(Math.random() * 3) + 1}"></sl-skeleton>
+          <sl-skeleton effect="sheen" class="skeleton-part" style="flex: ${Math.floor(Math.random() * 3) + 1}"></sl-skeleton>
+        </div>
+        <div class="skeleton-row">
+          <sl-skeleton effect="sheen" class="skeleton-part" style="flex: ${Math.floor(Math.random() * 3) + 1}"></sl-skeleton>
+          <sl-skeleton effect="sheen" class="skeleton-part" style="flex: ${Math.floor(Math.random() * 3) + 1}"></sl-skeleton>
+          <sl-skeleton effect="sheen" class="skeleton-part" style="flex: ${Math.floor(Math.random() * 3) + 1}"></sl-skeleton>
+        </div>
+      </div></nh-card>`
     : html`
       <nh-card
         .theme=${"light"}
@@ -84,10 +95,25 @@ export default class NHPostCard extends NHComponent {
         height: 300px;
       }
 
+      .skeleton-container {
+        width: 100%;
+        height: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .skeleton-row {
+        width: 100%;
+        height: 14px;
+        display: flex;
+        gap: 2px;
+      }
+
       .skeleton-part {
-        --color: var(--nh-theme-bg-detail);
+        display: flex;
+        --color: var(--nh-theme-bg-element);
         --sheen-color: var(--nh-theme-bg-detail);
-        height: 44px;
       }
       .skeleton-part::part(indicator) {
         border-radius: calc(1px * var(--nh-radii-base));
