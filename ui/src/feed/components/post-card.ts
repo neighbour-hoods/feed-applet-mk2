@@ -1,49 +1,63 @@
-import { css, CSSResult, html, unsafeCSS } from "lit";
-import { customElement, property } from "lit/decorators.js";
-import { NHComponent } from "neighbourhoods-design-system-components";
-import { NHCard } from "./card";
-import { NHAssessmentWidget } from "./assessment-widget";
-import { pearImg } from "./b64images";
+import { css, CSSResult, html } from "lit";
+import { property } from "lit/decorators.js";
+import { NHComponent , NHCard, NHAssessmentWidget } from '@neighbourhoods/design-system-components';
+import { SlSkeleton } from "@scoped-elements/shoelace";
+import { classMap } from "lit/directives/class-map";
 
 const kebabCase = (str: string) => str
-    .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
+    ?.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
     ?.join('-')
     .toLowerCase();
 
-export class NHPostCard extends NHComponent {
+export default class NHPostCard extends NHComponent {
   @property()
   title!: string;
   @property()
   textContent!: string;
   @property()
-  iconImg: string = pearImg;
+  iconImg!: string;
   @property()
-  hashtags: string[] = [];
+  loading: boolean = false;
+  @property()
+  isPreview: boolean = false;
 
   render() {
-    return html`
-      <nh-applet-card
-        .theme=${"dark"}
-        .heading=${this.title}
-        .hasContextMenu=${true}
+    return this.loading
+    ? html`
+      <nh-card
+        .theme=${"light"}
+        .heading=${""}
+        .hasContextMenu=${!false}
         .hasPrimaryAction=${false}
-        .textSize=${"lg"}
         .footerAlign=${"l"}
+        class="nested-card"
+      ><sl-skeleton effect="sheen" class="skeleton-part"></sl-skeleton></nh-card>`
+    : html`
+      <nh-card
+        .theme=${"light"}
+        .heading=${this.title}
+        .hasContextMenu=${!this.isPreview}
+        .hasPrimaryAction=${false}
+        .textSize=${this.isPreview ? "sm" : "lg"}
+        .footerAlign=${"l"}
+        class="nested-card"
       >
-        <div class="content">
+        <div class="content ${classMap({
+          preview: this.isPreview
+        })}>
           ${this.textContent !== "" ? html`<p>${this.textContent}</p>` : null}
-          ${this.hashtags.length ? html`<div class="hashtags">${this.hashtags.map(tag => html`<span class="hashtag">#${tag}</span>`)}</div>` : null}
           <slot name="image"></slot>
         </div>
-        <nh-assessment-widget slot="footer" .name=${kebabCase(this.title)} .iconAlt=${`Assess post: "${this.title}"`} .iconImg=${this.iconImg}></nh-assessment-widget>
-      </nh-applet-card>
+        ${this.isPreview ? null : html`<nh-assessment-widget slot="footer" .name=${kebabCase(this.title)} .iconAlt=${`Assess post: "${this.title}"`} .iconImg=${this.iconImg}></nh-assessment-widget>`}
+      </nh-card>
     `;
   }
 
   static get elementDefinitions() {
     return {
       "nh-assessment-widget": NHAssessmentWidget,
-      "nh-applet-card": NHCard,
+      "nh-card": NHCard,
+      "sl-skeleton": SlSkeleton,
     };
   }
 
@@ -54,24 +68,30 @@ export class NHPostCard extends NHComponent {
       .content {
         display: flex;
         flex-direction: column;
-        gap: calc(1px * var(--nh-spacing-sm));
+        gap: 2px;
       }
-
+      
       p {
         margin: 0 0 calc(1px * var(--nh-spacing-lg)) 0;
       }
 
-      div.hashtags {
-        display: flex;
-        gap: calc(1px * var(--nh-spacing-xl));
-      }
-      span.hashtag {
-        color: var(--nh-theme-accent-default);
+      .content.preview p {
+        margin: 0;
       }
 
       :host ::slotted([slot=image]) {
         object-fit: cover;
         height: 300px;
+      }
+
+      .skeleton-part {
+        --color: var(--nh-theme-bg-detail);
+        --sheen-color: var(--nh-theme-bg-detail);
+        height: 44px;
+      }
+      .skeleton-part::part(indicator) {
+        border-radius: calc(1px * var(--nh-radii-base));
+        opacity: 1;
       }
     `,
   ];
