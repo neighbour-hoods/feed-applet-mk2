@@ -1,9 +1,10 @@
-import { html } from "lit";
+import { css, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { AppAgentCallZomeRequest, AppAgentClient, EntryHash } from "@holochain/client";
 import { Post, WrappedEntry } from "../types";
-import { NHPostCard } from "./post-card";
+
 import { NHComponent } from "neighbourhoods-design-system-components";
+import NHPostCard from "./post-card";
 
 @customElement('post-display-wrapper')
 export class PostDisplayWrapper extends NHComponent {
@@ -26,7 +27,6 @@ export class PostDisplayWrapper extends NHComponent {
             fn_name: "get_latest_post_with_eh",
             payload: this.resourceHash,
         }
-        debugger;
         const post = await this.appAgentWebsocket.callZome(req);
         this.post = {
             entry: post,
@@ -36,16 +36,22 @@ export class PostDisplayWrapper extends NHComponent {
         this.fetchingResource = false;
     }
     render() {
-        if(this.fetchingResource) return html`<mwc-circular-progress></mwc-circular-progress>`
-        else {
-            return html`
-                <post-card .text=${this.post!.entry.text} .textContent=${this.post!.entry.text}></post-card>
-            `
-        }
+        return html`
+            <post-card .loading=${this.fetchingResource} .isPreview=${true} .title=${!this.fetchingResource && "Post"} .textContent=${!this.fetchingResource && this.post!.entry.text}></post-card>`
     }
 
     static elementDefinitions = {
         "post-card": NHPostCard,
+    }
+
+    static get styles() {
+        return [
+            css`
+                :host{
+                    padding: calc(1px * var(--nh-spacing-sm));
+                }
+            `
+        ]   
     }
 }
 
