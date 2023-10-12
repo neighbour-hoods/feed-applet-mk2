@@ -13,9 +13,9 @@
     "start": "vite dev --mode development --clearScreen false --port $UI_PORT",
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
-    "build": "tsc && vite build --mode production",
+    "build": "tsc; vite build --mode production",
     "build:watch": "rimraf dist && vite build --mode development --config vite.config.js -w",
-    "package:ui": "rimraf ui.zip && npm run build && cd ./dist && bestzip ../ui.zip index.js icon.svg"
+    "package:ui": "rimraf ui.zip && npm run build && cd ./dist && bestzip ../ui.zip index.js icon.png"
   },
   "dependencies": {
     "@holochain-open-dev/stores": "^0.5.4",
@@ -77,5 +77,15 @@
     "singleQuote": true,
     "arrowParens": "avoid"
   },
-  "type": "module"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
 }
