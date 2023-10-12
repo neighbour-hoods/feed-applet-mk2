@@ -1,11 +1,11 @@
-import { contextProvided } from "@lit-labs/context";
-import { property, state } from "lit/decorators.js";
-import { LitElement, html, css, PropertyValueMap } from "lit";
-import { Post, WrappedEntry, WrappedPostWithAssessment } from "../types";
-import { ActionHash, AppAgentCallZomeRequest, AppAgentClient, EntryHash } from "@holochain/client";
+import { html } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { AppAgentCallZomeRequest, AppAgentClient, EntryHash } from "@holochain/client";
+import { Post, WrappedEntry } from "../types";
 import { NHPostCard } from "./post-card";
 import { NHComponent } from "neighbourhoods-design-system-components";
 
+@customElement('post-display-wrapper')
 export class PostDisplayWrapper extends NHComponent {
     @property()
     resourceHash!: EntryHash;
@@ -25,7 +25,8 @@ export class PostDisplayWrapper extends NHComponent {
             zome_name: "posts",
             fn_name: "get_latest_post_with_eh",
             payload: this.resourceHash,
-          }
+        }
+        debugger;
         const post = await this.appAgentWebsocket.callZome(req);
         this.post = {
             entry: post,

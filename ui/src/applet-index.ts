@@ -15,6 +15,8 @@ import { FeedApplet } from "./applet/feed-applet";
 import { appletConfig } from "./appletConfig";
 import { html, render } from "lit";
 
+import "./feed/components/post-display-wrapper";
+
 const feedApplet: NeighbourhoodApplet = {
   appletConfig: appletConfig,
   widgetPairs: [
@@ -41,7 +43,6 @@ const feedApplet: NeighbourhoodApplet = {
       resourceRenderers: {
         "post_item": (element: HTMLElement, resourceHash: EntryHash) => {
           console.log('trying to render post', resourceHash)
-
           render(html`
             <post-display-wrapper
               .resourceHash=${resourceHash}

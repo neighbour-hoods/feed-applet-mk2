@@ -7,8 +7,6 @@ import { get } from "svelte/store";
 import { consume } from "@lit-labs/context";
 import { Assessment } from '@neighbourhoods/sensemaker-lite-types';
 import { NHComponent } from "neighbourhoods-design-system-components";
-import { TotalLikesDimensionAssessment } from "./widgets/total-likes-dimension-display";
-import { LikeDimensionAssessment } from "./widgets/like-dimension-assessment";
 
 export class SensemakeResource extends NHComponent {
     @consume({ context: sensemakerStoreContext })
