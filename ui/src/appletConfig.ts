@@ -62,18 +62,13 @@ const likedPostsContext: ConfigCulturalContext = {
     "thresholds": [noLikesThreshold],
     "order_by": [[totalLikesDimension, { "Biggest": null }]]
 }
-const appletConfigInput: AppletConfigInput = {
+const appletConfig: AppletConfigInput = {
     "name": "feed_applet",
     "ranges": [likeRange, totalLikesRange],
     "dimensions": [likeDimension, totalLikesDimension],
-    "resource_defs": [postItemResourceDef],
+    "resource_defs": { "feed": { "posts": [postItemResourceDef] } },
     "methods": [totalLikesMethod],
     "cultural_contexts": [mostLikedPostsContext, likedPostsContext]
 }
-
-const appletConfig: CreateAppletConfigInput = {
-    "applet_config_input": appletConfigInput,
-    "role_name": "feed_applet"
-} 
 
 export { appletConfig }
