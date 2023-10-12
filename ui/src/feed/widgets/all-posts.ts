@@ -24,7 +24,6 @@ import { Task } from '@lit-labs/task';
 import { NHAssessmentWidget } from '../components/assessment-widget';
 import { PostDetailWidget } from './post-detail';
 
-@customElement('all-posts-widget')
 export class AllPosts extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;
@@ -99,7 +98,7 @@ export class AllPosts extends NHComponent {
                     style="z-index: 1; position: relative;"
                     .resourceEh=${entryHash}
                     .resourceDefEh=${
-                      (get(this.sensemakerStore.flattenedAppletConfigs())as any).resource_defs[
+                      (get(this.sensemakerStore.flattenedAppletConfigs())as any).resource_defs['feed']['posts'][
                         'post_item'
                       ]
                     }
