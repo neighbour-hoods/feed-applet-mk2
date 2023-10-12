@@ -2,7 +2,7 @@ import { css, CSSResult, html } from "lit";
 import { property } from "lit/decorators.js";
 import { NHComponent , NHCard, NHAssessmentWidget } from '@neighbourhoods/design-system-components';
 import { SlSkeleton } from "@scoped-elements/shoelace";
-import { classMap } from "lit/directives/class-map";
+import { classMap } from "lit/directives/class-map.js";
 
 const kebabCase = (str: string) => str
     ?.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
@@ -44,7 +44,7 @@ export default class NHPostCard extends NHComponent {
       >
         <div class="content ${classMap({
           preview: this.isPreview
-        })}>
+        })}">
           ${this.textContent !== "" ? html`<p>${this.textContent}</p>` : null}
           <slot name="image"></slot>
         </div>
