@@ -1,6 +1,6 @@
-import { LitElement, PropertyValueMap, css, html } from "lit";
-import { consume, provide } from "@lit-labs/context";
-import { customElement, property, state } from "lit/decorators.js";
+import { css, html } from "lit";
+import { consume } from "@lit-labs/context";
+import { property, state } from "lit/decorators.js";
 
 import { get } from "svelte/store";
 import { ComputeContextInput, SensemakerStore } from "@neighbourhoods/client";
@@ -9,10 +9,11 @@ import { StoreSubscriber } from "lit-svelte-stores";
 import { FeedStore } from "../feed-store";
 import { feedStoreContext, sensemakerStoreContext } from "../contexts";
 import { ActionHash, EntryHash, encodeHashToBase64 } from "@holochain/client";
-import { ScopedRegistryHost } from "@lit-labs/scoped-registry-mixin";
+import { NHComponent } from "neighbourhoods-design-system-components";
+import { PostDetailWidget } from "../feed/widgets/post-detail";
+import { NHAssessmentWidget } from "../feed/components/assessment-widget";
 
-@customElement('context-view')
-export class ContextView extends ScopedRegistryHost(LitElement) {
+export class ContextView extends NHComponent {
     @consume({ context: feedStoreContext })
     @state()
     public feedStore!: FeedStore
@@ -82,14 +83,14 @@ export class ContextView extends ScopedRegistryHost(LitElement) {
                     }}
                     slot="footer" .name=${'ok'} .iconAlt=${''} .iconImg=${''}>
                     <sensemake-resource
-                    slot="icon"
-                    style="z-index: 1; position: relative;"
-                    .resourceEh=${entryHash}
-                    .resourceDefEh=${
-                        get(this.sensemakerStore.flattenedAppletConfigs()).resource_defs[
-                        'post_item'
-                        ]
-                    }
+                        slot="icon"
+                        style="z-index: 1; position: relative;"
+                        .resourceEh=${entryHash}
+                        .resourceDefEh=${
+                                get(this.sensemakerStore.flattenedAppletConfigs()).resource_defs['feed']['posts'][
+                                'post_item'
+                                ]
+                        }
                     >
                     </nh-assessment-widget>
                     </sensemake-resource>
@@ -111,11 +112,12 @@ export class ContextView extends ScopedRegistryHost(LitElement) {
         return this.renderList(allContextRecords.filter((record: [EntryHash, ActionHash]) =>contextResultEntryHashes.includes(encodeHashToBase64(record[0])) ));
     }
     
-    static get scopedElements() {
-        return {
-            'sensemake-resource': SensemakeResource,
-        };
+    static elementDefinitions = {
+        'sensemake-resource': SensemakeResource,
+        'nh-assessment-widget': NHAssessmentWidget,
+        'post-detail-widget': PostDetailWidget,
     }
+
     static get styles() {
         return [
             css`
