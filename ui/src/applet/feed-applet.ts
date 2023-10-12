@@ -51,7 +51,7 @@ export class FeedApplet extends NHComponent {
       await this.sensemakerStore.registerWidget(
         [
           encodeHashToBase64(
-            get(this.sensemakerStore.flattenedAppletConfigs()).dimensions['total_like']
+            get(this.sensemakerStore.flattenedAppletConfigs()).dimensions['total_likes']
           ),
           encodeHashToBase64(
             get(this.sensemakerStore.flattenedAppletConfigs()).dimensions['like']
