@@ -13,7 +13,7 @@ export class TotalLikesDimensionAssessment extends DisplayDimensionWidget {
                     <div class="display-box-wrapper">
                         <div class="display-box">
                             <span>❤️</span>
-                            <span>${this.assessment ? (this.assessment.value as RangeValueInteger).Integer : 0}</span>
+                            <span>${this.assessment && ((this.assessment.value as RangeValueInteger).Integer > 1) ? (this.assessment.value as RangeValueInteger).Integer : ""}</span>
                         </div>
                     </div>
                 `
