@@ -1,2 +1,2 @@
-export * from "./importance-dimension-assessment"
-export * from "./total-importance-dimension-display"
+export * from "./like-dimension-assessment"
+export * from "./total-likes-dimension-display"

@@ -5,7 +5,7 @@ import { AssessDimensionWidget, SensemakerStore, sensemakerStoreContext } from '
 import { provide } from '@lit-labs/context';
 
 @customElement('like-dimension-assessment')
-export class ImportanceDimensionAssessment extends AssessDimensionWidget {
+export class LikeDimensionAssessment extends AssessDimensionWidget {
     @provide({ context: sensemakerStoreContext })
     @state()
     sensemakerStore!: SensemakerStore;

@@ -3,8 +3,8 @@ import { customElement, property } from 'lit/decorators.js';
 import { DisplayDimensionWidget } from '@neighbourhoods/client';
 import { Assessment, RangeValueInteger } from '@neighbourhoods/client';
 
-@customElement('total-like-dimension-display')
-export class TotalImportanceDimensionDisplay extends DisplayDimensionWidget {
+@customElement('total-likes-dimension-assessment')
+export class TotalLikesDimensionAssessment extends DisplayDimensionWidget {
 
     @property()
     assessment!: Assessment | null
