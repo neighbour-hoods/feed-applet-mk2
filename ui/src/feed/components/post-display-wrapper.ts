@@ -37,7 +37,7 @@ export class PostDisplayWrapper extends NHComponent {
     }
     render() {
         return html`
-            <post-card .loading=${this.fetchingResource} .isPreview=${true} .title=${!this.fetchingResource && "Post"} .textContent=${!this.fetchingResource && this.post!.entry.text}></post-card>`
+            <post-card .loading=${this.fetchingResource} .isPreview=${true} .title=${!this.fetchingResource && this.post!.entry.text} .textContent=${""}></post-card>`
     }
 
     static elementDefinitions = {
