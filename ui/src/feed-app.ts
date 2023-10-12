@@ -11,7 +11,7 @@ import {
 } from '@neighbourhoods/client';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 import { NHPageHeaderCard } from './feed/components/page-header-card';
-import { CreatePost } from './feed/widgets/create-post';
+import CreatePost from './feed/widgets/create-post';
 import { AllPosts } from './feed/widgets/all-posts';
 import { ContextView } from './sensemaker/context-view';
 import { ContextSelector } from './sensemaker/context-selector';
