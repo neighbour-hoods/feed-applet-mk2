@@ -9,7 +9,7 @@ import {
   AppletInfo,
 } from "@neighbourhoods/nh-launcher-applet";
 
-import { ImportanceDimensionAssessment, TotalImportanceDimensionDisplay } from "./sensemaker/widgets";
+import { LikeDimensionAssessment, TotalLikesDimensionAssessment } from "./sensemaker/widgets";
 
 import { FeedApplet } from "./applet/feed-applet";
 import { appletConfig } from "./appletConfig";
@@ -19,9 +19,9 @@ const feedApplet: NeighbourhoodApplet = {
   appletConfig: appletConfig,
   widgetPairs: [
     {
-      assess: ImportanceDimensionAssessment,
-      display: TotalImportanceDimensionDisplay,
-      compatibleDimensions: ["importance", "total_importance"],
+      assess: LikeDimensionAssessment,
+      display: TotalLikesDimensionAssessment,
+      compatibleDimensions: ["like", "total_likes"],
     }
   ],
   async appletRenderers(
