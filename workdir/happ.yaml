@@ -1,6 +1,6 @@
 ---
 manifest_version: "1"
-name: feed_applet
+name: feed-applet
 description: ~
 roles:
   - name: feed
