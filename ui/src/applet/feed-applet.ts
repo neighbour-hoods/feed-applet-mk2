@@ -60,6 +60,13 @@ export class FeedApplet extends NHComponent {
         TotalLikesDimensionAssessment,
         LikeDimensionAssessment
       );
+
+      if(!customElements.get('total-likes-dimension-assessment')) {
+        customElements.define('total-likes-dimension-assessment', TotalLikesDimensionAssessment)
+      }
+      if(!customElements.get('like-dimension-assessment')) {
+        customElements.define('like-dimension-assessment', LikeDimensionAssessment)
+      }
       const appWs = this.appWebsocket;
       this.feedStore = new FeedStore(
         this.appAgentWebsocket,
