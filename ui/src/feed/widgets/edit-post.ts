@@ -12,7 +12,7 @@ import { consume } from '@lit-labs/context';
 import { decode } from '@msgpack/msgpack';
 
 import { clientContext, feedStoreContext } from '../../contexts';
-import { Post } from '../types';
+import { Post } from '../posts/types';
 import { FeedStore } from '../../feed-store';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { NHButton } from '../components/button';

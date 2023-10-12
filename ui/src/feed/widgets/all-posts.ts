@@ -10,7 +10,7 @@ import { StoreSubscriber, TaskSubscriber } from '@holochain-open-dev/stores';
 import { consume } from '@lit-labs/context';
 
 import { clientContext, feedStoreContext } from '../../contexts';
-import { Post, PostsSignal } from '../types';
+import { Post, PostsSignal } from '../posts/types';
 import { FeedStore } from '../../feed-store';
 import {
   SensemakerStore,

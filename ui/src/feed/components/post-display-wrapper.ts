@@ -1,7 +1,7 @@
 import { css, html } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { AppAgentCallZomeRequest, AppAgentClient, EntryHash } from "@holochain/client";
-import { Post, WrappedEntry } from "../types";
+import { Post, WrappedEntry } from "../posts/types";
 
 import { NHComponent } from "neighbourhoods-design-system-components";
 import NHPostCard from "./post-card";

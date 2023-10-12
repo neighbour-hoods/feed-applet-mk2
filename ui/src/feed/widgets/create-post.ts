@@ -5,7 +5,7 @@ import { consume } from '@lit-labs/context';
 
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { clientContext, feedStoreContext } from '../../contexts';
-import { Post } from '../types';
+import { Post } from '../posts/types';
 import { FeedStore } from '../../feed-store';
 import { NHCreatePost } from '../components/create-post';
 import { NHButton } from '../components/button';
