@@ -54,24 +54,29 @@ pub fn get_latest_post_with_eh(entry_hash: EntryHash) -> ExternResult<Option<Pos
             match details.updates.len() {
                 0 => {
                     let entry: Entry = details.entry;
-                    let task = entry.as_app_entry().map(|entry| 
-                        Post::try_from(SerializedBytes::from(entry.to_owned())).map_err(|err| wasm_error!(WasmErrorInner::Guest(err.into()))))
-                            .ok_or(wasm_error!(WasmErrorInner::Guest(String::from(
-                                "Malformed post"
-                            ))))??;
+                    let task = entry
+                        .as_app_entry()
+                        .map(|entry| {
+                            Post::try_from(SerializedBytes::from(entry.to_owned()))
+                                .map_err(|err| {
+                                    wasm_error!(WasmErrorInner::Guest(err.into()))
+                                })
+                        })
+                        .ok_or(
+                            wasm_error!(
+                                WasmErrorInner::Guest(String::from("Malformed post"))
+                            ),
+                        )??;
                     Ok(Some(task))
-                },
+                }
                 _ => {
                     let mut sortlist = details.updates.to_vec();
-                    // unix timestamp should work for sorting
-                    sortlist.sort_by_key(|update| update.action().timestamp().as_millis());
-                    // sorts in ascending order, so take the last record
+                    sortlist
+                        .sort_by_key(|update| update.action().timestamp().as_millis());
                     let last = sortlist.last().unwrap().to_owned();
                     let hash = last.action_address();
                     match get(hash.clone(), GetOptions::default())? {
-                        Some(record) => {
-                            Ok(Some(entry_from_record(record)?))
-                        }
+                        Some(record) => Ok(Some(entry_from_record(record)?)),
                         None => Ok(None),
                     }
                 }
@@ -80,17 +85,17 @@ pub fn get_latest_post_with_eh(entry_hash: EntryHash) -> ExternResult<Option<Pos
         _ => Ok(None),
     }
 }
-
-pub fn entry_from_record<T: TryFrom<SerializedBytes, Error = SerializedBytesError>>(record: Record) -> ExternResult<T> {
-    Ok(record
-        .entry()
-        .to_app_option()
-        .map_err(|err| wasm_error!(WasmErrorInner::from(err)))?
-        .ok_or(wasm_error!(WasmErrorInner::Guest(String::from(
-            "Malformed post"
-        ))))?)
+pub fn entry_from_record<T: TryFrom<SerializedBytes, Error = SerializedBytesError>>(
+    record: Record,
+) -> ExternResult<T> {
+    Ok(
+        record
+            .entry()
+            .to_app_option()
+            .map_err(|err| wasm_error!(WasmErrorInner::from(err)))?
+            .ok_or(wasm_error!(WasmErrorInner::Guest(String::from("Malformed post"))))?,
+    )
 }
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UpdatePostInput {
     pub original_post_hash: ActionHash,
