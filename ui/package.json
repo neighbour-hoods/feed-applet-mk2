@@ -25,7 +25,7 @@
     "@lit-labs/scoped-registry-mixin": "^1.0.1",
     "@lit-labs/task": "^2.0.0",
     "@msgpack/msgpack": "^2.8.0",
-    "@neighbourhoods/client": "0.0.5",
+    "@neighbourhoods/client": "0.0.7",
     "@neighbourhoods/design-system-components": "0.0.14",
     "@neighbourhoods/nh-launcher-applet": "0.0.13",
     "@scoped-elements/shoelace": "^0.1.0",
