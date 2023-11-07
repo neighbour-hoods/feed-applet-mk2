@@ -1,12 +1,9 @@
-import { LitElement, html } from 'lit';
-import { state, customElement, property } from 'lit/decorators.js';
+import { html } from 'lit';
+import { state, property } from 'lit/decorators.js';
 import {
   ActionHash,
-  EntryHash,
-  AgentPubKey,
   Record,
   AppAgentClient,
-  DnaHash,
 } from '@holochain/client';
 import { consume } from '@lit-labs/context';
 import { decode } from '@msgpack/msgpack';
@@ -16,8 +13,8 @@ import { Post } from '../posts/types';
 import { FeedStore } from '../../feed-store';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { NHButton } from '../components/button';
-import { NHCreatePost } from '../components/create-post';
 import { NHComponent } from 'neighbourhoods-design-system-components';
+import NHCreatePost from './create-post';
 
 export class EditPost extends NHComponent {
   @consume({ context: clientContext })

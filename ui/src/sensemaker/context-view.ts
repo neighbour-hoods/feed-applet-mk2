@@ -2,7 +2,6 @@ import { css, html } from "lit";
 import { consume } from "@lit-labs/context";
 import { property, state } from "lit/decorators.js";
 
-import { get } from "svelte/store";
 import { ComputeContextInput, SensemakerStore } from "@neighbourhoods/client";
 import { SensemakeResource } from "./sensemake-resource";
 import { StoreSubscriber } from "lit-svelte-stores";
@@ -12,6 +11,7 @@ import { ActionHash, EntryHash, encodeHashToBase64 } from "@holochain/client";
 import { NHComponent } from "neighbourhoods-design-system-components";
 import { PostDetailWidget } from "../feed/widgets/post-detail";
 import { NHAssessmentWidget } from "../feed/components/assessment-widget";
+import { get } from "@holochain-open-dev/stores";
 
 export class ContextView extends NHComponent {
     @consume({ context: feedStoreContext })

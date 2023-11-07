@@ -3,10 +3,10 @@ import { LitElement, html, css, unsafeCSS, PropertyValueMap } from "lit";
 import { sensemakerStoreContext, SensemakerStore, getLatestAssessment } from "@neighbourhoods/client";
 import { EntryHash, encodeHashToBase64, decodeHashFromBase64 } from "@holochain/client";
 import { StoreSubscriber } from "lit-svelte-stores";
-import { get } from "svelte/store";
 import { consume } from "@lit-labs/context";
 import { Assessment } from '@neighbourhoods/sensemaker-lite-types';
 import { NHComponent } from "neighbourhoods-design-system-components";
+import { get } from "@holochain-open-dev/stores";
 
 export class SensemakeResource extends NHComponent {
     @consume({ context: sensemakerStoreContext })

@@ -10,8 +10,8 @@ import {
 } from '../index';
 import { AppAgentClient, AppWebsocket, CellId, CellType, ProvisionedCell, encodeHashToBase64 } from "@holochain/client";
 import { SensemakerStore } from '@neighbourhoods/client';
-import { get } from 'svelte/store';
 import { NHComponent } from 'neighbourhoods-design-system-components';
+import { get } from '@holochain-open-dev/stores';
 
 export class FeedApplet extends NHComponent {
   @property()

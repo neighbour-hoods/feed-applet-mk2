@@ -1,8 +1,7 @@
-import { derived, get, Writable, writable } from 'svelte/store';
 import { AgentPubKey, AgentPubKeyB64, AppAgentClient, Record, AppSignal, AppWebsocket, CellId, encodeHashToBase64, EntryHash, ActionHash, DnaHash, RoleName } from '@holochain/client';
 import { FeedService } from './feed-service';
 import { PostsSignal, Post, WrappedEntry, EntryTypes } from './feed/types';
-import { lazyLoadAndPoll, AsyncReadable } from "@holochain-open-dev/stores";
+import { lazyLoadAndPoll, AsyncReadable, get, writable, Writable, derived } from "@holochain-open-dev/stores";
 import { EntryRecord, LazyHoloHashMap } from "@holochain-open-dev/utils";
 
 export class FeedStore {

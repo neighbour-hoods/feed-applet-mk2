@@ -6,7 +6,7 @@ import {
   ActionHash,
   encodeHashToBase64,
 } from '@holochain/client';
-import { StoreSubscriber, TaskSubscriber } from '@holochain-open-dev/stores';
+import { StoreSubscriber, TaskSubscriber, get } from '@holochain-open-dev/stores';
 import { consume } from '@lit-labs/context';
 
 import { clientContext, feedStoreContext } from '../../contexts';
@@ -16,7 +16,6 @@ import {
   SensemakerStore,
   sensemakerStoreContext,
 } from '@neighbourhoods/client';
-import { get } from 'svelte/store';
 import { SensemakeResource } from '../../sensemaker/sensemake-resource';
 import { NHComponent } from 'neighbourhoods-design-system-components';
 import { EntryRecord } from '@holochain-open-dev/utils';
