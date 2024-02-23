@@ -1,7 +1,7 @@
 import { CSSResult, css, html } from 'lit';
 import { state, property, query } from 'lit/decorators.js';
 import { AppAgentClient } from '@holochain/client';
-import { consume } from '@lit-labs/context';
+import { consume } from '@lit/context';
 
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { clientContext, feedStoreContext } from '../../contexts';

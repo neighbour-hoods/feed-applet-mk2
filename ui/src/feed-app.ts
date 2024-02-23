@@ -1,15 +1,18 @@
 import { CSSResult, LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { provide } from '@lit-labs/context';
+import { provide } from '@lit/context';
 import './fonts.css';
 import { feedStoreContext } from './contexts';
 import { FeedStore } from './feed-store';
 import {
+  AppBlock,
+  AppBlockDelegate,
   AppletConfig,
+  NHDelegateReceiver,
   SensemakerStore,
   sensemakerStoreContext,
 } from '@neighbourhoods/client';
-import { NHComponent } from 'neighbourhoods-design-system-components';
+import { NHComponent } from '@neighbourhoods/design-system-components';
 import { NHPageHeaderCard } from './feed/components/page-header-card';
 import CreatePost from './feed/widgets/create-post';
 import { AllPosts } from './feed/widgets/all-posts';
@@ -17,8 +20,9 @@ import { ContextView } from './sensemaker/context-view';
 import { ContextSelector } from './sensemaker/context-selector';
 import { StoreSubscriber } from 'lit-svelte-stores';
 import { classMap } from 'lit/directives/class-map.js';
+import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 
-export class FeedApp extends NHComponent {
+export class FeedApplet extends ScopedRegistryHost(AppBlock) implements NHDelegateReceiver<AppBlockDelegate> {
   @state() loading = false;
   
   @provide({ context: feedStoreContext })

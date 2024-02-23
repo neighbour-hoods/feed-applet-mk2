@@ -1,88 +1,44 @@
-import { LitElement, css, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import {
-  AppWebsocket,
-  ActionHash,
-  AppInfo,
-  AdminWebsocket,
-  encodeHashToBase64,
-  CellInfo,
-  AppAgentWebsocket,
-  ProvisionedCell,
-  CellType,
-  CellId,
-  ClonedCell,
-} from '@holochain/client';
-import { FeedStore } from './feed-store';
-import { SensemakerStore } from '@neighbourhoods/client';
-import { appletConfig } from './appletConfig'
-import feedApplet from './applet-index'
-import { AppletInfo, AppletRenderers } from '@neighbourhoods/nh-launcher-applet';
-import { getCellId } from './utils';
-import { CreateOrJoinNh } from './create-or-join-nh';
-import { NHComponent } from 'neighbourhoods-design-system-components';
-import './feed/components/post-display-wrapper'
-import { ref } from "lit/directives/ref.js";
-import { get } from '@holochain-open-dev/stores';
+import { css, html } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 
+import { AppWebsocket, AppInfo, AdminWebsocket, encodeHashToBase64, CellInfo, AppAgentWebsocket, ProvisionedCell, CellType, CellId, ClonedCell, } from '@holochain/client';
+
+import { connectHolochainApp, getAppAgentWebsocket, createAppDelegate, AppBlockRenderer } from "@neighbourhoods/app-loader"
+import { CreateOrJoinNH } from '@neighbourhoods/dev-util-components';
+import { SensemakerStore } from '@neighbourhoods/client';
+
+import { NHComponent } from '@neighbourhoods/design-system-components';
+
+import { INSTALLED_APP_ID, appletConfig } from './appletConfig'
+import FeedApplet from './applet-index'
+
+@customElement('applet-test-harness')
 export class AppletTestHarness extends NHComponent {
   @state() loading = true;
-  @state() actionHash: ActionHash | undefined;
-  @state() currentSelectedList: string | undefined;
-
-  @property({ type: Object })
-  appWebsocket!: AppWebsocket;
-
-  @property({ type: Object })
-  adminWebsocket!: AdminWebsocket;
-
-  @property({ type: Object })
-  appInfo!: AppInfo;
-
-  @property()
-  _feedStore!: FeedStore;
-
-  @property()
-  _sensemakerStore!: SensemakerStore;
-
-  @property()
-  isSensemakerCloned: boolean = false;
-
-  @property()
-  agentPubkey!: string;
-
-  renderers!: AppletRenderers;
-  appletInfo!: AppletInfo[];
-
-  @state()
-  postHash?: ActionHash;
+  @state() isSensemakerCloned: boolean = false;
   
-  appAgentWebsocket!: AppAgentWebsocket;
+  private _agentPubkey!: string;
+  private _appWebsocket!: AppWebsocket;
+  private _adminWebsocket!: AdminWebsocket;
+  private _appAgentWebsocket!: AppAgentWebsocket;
+  
+  private _sensemakerStore!: SensemakerStore;
+  private _appInfo!: AppInfo;
 
 
   async firstUpdated() {
-    // connect to holochain conductor and set up websocket connections
+   // connect to holochain conductor and set up websocket connections
     try {
-      await this.connectHolochain()
-      const installedCells = this.appInfo.cell_info;
-      await Promise.all(
-        Object.keys(installedCells).map(roleName => {
-          installedCells[roleName].map(cellInfo => {
-            console.log('cell info map', cellInfo)
-            this.adminWebsocket.authorizeSigningCredentials(getCellId(cellInfo)!);
-          })
-        })
-      );
+      const {
+        adminWebsocket,
+        appWebsocket,
+        appInfo
+      } = await connectHolochainApp(INSTALLED_APP_ID);
+      const installedCells = appInfo.cell_info
 
-      // mocking what gets passed to the applet
-      this.appletInfo = [{
-        neighbourhoodInfo: {
-            logoSrc: "",
-            name: ""
-        },
-        appInfo: this.appInfo
-      }];
-
+      this._adminWebsocket = adminWebsocket
+      this._appWebsocket = appWebsocket
+      this._appInfo = appInfo
       // check if sensemaker has been cloned yet
       const sensemakerCellInfo: CellInfo[] = installedCells["sensemaker"];
       if (sensemakerCellInfo.length > 1) {
@@ -91,15 +47,15 @@ export class AppletTestHarness extends NHComponent {
         await this.initializeSensemakerStore(clonedSMCellId);
         this.loading = false;
       }
-      const feedCellInfo: CellInfo[] = installedCells["feed"];
-      let feedCellId: CellId;
-      if (CellType.Provisioned in feedCellInfo[0]) {
-        feedCellId = (feedCellInfo[0][CellType.Provisioned] as ProvisionedCell).cell_id;
+      const providerCellInfo: CellInfo[] = installedCells["feed"];
+      let providerCellId: CellId;
+      if (CellType.Provisioned in providerCellInfo[0]) {
+        providerCellId = (providerCellInfo[0][CellType.Provisioned] as ProvisionedCell).cell_id;
       } else {
         throw new Error("feed cell not provisioned yet")
 
       }
-      this.agentPubkey = encodeHashToBase64(feedCellId[1]);
+      this._agentPubkey = encodeHashToBase64(providerCellId[1]);
     }
     catch (e) {
       console.log("error registering applet", e)
@@ -107,23 +63,13 @@ export class AppletTestHarness extends NHComponent {
   }
 
   async initializeSensemakerStore(clonedSensemakerRoleName: string) {
-    const appAgentWebsocket: AppAgentWebsocket = await AppAgentWebsocket.connect(`ws://localhost:9001`, "feed-sensemaker");
-    this.appAgentWebsocket = appAgentWebsocket;
-    this._sensemakerStore = new SensemakerStore(appAgentWebsocket, clonedSensemakerRoleName);
-    // @ts-ignore
-    this.renderers = await feedApplet.appletRenderers(appAgentWebsocket, { sensemakerStore: this._sensemakerStore }, this.appletInfo);
-    await this._sensemakerStore.registerApplet(feedApplet.appletConfig)
-    feedApplet.widgetPairs.map((widgetPair) => {
-      this._sensemakerStore.registerWidget(
-        widgetPair.compatibleDimensions.map((dimensionName: string) => encodeHashToBase64(get(this._sensemakerStore.flattenedAppletConfigs()).dimensions[dimensionName])),
-        widgetPair.display,
-        widgetPair.assess,
-      ) 
-    });
+    this._appAgentWebsocket = await getAppAgentWebsocket(INSTALLED_APP_ID);;
+    this._sensemakerStore = new SensemakerStore(this._appAgentWebsocket, clonedSensemakerRoleName);
   }
+  
   async cloneSensemakerCell(ca_pubkey: string) {
-    const clonedSensemakerCell: ClonedCell = await this.appAgentWebsocket.createCloneCell({
-      app_id: 'feed-sensemaker',
+    const clonedSensemakerCell: ClonedCell = await this._appWebsocket.createCloneCell({
+      app_id: INSTALLED_APP_ID,
       role_name: "sensemaker",
       modifiers: {
         network_seed: '',
@@ -137,14 +83,14 @@ export class AppletTestHarness extends NHComponent {
         },
     }});
     this.isSensemakerCloned = true;
-    await this.adminWebsocket.authorizeSigningCredentials(clonedSensemakerCell.cell_id);
+    await this._adminWebsocket.authorizeSigningCredentials(clonedSensemakerCell.cell_id);
     await this.initializeSensemakerStore(clonedSensemakerCell.clone_id)
   }
 
   async createNeighbourhood(_e: CustomEvent) {
-    await this.cloneSensemakerCell(this.agentPubkey)
-    const _feedConfig = await this._sensemakerStore.registerApplet(appletConfig);
-    
+    await this.cloneSensemakerCell(this._agentPubkey)
+    const config = await this._sensemakerStore.registerApplet(appletConfig);
+    console.log('App config :>> ', config);
     this.loading = false;
   }
 
@@ -152,7 +98,7 @@ export class AppletTestHarness extends NHComponent {
     await this.cloneSensemakerCell(e.detail.newValue)
     // wait some time for the dht to sync, otherwise checkIfAppletConfigExists returns null
     setTimeout(async () => {
-      const _feedConfig = await this._sensemakerStore.registerApplet(appletConfig);
+      await this._sensemakerStore.registerApplet(appletConfig);
       this.loading = false;
     }, 2000)
   }
@@ -166,70 +112,63 @@ export class AppletTestHarness extends NHComponent {
       return html`
         <create-or-join-nh @create-nh=${this.createNeighbourhood} @join-nh=${this.joinNeighbourhood}></create-or-join-nh>
       `;
+    const delegate = createAppDelegate(
+      this._appAgentWebsocket,
+      this._appInfo,
+      {
+        logoSrc: "",
+        name: ""
+      },
+      this._sensemakerStore
+    )
+    console.log('delegate :>> ', delegate);
     return html`
       <main>
-        <h3>My Pubkey: ${this.agentPubkey}</h3>
-        <div class="home-page">
-        
-        <div class="home-page"
-          ${ref((e) => this.renderers.full(e as HTMLElement, customElements))}
-            @post-hash-created=${(e: CustomEvent) => { console.log('post created with hash:', e.detail.hash); this.postHash = e.detail.hash }}
-            style="flex: 1"
-        ></div>
-        <div class="app-footer">
-          ${this.postHash ? (this.renderers as any).resourceRenderers["post"](document.body, this.postHash) : html``}
-        </div>
+        <h3>My Pubkey: ${this._agentPubkey}</h3>
+        <div
+          @post-hash-created=${(e: CustomEvent) => { console.log('post created with hash:', e.detail.hash) }}
+        >
+          <app-renderer .component=${FeedApplet.appletRenderers['full']} .nhDelegate=${delegate}></app-renderer>
         </div>
       </main>
     `;
   }
 
-  async connectHolochain() {
-    this.adminWebsocket = await AdminWebsocket.connect(`ws://localhost:9000`);
-    this.appWebsocket = await AppWebsocket.connect(`ws://localhost:9001`);
-    this.appInfo = await this.appWebsocket.appInfo({
-      installed_app_id: 'feed-sensemaker',
-    });
-    console.log("appInfo", this.appInfo)
-  }
-
-  static get elementDefinitions() {
-    return {
-      'create-or-join-nh': CreateOrJoinNh,
-    };
+  static elementDefinitions = {
+    'create-or-join-nh': CreateOrJoinNH,
+    'app-renderer': AppBlockRenderer,
+    // 'mwc-circular-progress': CircularProgress,
   }
 
   static styles = css`
-    .home-page {
-      display: flex;
-      flex-direction: row;
-    }  
-
     :host {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      font-size: calc(10px + 2vmin);
-      color: #1a2b42;
-      max-width: 960px;
-      margin: 0 auto;
-      text-align: center;
-      background-color: var(--lit-element-background-color);
+      width: 100%;
+      height: 100%;
+    }
+
+    app-renderer {
+      width: 100%;
+    }
+
+    create-or-join-nh {
+      width: 50vw;
+      display: block;
+      margin: 30vh auto;
+      height: 50vh;
     }
 
     main {
       flex-grow: 1;
     }
 
-    .app-footer {
-      font-size: calc(12px + 0.5vmin);
-      align-items: center;
+    h3 {
+      text-align: center;
     }
 
-    .app-footer a {
-      margin-left: 5px;
+    mwc-circular-progress {
+      position: fixed;
+      top: 45vh;
+      right: 48vw;
     }
   `;
 }

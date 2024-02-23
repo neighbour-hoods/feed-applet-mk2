@@ -1,16 +1,14 @@
 import { css, html } from "lit";
-import { consume } from "@lit-labs/context";
+import { consume } from "@lit/context";
 import { property, state } from "lit/decorators.js";
 
 import { ComputeContextInput, SensemakerStore } from "@neighbourhoods/client";
-import { SensemakeResource } from "./sensemake-resource";
 import { StoreSubscriber } from "lit-svelte-stores";
 import { FeedStore } from "../feed-store";
 import { feedStoreContext, sensemakerStoreContext } from "../contexts";
 import { ActionHash, EntryHash, encodeHashToBase64 } from "@holochain/client";
-import { NHComponent } from "neighbourhoods-design-system-components";
+import { NHComponent } from "@neighbourhoods/design-system-components";
 import { PostDetailWidget } from "../feed/widgets/post-detail";
-import { NHAssessmentWidget } from "../feed/components/assessment-widget";
 import { get } from "@holochain-open-dev/stores";
 
 export class ContextView extends NHComponent {
@@ -82,18 +80,8 @@ export class ContextView extends NHComponent {
                     }
                     }}
                     slot="footer" .name=${'ok'} .iconAlt=${''} .iconImg=${''}>
-                    <sensemake-resource
-                        slot="icon"
-                        style="z-index: 1; position: relative;"
-                        .resourceEh=${entryHash}
-                        .resourceDefEh=${
-                                get(this.sensemakerStore.flattenedAppletConfigs()).resource_defs['feed']['posts'][
-                                'post_item'
-                                ]
-                        }
                     >
                     </nh-assessment-widget>
-                    </sensemake-resource>
                 </post-detail-widget>
             `;
         })}
@@ -113,8 +101,6 @@ export class ContextView extends NHComponent {
     }
     
     static elementDefinitions = {
-        'sensemake-resource': SensemakeResource,
-        'nh-assessment-widget': NHAssessmentWidget,
         'post-detail-widget': PostDetailWidget,
     }
 

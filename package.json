@@ -30,10 +30,7 @@
     "dotenv-cli": "^7.2.1",
     "open-cli": "^7.2.0",
     "@webcomponents/scoped-custom-element-registry": "^0.0.9",
-    "rimraf": "^3.0.2"
-  },
-  "dependencies": {
-    "@neighbourhoods/design-system-components": "workspace:*",
+    "rimraf": "^3.0.2",
     "vitest": "^0.32.2"
   },
   "engines": {

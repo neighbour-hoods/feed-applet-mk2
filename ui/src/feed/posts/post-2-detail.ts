@@ -1,8 +1,8 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { EntryHash, Record, ActionHash, AppAgentClient, DnaHash } from '@holochain/client';
-import { consume } from '@lit-labs/context';
-import { Task } from '@lit-labs/task';
+import { consume } from '@lit/context';
+import { Task } from '@lit/task';
 import { decode } from '@msgpack/msgpack';
 import '@material/mwc-circular-progress';
 import '@material/mwc-icon-button';

@@ -1,7 +1,7 @@
 import { css, CSSResult, html, unsafeCSS } from "lit";
 import { customElement, property, query, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
-import { NHComponent } from "neighbourhoods-design-system-components";
+import { NHComponent } from "@neighbourhoods/design-system-components";
 import { NHMenu } from "./menu";
 
 export class NHCard extends NHComponent {

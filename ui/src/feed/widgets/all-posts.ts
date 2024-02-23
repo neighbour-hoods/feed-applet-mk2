@@ -1,13 +1,13 @@
-import { LitElement, html } from 'lit';
-import { state, customElement, property } from 'lit/decorators.js';
+import { html } from 'lit';
+import { state, property } from 'lit/decorators.js';
 import {
   AppAgentClient,
   EntryHash,
   ActionHash,
   encodeHashToBase64,
 } from '@holochain/client';
-import { StoreSubscriber, TaskSubscriber, get } from '@holochain-open-dev/stores';
-import { consume } from '@lit-labs/context';
+import { StoreSubscriber} from '@holochain-open-dev/stores';
+import { consume } from '@lit/context';
 
 import { clientContext, feedStoreContext } from '../../contexts';
 import { Post, PostsSignal } from '../posts/types';
@@ -16,11 +16,9 @@ import {
   SensemakerStore,
   sensemakerStoreContext,
 } from '@neighbourhoods/client';
-import { SensemakeResource } from '../../sensemaker/sensemake-resource';
-import { NHComponent } from 'neighbourhoods-design-system-components';
+import { NHComponent } from '@neighbourhoods/design-system-components';
 import { EntryRecord } from '@holochain-open-dev/utils';
-import { Task } from '@lit-labs/task';
-import { NHAssessmentWidget } from '../components/assessment-widget';
+import { Task } from '@lit/task';
 import { PostDetailWidget } from './post-detail';
 
 export class AllPosts extends NHComponent {
@@ -92,18 +90,7 @@ export class AllPosts extends NHComponent {
                     }
                   }}
                   slot="footer" .name=${'ok'} .iconAlt=${''} .iconImg=${''}>
-                  <sensemake-resource
-                    slot="icon"
-                    style="z-index: 1; position: relative;"
-                    .resourceEh=${entryHash}
-                    .resourceDefEh=${
-                      (get(this.sensemakerStore.flattenedAppletConfigs())as any).resource_defs['feed']['posts'][
-                        'post_item'
-                      ]
-                    }
-                  >
                   </nh-assessment-widget>
-                  </sensemake-resource>
               </post-detail-widget>
             `;
         })}
@@ -127,8 +114,6 @@ export class AllPosts extends NHComponent {
 
   static get elementDefinitions() {
     return {
-      'sensemake-resource': SensemakeResource,
-      'nh-assessment-widget': NHAssessmentWidget,
       'post-detail-widget': PostDetailWidget,
     };
   }

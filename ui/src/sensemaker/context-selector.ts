@@ -1,4 +1,4 @@
-import { consume } from '@lit-labs/context';
+import { consume } from '@lit/context';
 import { LitElement, html, css } from 'lit';
 import { StoreSubscriber } from 'lit-svelte-stores';
 import { customElement, state } from 'lit/decorators.js';
@@ -6,7 +6,7 @@ import { SensemakerStore, AppletConfig } from '@neighbourhoods/client';
 import { sensemakerStoreContext } from '../contexts';
 import { NHButton } from '../feed/components/button';
 import { NHPageHeaderCard } from '../feed/components/page-header-card';
-import { NHComponent } from 'neighbourhoods-design-system-components';
+import { NHComponent } from '@neighbourhoods/design-system-components';
 
 export const cleanForUI = (propertyName: string) =>
   propertyName.split('_').map(capitalize).join(' ');

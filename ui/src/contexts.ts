@@ -1,4 +1,4 @@
-import { createContext } from '@lit-labs/context';
+import { createContext } from '@lit/context';
 import { AdminWebsocket, AppAgentClient, AppWebsocket } from '@holochain/client';
 import { FeedStore } from './feed-store';
 import { SensemakerStore } from '@neighbourhoods/client';

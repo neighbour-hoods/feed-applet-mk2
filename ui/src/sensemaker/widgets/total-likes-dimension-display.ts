@@ -1,13 +1,9 @@
 import { css, html } from 'lit';
 import { property } from 'lit/decorators.js';
-import { DisplayDimensionWidget } from '@neighbourhoods/client';
-import { Assessment, RangeValueInteger } from '@neighbourhoods/client';
+import { Assessment, OutputAssessmentControl, RangeValueInteger } from '@neighbourhoods/client';
+import { NHComponent } from '@neighbourhoods/design-system-components';
 
-export class TotalLikesDimensionAssessment extends DisplayDimensionWidget {
-
-    @property()
-    assessment!: Assessment | null
-
+export class TotalLikesDimensionAssessment extends OutputAssessmentControl {
     render() {
         return html`
                     <div class="display-box-wrapper">

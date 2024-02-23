@@ -1,7 +1,7 @@
 import { css, CSSResult, html, unsafeCSS } from "lit";
 import { html as litHtml, literal } from "lit/static-html.js";
 import { customElement, property } from "lit/decorators.js";
-import { NHComponentShoelace } from "neighbourhoods-design-system-components";
+import { NHComponentShoelace } from "@neighbourhoods/design-system-components";
 import { classMap } from "lit/directives/class-map.js";
 import { plusIcon } from "./b64images";
 import { NHButton } from "./button";

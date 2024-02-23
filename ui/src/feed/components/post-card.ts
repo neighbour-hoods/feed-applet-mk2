@@ -1,6 +1,6 @@
 import { css, CSSResult, html } from "lit";
 import { property } from "lit/decorators.js";
-import { NHComponent , NHCard, NHAssessmentWidget } from '@neighbourhoods/design-system-components';
+import { NHComponent , NHCard } from '@neighbourhoods/design-system-components';
 import { SlSkeleton } from "@scoped-elements/shoelace";
 import { classMap } from "lit/directives/class-map.js";
 
@@ -72,7 +72,6 @@ export default class NHPostCard extends NHComponent {
 
   static get elementDefinitions() {
     return {
-      "nh-assessment-widget": NHAssessmentWidget,
       "nh-card": NHCard,
       "sl-skeleton": SlSkeleton,
     };

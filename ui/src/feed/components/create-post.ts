@@ -1,6 +1,6 @@
 import { css, CSSResult, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-import { NHComponent, NHComponentShoelace } from "neighbourhoods-design-system-components";
+import { property } from "lit/decorators.js";
+import { NHComponent, NHComponentShoelace } from "@neighbourhoods/design-system-components";
 import { NHCard } from "./card";
 import { SlTextarea } from "@scoped-elements/shoelace";
 

@@ -1,15 +1,12 @@
-import { AppletConfigInput, CreateAppletConfigInput, ConfigCulturalContext, ConfigMethod, ConfigThreshold, Range, ConfigResourceDef, ConfigDimension } from '@neighbourhoods/client'
+import { AppletConfigInput, ConfigCulturalContext, ConfigDimension, ConfigMethod, ConfigResourceDef, ConfigThreshold, Dimension, Range } from '@neighbourhoods/client'
+export const INSTALLED_APP_ID = 'feed-sensemaker';
 
+// ==========RANGES==========
 const likeRange: Range = {
     "name": "1-scale",
     "kind": {
         "Integer": { "min": 0, "max": 1 }
     }
-}
-const likeDimension: ConfigDimension = {
-    "name": "like",
-    "range": likeRange,
-    "computed": false
 }
 
 const totalLikesRange: Range = {
@@ -18,21 +15,31 @@ const totalLikesRange: Range = {
         "Integer": { "min": 0, "max": 1000000 }
     }
 }
+
+// ==========DIMENSIONS==========
+const likeDimension: ConfigDimension = {
+    "name": "like",
+    "range": likeRange,
+    "computed": false
+}
+
 const totalLikesDimension: ConfigDimension = {
     "name": "total_likes",
     "range": totalLikesRange,
     "computed": true
 }
 
+// ==========RESOURCE DEFS==========
 const postItemResourceDef: ConfigResourceDef = {
     "name": "post_item",
     "base_types": [{ "entry_index": 0, "zome_index": 0, "visibility": { "Public": null } }],
-    "dimensions": [likeDimension, totalLikesDimension]
+    "role_name": "feed",
+    "zome_name": "posts"
 }
 
+// ==========METHODS==========
 const totalLikesMethod: ConfigMethod = {
     "name": "total_likes_method",
-    "target_resource_def": postItemResourceDef,
     "input_dimensions": [likeDimension],
     "output_dimension": totalLikesDimension,
     "program": { "Sum": null },
@@ -40,6 +47,7 @@ const totalLikesMethod: ConfigMethod = {
     "requires_validation": false
 }
 
+// ==========THRESHOLDS==========
 const likesThreshold: ConfigThreshold = {
     "dimension": totalLikesDimension,
     "kind": { "GreaterThan": null },
@@ -50,23 +58,28 @@ const noLikesThreshold: ConfigThreshold = {
     "kind": { "GreaterThan": null },
     "value": { "Integer": 0 }
 }
+
+// ==========CULTURAL CONTEXTS==========
 const mostLikedPostsContext: ConfigCulturalContext = {
     "name": "most_liked_posts_(>3)",
     "resource_def": postItemResourceDef,
     "thresholds": [likesThreshold],
     "order_by": [[totalLikesDimension, { "Biggest": null }]]
 }
+
 const likedPostsContext: ConfigCulturalContext = {
     "name": "liked_posts",
     "resource_def": postItemResourceDef,
     "thresholds": [noLikesThreshold],
     "order_by": [[totalLikesDimension, { "Biggest": null }]]
 }
+
+// ==========APPLET CONFIG==========
 const appletConfig: AppletConfigInput = {
-    "name": "feed_applet",
+    "name": INSTALLED_APP_ID,
+    "resource_defs": [postItemResourceDef],
     "ranges": [likeRange, totalLikesRange],
     "dimensions": [likeDimension, totalLikesDimension],
-    "resource_defs": { "feed": { "posts": [postItemResourceDef] } },
     "methods": [totalLikesMethod],
     "cultural_contexts": [mostLikedPostsContext, likedPostsContext]
 }

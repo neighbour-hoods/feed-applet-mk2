@@ -7,14 +7,14 @@ import {
   AppAgentClient,
   DnaHash,
 } from '@holochain/client';
-import { consume } from '@lit-labs/context';
-import { Task } from '@lit-labs/task';
+import { consume } from '@lit/context';
+import { Task } from '@lit/task';
 import { decode } from '@msgpack/msgpack';
 
 import { clientContext, feedStoreContext } from '../../contexts';
 import { Post } from '../posts/types';
 import { FeedStore } from '../../feed-store';
-import { NHComponent } from 'neighbourhoods-design-system-components';
+import { NHComponent } from '@neighbourhoods/design-system-components';
 import { editIcon, pearImg, trashIcon } from '../components/b64images';
 import { NHButton } from '../components/button';
 import { NHCard } from '../components/card';

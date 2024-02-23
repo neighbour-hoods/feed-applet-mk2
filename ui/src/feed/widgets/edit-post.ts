@@ -5,7 +5,7 @@ import {
   Record,
   AppAgentClient,
 } from '@holochain/client';
-import { consume } from '@lit-labs/context';
+import { consume } from '@lit/context';
 import { decode } from '@msgpack/msgpack';
 
 import { clientContext, feedStoreContext } from '../../contexts';
@@ -13,7 +13,7 @@ import { Post } from '../posts/types';
 import { FeedStore } from '../../feed-store';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { NHButton } from '../components/button';
-import { NHComponent } from 'neighbourhoods-design-system-components';
+import { NHComponent } from '@neighbourhoods/design-system-components';
 import NHCreatePost from './create-post';
 
 export class EditPost extends NHComponent {
