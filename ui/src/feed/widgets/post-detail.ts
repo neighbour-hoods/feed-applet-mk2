@@ -15,7 +15,7 @@ import { clientContext, feedStoreContext } from '../../contexts';
 import { Post } from '../posts/types';
 import { FeedStore } from '../../feed-store';
 import { NHComponent } from 'neighbourhoods-design-system-components';
-import { editIcon, trashIcon } from '../components/b64images';
+import { editIcon, pearImg, trashIcon } from '../components/b64images';
 import { NHButton } from '../components/button';
 import { NHCard } from '../components/card';
 import { EditPost } from './edit-post';
@@ -79,23 +79,23 @@ export class PostDetailWidget extends NHComponent {
 
   renderDetail(record: Record) {
     const post = decode((record.entry as any).Present.entry) as Post;
-
     return html`
       <nh-post-card
-      .theme=${'dark'}
-      .title=${post.title}
-      .textContent=${post.text_content}
-    >
-      <div class="action-buttons" slot="context-menu" style="display: flex; gap: 2px; flex-direction: column;">
-        <nh-applet-button .variant=${'primary'} .size=${'icon'} .iconImageB64=${editIcon} .clickHandler=${() => {
-      this._editing = true;
-    }}>Edit</nh-applet-button>
-        <nh-applet-button .variant=${'danger'} .size=${'icon'} .iconImageB64=${trashIcon} .clickHandler=${() => {
-      this.deletePost();
-    }}>Delete</nh-applet-button>
-      </div>
-      <img src=${`data:image/png;base64,${post.image_content}`} slot="image"/>
-    </nh-post-card>
+        .title=${post.title}
+        .textContent=${post.text_content}
+        .tags=${post.hash_tags}
+        .imageContent=${post.image_content}
+        .assessmentIcon=${pearImg}
+      >
+        <div class="action-buttons" slot="context-menu" style="display: flex; gap: 2px; flex-direction: column;">
+          <nh-applet-button .variant=${'primary'} .size=${'icon'} .iconImageB64=${editIcon} .clickHandler=${() => {
+        this._editing = true;
+      }}>Edit</nh-applet-button>
+          <nh-applet-button .variant=${'danger'} .size=${'icon'} .iconImageB64=${trashIcon} .clickHandler=${() => {
+        this.deletePost();
+      }}>Delete</nh-applet-button>
+        </div>
+      </nh-post-card>
     `;
   }
 

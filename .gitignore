@@ -12,3 +12,4 @@ node_modules
 .running
 pnpm-lock.yaml
 /tests/node_modules
+.env

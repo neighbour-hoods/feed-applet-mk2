@@ -2,7 +2,10 @@ use hdi::prelude::*;
 #[hdk_entry_helper]
 #[derive(Clone, PartialEq)]
 pub struct Post {
-    pub text: String,
+    pub title: String,
+    pub text_content: String,
+    pub hash_tags: Vec<String>,
+    pub image_content: String,
 }
 pub fn validate_create_post(
     _action: EntryCreationAction,

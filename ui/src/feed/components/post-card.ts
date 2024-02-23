@@ -15,7 +15,11 @@ export default class NHPostCard extends NHComponent {
   @property()
   textContent!: string;
   @property()
-  iconImg!: string;
+  imageContent!: string;
+  @property()
+  assessmentIcon!: string;
+  @property()
+  tags!: string[];
   @property()
   loading: boolean = false;
   @property()
@@ -27,7 +31,7 @@ export default class NHPostCard extends NHComponent {
       <nh-card
         .theme=${"light"}
         .heading=${""}
-        .hasContextMenu=${!false}
+        .hasContextMenu=${false}
         .hasPrimaryAction=${false}
         .footerAlign=${"l"}
         class="nested-card"
@@ -57,9 +61,11 @@ export default class NHPostCard extends NHComponent {
           preview: this.isPreview
         })}">
           ${this.textContent !== "" ? html`<p>${this.textContent}</p>` : null}
-          <slot name="image"></slot>
+          <slot name="image">
+            <img src=${this.imageContent} />
+          </slot>
         </div>
-        ${this.isPreview ? null : html`<nh-assessment-widget slot="footer" .name=${kebabCase(this.title)} .iconAlt=${`Assess post: "${this.title}"`} .iconImg=${this.iconImg}></nh-assessment-widget>`}
+        ${this.isPreview ? null : html`<nh-assessment-widget slot="footer" .name=${kebabCase(this.title)} .iconAlt=${`Assess post: "${this.title}"`} .iconImg=${this.assessmentIcon}></nh-assessment-widget>`}
       </nh-card>
     `;
   }
