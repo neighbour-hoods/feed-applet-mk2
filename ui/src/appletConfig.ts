@@ -31,7 +31,7 @@ const totalLikesDimension: ConfigDimension = {
 
 // ==========RESOURCE DEFS==========
 const postItemResourceDef: ConfigResourceDef = {
-    "name": "post_item",
+    "resource_name": "post_item",
     "base_types": [{ "entry_index": 0, "zome_index": 0, "visibility": { "Public": null } }],
     "role_name": "feed",
     "zome_name": "posts"

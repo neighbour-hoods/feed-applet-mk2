@@ -1,4 +1,4 @@
-import { css, html } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 import { AppWebsocket, AppInfo, AdminWebsocket, encodeHashToBase64, CellInfo, AppAgentWebsocket, ProvisionedCell, CellType, CellId, ClonedCell, } from '@holochain/client';
@@ -7,13 +7,14 @@ import { connectHolochainApp, getAppAgentWebsocket, createAppDelegate, AppBlockR
 import { CreateOrJoinNH } from '@neighbourhoods/dev-util-components';
 import { SensemakerStore } from '@neighbourhoods/client';
 
-import { NHComponent } from '@neighbourhoods/design-system-components';
+import { decode } from '@msgpack/msgpack';
 
 import { INSTALLED_APP_ID, appletConfig } from './appletConfig'
 import FeedApplet from './applet-index'
+import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 
 @customElement('applet-test-harness')
-export class AppletTestHarness extends NHComponent {
+export class AppletTestHarness extends ScopedRegistryHost(LitElement) {
   @state() loading = true;
   @state() isSensemakerCloned: boolean = false;
   
@@ -96,11 +97,7 @@ export class AppletTestHarness extends NHComponent {
 
   async joinNeighbourhood(e: CustomEvent) {
     await this.cloneSensemakerCell(e.detail.newValue)
-    // wait some time for the dht to sync, otherwise checkIfAppletConfigExists returns null
-    setTimeout(async () => {
-      await this._sensemakerStore.registerApplet(appletConfig);
-      this.loading = false;
-    }, 2000)
+    this.loading = false;
   }
 
   render() {

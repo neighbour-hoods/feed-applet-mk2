@@ -21,27 +21,55 @@ import { ContextSelector } from './sensemaker/context-selector';
 import { StoreSubscriber } from 'lit-svelte-stores';
 import { classMap } from 'lit/directives/class-map.js';
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
+import { getCellId } from '@neighbourhoods/app-loader';
+import { appletConfig } from './appletConfig';
+import { get } from '@holochain-open-dev/stores';
 
 export class FeedApplet extends ScopedRegistryHost(AppBlock) implements NHDelegateReceiver<AppBlockDelegate> {
-  @state() loading = false;
+  @state() loaded = false;
   
-  @provide({ context: feedStoreContext })
-  @property()
-  feedStore!: FeedStore;
+  @property() feedStore!: FeedStore;
 
-  @provide({ context: sensemakerStoreContext })
-  @property()
-  sensemakerStore!: SensemakerStore;
+  @property() sensemakerStore!: SensemakerStore;
 
-  @state()
-  _selectedContext: string = "";
-  
-  configs: StoreSubscriber<AppletConfig> = new StoreSubscriber(this, () =>
-    this.sensemakerStore.flattenedAppletConfigs()
-  );
+  @state() config!: AppletConfig;
+
+  @state() _selectedContext: string = "";
+
+  loadData = async () => {
+    try {
+      this.sensemakerStore = this.nhDelegate.sensemakerStore;
+      const appletRoleName = 'feed';
+      const cellInfo = this.nhDelegate.appInfo.cell_info[appletRoleName][0];
+      const cellId = getCellId(cellInfo);
+      const installAppId = this.nhDelegate.appInfo.installed_app_id;
+      appletConfig.name = installAppId;
+      this.feedStore = new FeedStore(
+        this.nhDelegate.appAgentWebsocket,
+        cellId!,
+        appletRoleName
+      );
+
+      this.feedStore?.fetchAllPosts();
+      const allPostEntryHashes = get(this.feedStore?.allPostEntryHashes());
+
+      await this.nhDelegate.sensemakerStore.getAssessmentsForResources({
+        resource_ehs: allPostEntryHashes,
+      });
+
+      const config = await this.sensemakerStore.checkIfAppletConfigExists(installAppId)
+      if(config) {
+        this.config = config
+      }
+      
+      this.loaded = true;
+    } catch (e) {
+      console.log('error in first update', e);
+    }
+  };
 
   render() {
-    if (this.loading) return html`Loading...`;
+    if (!this.loaded) return html`Loading...`;
     return html`
       <main>
         <header>
@@ -69,7 +97,7 @@ export class FeedApplet extends ScopedRegistryHost(AppBlock) implements NHDelega
         @enter-right=${(e: CustomEvent) => { (e.currentTarget as any).classList.toggle("moveFromRight");(e.currentTarget as any).classList.toggle("moveFromLeft")}}
         ></context-selector>
         <div class="contexts-carousel">
-          ${Object.keys(this.configs?.value?.cultural_contexts).map(
+          ${[].map(
             contextName => html`<context-view
               class=${classMap({
                 active: this._selectedContext == contextName,
@@ -94,7 +122,6 @@ export class FeedApplet extends ScopedRegistryHost(AppBlock) implements NHDelega
   }
 
   static styles = [
-    super.styles as CSSResult,
     css`
       :host {
         display: flex;
