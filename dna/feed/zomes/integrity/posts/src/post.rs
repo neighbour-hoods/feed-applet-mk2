@@ -4,8 +4,8 @@ use hdi::prelude::*;
 pub struct Post {
     pub title: String,
     pub text_content: String,
-    pub hash_tags: Vec<String>,
-    pub image_content: String,
+    pub hash_tags: Option<Vec<String>>,
+    pub image_content: Option<String>,
 }
 pub fn validate_create_post(
     _action: EntryCreationAction,
@@ -31,10 +31,14 @@ pub fn validate_delete_post(
 pub fn validate_create_link_post_updates(
     _action: CreateLink,
     base_address: AnyLinkableHash,
-    target_address: AnyLinkableHash,
+    _target_address: AnyLinkableHash,
     _tag: LinkTag,
 ) -> ExternResult<ValidateCallbackResult> {
-    let action_hash = ActionHash::from(base_address);
+    let action_hash = ActionHash::try_from(base_address.clone()).map_err(|_| {
+        wasm_error!(
+            WasmErrorInner::Guest(String::from("Failed to convert base_address to ActionHash"))
+        )
+    })?;
     let record = must_get_valid_record(action_hash)?;
     let _post: crate::Post = record
         .entry()
@@ -45,7 +49,11 @@ pub fn validate_create_link_post_updates(
                 WasmErrorInner::Guest(String::from("Linked action must reference an entry"))
             ),
         )?;
-    let action_hash = ActionHash::from(target_address);
+    let action_hash = ActionHash::try_from(base_address).map_err(|_| {
+        wasm_error!(
+            WasmErrorInner::Guest(String::from("Failed to convert base_address to ActionHash"))
+        )
+    })?;
     let record = must_get_valid_record(action_hash)?;
     let _post: crate::Post = record
         .entry()
@@ -73,12 +81,16 @@ pub fn validate_delete_link_post_updates(
 }
 pub fn validate_create_link_all_posts(
     _action: CreateLink,
-    _base_address: AnyLinkableHash,
-    target_address: AnyLinkableHash,
+    base_address: AnyLinkableHash,
+    _target_address: AnyLinkableHash,
     _tag: LinkTag,
 ) -> ExternResult<ValidateCallbackResult> {
     // Check the entry type for the given action hash
-    let action_hash = ActionHash::from(target_address);
+    let action_hash = ActionHash::try_from(base_address).map_err(|_| {
+        wasm_error!(
+            WasmErrorInner::Guest(String::from("Failed to convert base_address to ActionHash"))
+        )
+    })?;
     let record = must_get_valid_record(action_hash)?;
     let _post: crate::Post = record
         .entry()

@@ -5,7 +5,7 @@ import { consume } from '@lit/context';
 
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { clientContext, feedStoreContext } from '../../contexts';
-import { Post } from '../posts/types';
+// import { Post } from '../posts/types';
 import { FeedStore } from '../../feed-store';
 import { object, string, array, InferType } from 'yup';
 import { SlInput, SlTag, SlTextarea } from '@scoped-elements/shoelace';
@@ -33,10 +33,10 @@ export default class NHCreatePost extends NHComponentShoelace {
 
     async createEntries(model: object) {
       const formData : { title?: string, text_content?: string, hash_tags?: string[] } = model;
-      let postEntryRecord : EntryRecord<Post>;
+      let postEntryRecord : EntryRecord<any>;
 
       try {
-        postEntryRecord = await this.feedStore.service.createPost({title: formData.title, text_content: formData.text_content, hash_tags: formData.hash_tags, image_content: ''} as Post);
+        postEntryRecord = await this.feedStore.service.createPost({title: formData.title, text_content: formData.text_content, hash_tags: undefined, image_content: undefined} as any);
       } catch (error) {
         console.error('error :>> ', parseZomeError(error as Error));
         return Promise.reject(Error('Error creating post: ' + parseZomeError(error as Error)))

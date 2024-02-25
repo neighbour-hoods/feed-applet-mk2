@@ -20,7 +20,11 @@ pub fn get_post(original_post_hash: ActionHash) -> ExternResult<Option<Record>> 
         .into_iter()
         .max_by(|link_a, link_b| link_a.timestamp.cmp(&link_b.timestamp));
     let latest_post_hash = match latest_link {
-        Some(link) => ActionHash::from(link.target.clone()),
+        Some(link) => ActionHash::try_from(link.target.clone()).map_err(|_| {
+            wasm_error!(
+                WasmErrorInner::Guest(String::from("Failed to convert base_address to ActionHash"))
+            )
+        })?,
         None => original_post_hash.clone(),
     };
     get(latest_post_hash, GetOptions::default())
