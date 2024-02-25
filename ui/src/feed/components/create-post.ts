@@ -1,6 +1,6 @@
 import { css, CSSResult, html } from "lit";
 import { property } from "lit/decorators.js";
-import { NHComponent, NHComponentShoelace } from "@neighbourhoods/design-system-components";
+import { NHForm, NHComponentShoelace } from "@neighbourhoods/design-system-components";
 import { NHCard } from "./card";
 import { SlTextarea } from "@scoped-elements/shoelace";
 
@@ -30,11 +30,9 @@ export class NHCreatePost extends NHComponentShoelace {
     `;
   }
   
-  static get elementDefinitions() {
-    return {
-      'nh-applet-card': NHCard,
-      'sl-textarea': SlTextarea
-    };
+  static elementDefinitions = {
+    'nh-applet-card': NHCard,
+    'sl-textarea': SlTextarea
   }
 
 

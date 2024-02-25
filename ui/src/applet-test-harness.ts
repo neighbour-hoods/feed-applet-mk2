@@ -7,7 +7,7 @@ import { connectHolochainApp, getAppAgentWebsocket, createAppDelegate, AppBlockR
 import { CreateOrJoinNH } from '@neighbourhoods/dev-util-components';
 import { SensemakerStore } from '@neighbourhoods/client';
 
-import { decode } from '@msgpack/msgpack';
+import './global-toast-styles.css';
 
 import { INSTALLED_APP_ID, appletConfig } from './appletConfig'
 import FeedApplet from './applet-index'
@@ -118,7 +118,6 @@ export class AppletTestHarness extends ScopedRegistryHost(LitElement) {
       },
       this._sensemakerStore
     )
-    console.log('delegate :>> ', delegate);
     return html`
       <main>
         <h3>My Pubkey: ${this._agentPubkey}</h3>

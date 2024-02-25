@@ -25,13 +25,9 @@ export class AllPosts extends NHComponent {
   @consume({ context: clientContext })
   client!: AppAgentClient;
 
-  @consume({ context: feedStoreContext })
-  @property()
-  feedStore!: FeedStore;
+  @consume({ context: feedStoreContext }) @property() feedStore!: FeedStore;
 
-  @consume({ context: sensemakerStoreContext })
-  @property()
-  sensemakerStore!: SensemakerStore;
+  @property() sensemakerStore!: SensemakerStore;
 
   activeMethod = new StoreSubscriber(this, () =>
     this.sensemakerStore.activeMethod()

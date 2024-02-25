@@ -24,7 +24,7 @@ export class FeedStore {
   allPostsForAssessment = lazyLoadAndPoll(async () => {
     await this.fetchAllPosts();
     const tuples =get(await this.allPostEntryActionHashTuples());
-    // console.log('polling all post eh/ah :>> ', tuples);
+    console.log('polling all post eh/ah :>> ', tuples);
     return tuples
   }, 1000);
 
@@ -50,11 +50,13 @@ export class FeedStore {
       if (payload.app_entry.type !== 'Post') return;
       this.signaledHashes = [payload.action.hashed.hash, ...this.signaledHashes];
     });
+
     this.service = new FeedService(
       client,
       cellId,
       roleName
     );
+
     this.myAgentPubKey = encodeHashToBase64(cellId[1]);
   }
 
