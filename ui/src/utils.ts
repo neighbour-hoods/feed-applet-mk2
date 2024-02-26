@@ -15,6 +15,7 @@ export function parseZomeError(err: Error) {
   if(!err!.message) return "Not a valid error type";
 
   const decodedErrors = err.message.match(/Deserialize\(\[(.*?)\]\)/);
+  if(!decodedErrors) return err
   const error = decodedErrors![1];
   return JSON.stringify(error ? decode(JSON.parse("[" + error + "]")) : "{}", null, 2)
 }

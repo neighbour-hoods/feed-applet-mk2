@@ -1,10 +1,7 @@
 import { CSSResult, css, html } from 'lit';
 import { state, property, query } from 'lit/decorators.js';
-import { AppAgentClient, Entry } from '@holochain/client';
-import { consume } from '@lit/context';
 
 import { EntryRecord } from '@holochain-open-dev/utils';
-import { clientContext, feedStoreContext } from '../../contexts';
 // import { Post } from '../posts/types';
 import { FeedStore } from '../../feed-store';
 import { object, string, array, InferType } from 'yup';
@@ -34,21 +31,22 @@ export default class NHCreatePost extends NHComponentShoelace {
     async createEntries(model: object) {
       const formData : { title?: string, text_content?: string, hash_tags?: string[] } = model;
       let postEntryRecord : EntryRecord<any>;
-
+      let error;
       try {
-        postEntryRecord = await this.feedStore.service.createPost({title: formData.title, text_content: formData.text_content, hash_tags: undefined, image_content: undefined} as any);
+        postEntryRecord = await this.feedStore.createPost({title: formData.title, text_content: formData.text_content, hash_tags: undefined, image_content: undefined} as any);
       } catch (error) {
         console.error('error :>> ', parseZomeError(error as Error));
-        return Promise.reject(Error('Error creating post: ' + parseZomeError(error as Error)))
+        error = Promise.reject(Error('Error creating post: ' + parseZomeError(error as Error)))
       }
-
+      if(error) return error;
+      
       await this.updateComplete;
       this.dispatchEvent(
         new CustomEvent('post-created', {
           composed: true,
           bubbles: true,
           detail: {
-            postHash: postEntryRecord.actionHash,
+            postHash: postEntryRecord!.actionHash,
           },
         })
       );
@@ -108,7 +106,7 @@ export default class NHCreatePost extends NHComponentShoelace {
                 }
               ],
             ],
-            submitOverload: this.createEntries.bind(this),
+            submitOverload: (model: any) => this.createEntries.call(this, model),
             // resetOverload: this.resetLocalState,
             // progressiveValidation: true,
             schema: (_model: object) => (object({

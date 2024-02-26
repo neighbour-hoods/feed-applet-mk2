@@ -95,6 +95,7 @@ export class FeedApplet
                   ).nextElementSibling as HTMLElement
                 ).nextElementSibling as HTMLElement
               );
+              debugger;
             }}
           ></create-post-widget>
 
