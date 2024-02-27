@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { css, html } from 'lit';
 import { state, property } from 'lit/decorators.js';
 import {
   AppAgentClient,
@@ -20,13 +20,10 @@ import { NHComponent } from '@neighbourhoods/design-system-components';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { Task } from '@lit/task';
 import { PostDetailWidget } from './post-detail';
+import { SlSpinner } from '@scoped-elements/shoelace';
 
 export class AllPosts extends NHComponent {
-  @consume({ context: clientContext })
-  client!: AppAgentClient;
-
-  @consume({ context: feedStoreContext }) @property() feedStore!: FeedStore;
-
+  @property() feedStore!: FeedStore;
   @property() sensemakerStore!: SensemakerStore;
 
   activeMethod = new StoreSubscriber(this, () =>
@@ -42,7 +39,7 @@ export class AllPosts extends NHComponent {
   _fetchPosts = new Task(this, ([]) => this.feedStore.fetchAllPosts() as Promise<Array<EntryRecord<Post>>>, () => []);
 
   async firstUpdated() {
-    this?.client && this.client.on('signal', signal => {
+    this?.feedStore.service.client && this.feedStore.service.client.on('signal', signal => {
       if (signal.zome_name !== 'posts') return;
       const payload = signal.payload as PostsSignal;
       if (payload.type !== 'EntryCreated') return;
@@ -63,30 +60,8 @@ export class AllPosts extends NHComponent {
       >
         ${hashes.map(([entryHash, actionHash]) => {
           return html`
-              <post-detail-widget .postHash=${actionHash} .postEh=${entryHash}>
-                <nh-assessment-widget
-                  @set-initial-assessment-value=${function (e: CustomEvent) {
-                    let { assessmentValue, resourceEh } = (e as any).detail;
-                    let myHash = encodeHashToBase64(
-                      (e as any).currentTarget.parentElement.postEh
-                    );
-                    if (myHash === resourceEh) {
-                      (e.currentTarget as any).assessmentCount =
-                        assessmentValue;
-                    }
-                  }}
-                  @update-assessment-value=${function (e: CustomEvent) {
-                    let { assessmentValue, resourceEh } = (e as any).detail;
-                    let myHash = encodeHashToBase64(
-                      (e as any).currentTarget.parentElement.postEh
-                    );
-                    if (myHash === resourceEh) {
-                      (e.currentTarget as any).assessmentCount +=
-                        assessmentValue;
-                    }
-                  }}
-                  slot="footer" .name=${'ok'} .iconAlt=${''} .iconImg=${''}>
-                  </nh-assessment-widget>
+              <post-detail-widget .feedStore=${this.feedStore} .postHash=${actionHash} .postEh=${entryHash}>
+
               </post-detail-widget>
             `;
         })}
@@ -96,21 +71,31 @@ export class AllPosts extends NHComponent {
   render() {
     switch (this._allPostsForAssessment.value.status) {
       case 'pending':
-        return html`<div
-          style="display: flex; flex: 1; align-items: center; justify-content: center"
-        >
-          Loading!
-        </div>`;
+        return html`<sl-spinner class="icon-spinner"></sl-spinner>`;
       case 'complete':
         return this.renderList(this._allPostsForAssessment.value.value as any);
       case 'error':
-        return html`<div>"Error fetching the posts"</div>`;
+        return html`<p>"Error!</p>`;
     }
   }
 
   static get elementDefinitions() {
     return {
       'post-detail-widget': PostDetailWidget,
+      "sl-spinner": SlSpinner
     };
   }
+
+  static styles = [
+    super.styles,
+    css`
+      .icon-spinner {
+        font-size: 2.1rem;
+        --speed: 10000ms;
+        --track-width: 4px;
+        --indicator-color: var(--nh-theme-accent-emphasis);
+        margin: 3px
+      }
+    `
+  ];
 }

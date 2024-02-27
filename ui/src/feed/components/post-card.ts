@@ -29,11 +29,11 @@ export default class NHPostCard extends NHComponent {
     return this.loading
     ? html`
       <nh-card
-        .theme=${"light"}
+        .theme=${"dark"}
         .heading=${""}
-        .hasContextMenu=${false}
+        .hasContextMenu=${true}
         .hasPrimaryAction=${false}
-        .footerAlign=${"l"}
+        .footerAlign=${"r"}
         class="nested-card"
       ><div class="skeleton-container">
         <div class="skeleton-row">

@@ -79,26 +79,15 @@ export class FeedApplet
           </nh-page-header-card>
         </header>
 
-        <div id="my-feed">
           <create-post-widget
             .sensemakerStore=${this.sensemakerStore}
             .feedStore=${this.feedStore}
             @post-created=${function (e: CustomEvent) {
-              // (
-              //   (e.currentTarget as HTMLElement).nextElementSibling as any
-              // )._fetchPosts.run();
-              console.log(
-                (
-                  (
-                    (e.currentTarget as HTMLElement)
-                      .parentElement as HTMLElement
-                  ).nextElementSibling as HTMLElement
-                ).nextElementSibling as HTMLElement
-              );
-              debugger;
+              console.log('Created post')
             }}
           ></create-post-widget>
 
+        <div id="my-feed">
           <all-posts-widget
             .sensemakerStore=${this.sensemakerStore}
             .feedStore=${this.feedStore}
@@ -124,19 +113,6 @@ export class FeedApplet
             (e.currentTarget as any).classList.toggle('moveFromLeft');
           }}
         ></context-selector>
-
-        <div class="contexts-carousel">
-          ${[].map(
-            contextName => html`<context-view
-              class=${classMap({
-                active: this._selectedContext == contextName,
-              })}
-              .selected=${this._selectedContext == contextName}
-              .contextName=${contextName}
-            >
-            </context-view>`
-          )}
-        </div>
       </main>
     `;
   }
@@ -145,7 +121,7 @@ export class FeedApplet
     return {
       'nh-page-header-card': NHPageHeaderCard,
       'create-post-widget': CreatePost,
-      // 'all-posts-widget': AllPosts,
+      'all-posts-widget': AllPosts,
       'context-view': ContextView,
       // 'context-selector': ContextSelector,
     };
@@ -162,15 +138,16 @@ export class FeedApplet
         color: var(--nh-theme-fg-default);
       }
       main {
-        height: 100%;
+        height: 90vh;
+        overflow: auto;
         width: 100%;
         display: grid;
-        grid-template-columns: minmax(12rem, 30%) minmax(4rem, 5%) minmax(
+        grid-template-columns: minmax(6rem, 30%) minmax(4rem, 5%) minmax(
             12rem,
             40%
           );
-        grid-template-rows: minmax(2rem, 8rem) auto;
-        grid-template-areas: 'top-menu gap context-switch' 'feed gap contexts';
+        grid-template-rows: 3rem auto;
+        grid-template-areas: 'top-menu gap create-post' 'feed gap create-post';
         align-items: start;
         justify-content: center;
         gap: calc(1px * var(--nh-spacing-lg)) 0;
@@ -185,7 +162,6 @@ export class FeedApplet
         width: 0;
       }
       #my-feed {
-        height: 100%;
         width: 100%;
         grid-area: feed;
         display: flex;
@@ -199,6 +175,10 @@ export class FeedApplet
       }
       context-selector {
         grid-area: context-switch;
+        height: 7rem;
+      }
+      create-post-widget {
+        grid-area: create-post;
         height: 7rem;
       }
       .contexts-carousel {

@@ -144,6 +144,8 @@ export class AppletTestHarness extends ScopedRegistryHost(LitElement) {
 
     app-renderer {
       width: 100%;
+      height: 90vh;
+      display: block;
     }
 
     create-or-join-nh {
