@@ -1,21 +1,16 @@
 import { CSSResult, css, html } from 'lit';
 import { state, property } from 'lit/decorators.js';
 import {
-  AppAgentClient,
   EntryHash,
   ActionHash,
-  encodeHashToBase64,
 } from '@holochain/client';
 import { StoreSubscriber} from '@holochain-open-dev/stores';
-import { consume } from '@lit/context';
 
-import { clientContext, feedStoreContext } from '../../contexts';
 import { Post, PostsSignal } from '../posts/types';
 import { FeedStore } from '../../feed-store';
 import {
   AppletConfig,
   SensemakerStore,
-  sensemakerStoreContext,
 } from '@neighbourhoods/client';
 import { NHComponent } from '@neighbourhoods/design-system-components';
 import { EntryRecord } from '@holochain-open-dev/utils';
