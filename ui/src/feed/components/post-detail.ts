@@ -115,7 +115,7 @@ export class PostDetailWidget extends NHComponent {
               <span slot="assessment-output">0</span>
               <input-assessment-renderer slot="assessment-control"
                   .component=${applet.assessmentWidgets.heatAssessment.component}
-                  .nhDelegate=${this.createInputDelegate('Priority', 'task_item')}
+                  .nhDelegate=${this.createInputDelegate('Priority', 'post_item')}
               ></input-assessment-renderer>
             </assessment-container>
             <assessment-container>
