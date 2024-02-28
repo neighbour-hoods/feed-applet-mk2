@@ -16,16 +16,45 @@ const totalLikesRange: Range = {
     }
 }
 
+const perceivedHeatRange: Range = {
+    "name": "perceived_heat_range",
+    "kind": {
+        "Integer": { "min": 0, "max": 4 }
+    }
+}
+
 // ==========DIMENSIONS==========
 const likeDimension: ConfigDimension = {
-    "name": "like",
+    "name": "Like",
     "range": likeRange,
     "computed": false
 }
 
 const totalLikesDimension: ConfigDimension = {
-    "name": "total_likes",
+    "name": "Total Likes",
     "range": totalLikesRange,
+    "computed": true
+}
+
+const importanceDimension: ConfigDimension = {
+    "name": "Vote",
+    "range": likeRange,
+    "computed": false
+}
+
+const perceivedHeatDimension: ConfigDimension = {
+    "name": "Priority",
+    "range": perceivedHeatRange,
+    "computed": false
+}
+const totalImportanceDimension = {
+    "name": "Votes",
+    "range": totalLikesRange,
+    "computed": true
+}
+const averageHeatDimension = {
+    "name": "Priority level",
+    "range": perceivedHeatRange,
     "computed": true
 }
 
@@ -43,6 +72,22 @@ const totalLikesMethod: ConfigMethod = {
     "input_dimensions": [likeDimension],
     "output_dimension": totalLikesDimension,
     "program": { "Sum": null },
+    "can_compute_live": false,
+    "requires_validation": false
+}
+const totalImportanceMethod: ConfigMethod = {
+    "name": "Votes_method",
+    "input_dimensions": [importanceDimension],
+    "output_dimension": totalImportanceDimension,
+    "program": { "Sum": null },
+    "can_compute_live": false,
+    "requires_validation": false
+}
+const totalHeatMethod: ConfigMethod = {
+    "name": "Priority_level_method",
+    "input_dimensions": [perceivedHeatDimension],
+    "output_dimension": averageHeatDimension,
+    "program": { "Average": null },
     "can_compute_live": false,
     "requires_validation": false
 }
@@ -78,9 +123,9 @@ const likedPostsContext: ConfigCulturalContext = {
 const appletConfig: AppletConfigInput = {
     "name": INSTALLED_APP_ID,
     "resource_defs": [postItemResourceDef],
-    "ranges": [likeRange, totalLikesRange],
-    "dimensions": [likeDimension, totalLikesDimension],
-    "methods": [totalLikesMethod],
+    "ranges": [likeRange, totalLikesRange, perceivedHeatRange],
+    "dimensions": [likeDimension, totalLikesDimension,importanceDimension, totalImportanceDimension, perceivedHeatDimension, averageHeatDimension],
+    "methods": [totalLikesMethod,totalImportanceMethod, totalHeatMethod],
     "cultural_contexts": [mostLikedPostsContext, likedPostsContext]
 }
 
