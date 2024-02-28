@@ -107,7 +107,8 @@ export class FeedStore {
   }
   
 }
-interface UpdatePostInput {
+
+export interface UpdatePostInput {
       original_post_hash: ActionHash
       previous_post_hash: ActionHash,
       updated_post: Post,

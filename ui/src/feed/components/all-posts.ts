@@ -6,7 +6,7 @@ import {
 } from '@holochain/client';
 import { StoreSubscriber} from '@holochain-open-dev/stores';
 
-import { Post, PostsSignal } from '../posts/types';
+import { Post, PostsSignal } from '../types';
 import { FeedStore } from '../../feed-store';
 import {
   AppletConfig,
@@ -75,11 +75,9 @@ export class AllPosts extends NHComponent {
     }
   }
 
-  static get elementDefinitions() {
-    return {
+  static elementDefinitions = {
       'post-detail-widget': PostDetailWidget,
       "sl-spinner": SlSpinner
-    };
   }
 
   static styles: CSSResult[] = [

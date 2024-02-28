@@ -1,5 +1,5 @@
 import { ActionHash, Record, AppAgentClient, CallZomeRequest, CellId, RoleName } from '@holochain/client';
-import { Post } from './feed/posts/types';
+import { Post } from './feed/types';
 import { EntryRecord } from '@holochain-open-dev/utils';
 
 export class FeedService {

@@ -8,10 +8,10 @@ import {
 import { Task } from '@lit/task';
 import { decode } from '@msgpack/msgpack';
 
-import { Post } from '../posts/types';
+import { Post } from '../types';
 import { FeedStore } from '../../feed-store';
 import { NHAssessmentContainer, NHButton, NHCard, NHComponent, NHResourceAssessmentTray } from '@neighbourhoods/design-system-components';
-import { editIcon, trashIcon } from '../components/b64images';
+import { editIcon, trashIcon } from '../b64images';
 import { EditPost } from './edit-post';
 import applet from '../../applet-index';
 import { InputAssessmentRenderer, OutputAssessmentRenderer, createInputAssessmentWidgetDelegate } from '@neighbourhoods/app-loader';

@@ -7,10 +7,10 @@ import { FeedStore } from '../../feed-store';
 import { object, string, array, InferType } from 'yup';
 import { SlInput, SlTag, SlTextarea } from '@scoped-elements/shoelace';
 import { NHForm, NHButton, NHCard, NHComponentShoelace, NHSelectAvatar } from '@neighbourhoods/design-system-components';
-import { postImagePlaceholder } from '../components/b64images';
+import { postImagePlaceholder } from '../b64images';
 import { SensemakerStore } from '@neighbourhoods/client';
 import { parseZomeError } from '../../utils';
-import { Post } from '../posts/types';
+import { Post } from '../types';
 
 const ADD_IMAGE_ICON = "PHN2ZyB3aWR0aD0iNDUiIGhlaWdodD0iNDUiIHZpZXdCb3g9IjAgMCA0NSA0NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3QgeD0iMSIgeT0iMSIgd2lkdGg9IjQzIiBoZWlnaHQ9IjQzIiByeD0iMyIgc3Ryb2tlPSIjQ0JDQkNCIiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0iTTEgMzIuNUwxMCAyM0wxOSAzMi41TDMzIDE4TDQ0IDMyLjUiIHN0cm9rZT0iI0NCQ0JDQiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjxjaXJjbGUgY3g9IjE5IiBjeT0iMTEiIHI9IjQiIHN0cm9rZT0iI0NCQ0JDQiIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjwvc3ZnPgo=";
 

@@ -6,8 +6,8 @@ import {
 } from '@holochain/client';
 import { decode } from '@msgpack/msgpack';
 
-import { Post } from '../posts/types';
-import { FeedStore } from '../../feed-store';
+import { Post } from '../types';
+import { FeedStore, UpdatePostInput } from '../../feed-store';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { NHComponent, NHButton, NHCard, NHButtonGroup } from '@neighbourhoods/design-system-components';
 import NHCreatePost from './create-post';
@@ -60,7 +60,7 @@ export class EditPost extends NHComponent {
         previous_post_hash: this.currentRecord.signed_action.hashed.hash,
         updated_post: { ...model },
       }
-      const updateRecord: EntryRecord<Post> = await this.feedStore.updatePost(payload)
+      const updateRecord: EntryRecord<Post> = await this.feedStore.updatePost(payload as UpdatePostInput)
       this.currentRecord = updateRecord.record
   }
 

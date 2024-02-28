@@ -70,11 +70,9 @@ export default class NHPostCard extends NHComponent {
     `;
   }
 
-  static get elementDefinitions() {
-    return {
+  static elementDefinitions = {
       "nh-card": NHCard,
       "sl-skeleton": SlSkeleton,
-    };
   }
 
   static styles: CSSResult[] = [
