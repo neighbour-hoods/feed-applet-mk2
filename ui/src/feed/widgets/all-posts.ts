@@ -1,4 +1,4 @@
-import { css, html } from 'lit';
+import { CSSResult, css, html } from 'lit';
 import { state, property } from 'lit/decorators.js';
 import {
   AppAgentClient,
@@ -13,6 +13,7 @@ import { clientContext, feedStoreContext } from '../../contexts';
 import { Post, PostsSignal } from '../posts/types';
 import { FeedStore } from '../../feed-store';
 import {
+  AppletConfig,
   SensemakerStore,
   sensemakerStoreContext,
 } from '@neighbourhoods/client';
@@ -25,6 +26,7 @@ import { SlSpinner } from '@scoped-elements/shoelace';
 export class AllPosts extends NHComponent {
   @property() feedStore!: FeedStore;
   @property() sensemakerStore!: SensemakerStore;
+  @property() config!: AppletConfig;
 
   activeMethod = new StoreSubscriber(this, () =>
     this.sensemakerStore.activeMethod()
@@ -60,8 +62,7 @@ export class AllPosts extends NHComponent {
       >
         ${hashes.map(([entryHash, actionHash]) => {
           return html`
-              <post-detail-widget .feedStore=${this.feedStore} .postHash=${actionHash} .postEh=${entryHash}>
-
+              <post-detail-widget .feedStore=${this.feedStore} .sensemakerStore=${this.sensemakerStore} .config=${this.config} .postHash=${actionHash} .postEh=${entryHash}>
               </post-detail-widget>
             `;
         })}
@@ -86,8 +87,8 @@ export class AllPosts extends NHComponent {
     };
   }
 
-  static styles = [
-    super.styles,
+  static styles: CSSResult[] = [
+    super.styles as CSSResult,
     css`
       .icon-spinner {
         font-size: 2.1rem;
