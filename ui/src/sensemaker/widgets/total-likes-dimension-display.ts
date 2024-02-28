@@ -1,23 +1,34 @@
 import { css, html } from 'lit';
-import { property } from 'lit/decorators.js';
-import { Assessment, OutputAssessmentControl, RangeValueInteger } from '@neighbourhoods/client';
-import { NHComponent } from '@neighbourhoods/design-system-components';
+import { OutputAssessmentControl, RangeValueInteger } from '@neighbourhoods/client';
+import { state } from 'lit/decorators.js';
+import { SlSpinner } from '@scoped-elements/shoelace';
 
 export class TotalLikesDimensionAssessment extends OutputAssessmentControl {
+    @state() loading = true;
+
+    public async loadData(): Promise<void> {
+        await super.loadData()
+        this.loading = false
+    }
+
     render() {
-        return html`
-                    <div class="display-box-wrapper">
-                        <div class="display-box">
-                            <span>❤️</span>
-                            <span>${this.assessment && ((this.assessment.value as RangeValueInteger).Integer > 1) ? (this.assessment.value as RangeValueInteger).Integer : ""}</span>
-                        </div>
-                    </div>
-                `
-    }
-    static get elementDefinitions() {
-        return {
+        if (this.loading) {
+            return html`<sl-spinner class="icon-spinner"></sl-spinner>`
         }
+        return html`
+            <div class="display-box-wrapper">
+                <div class="display-box">
+                    <span>❤️</span>
+                    <span>${this.assessment && ((this.assessment.value as RangeValueInteger).Integer > 1) ? (this.assessment.value as RangeValueInteger).Integer : ""}</span>
+                </div>
+            </div>
+        `
     }
+
+    static elementDefinitions = {
+        'sl-spinner': SlSpinner
+    }
+
     static styles = css`
         .display-box {
             background-color: rgb(50, 43, 55);
@@ -32,7 +43,7 @@ export class TotalLikesDimensionAssessment extends OutputAssessmentControl {
             min-width: 32px;
             gap: calc(1px * var(--nh-spacing-sm));
         }
-        
+
         .preview-container .display-box span {
             margin: 0 4px;
         }
@@ -41,6 +52,16 @@ export class TotalLikesDimensionAssessment extends OutputAssessmentControl {
             display: grid;
             align-items: center;
             justify-content: center;
+        }
+
+        .icon-spinner {
+            font-size: 1.2rem;
+            --speed: 10000ms;
+            --track-width: 4px;
+            --indicator-color: var(--nh-theme-accent-emphasis);
+            position: relative;
+            left: 20%;
+            top: 15%;
         }
     `
 }
