@@ -57,7 +57,6 @@ export class FeedApplet
         installAppId
       );
       if (config) {
-        console.log('config :>> ', config);
         this.config = config;
       }
 
@@ -91,6 +90,7 @@ export class FeedApplet
           <all-posts-widget
             .sensemakerStore=${this.sensemakerStore}
             .feedStore=${this.feedStore}
+            .config=${this.config}
           ></all-posts-widget>
         </div>
 
@@ -169,8 +169,7 @@ export class FeedApplet
         justify-content: flex-start;
         align-items: center;
         gap: calc(1px * var(--nh-spacing-lg));
-        overflow-y: auto;
-        overflow-x: hidden;
+        overflow: visible;
         padding-right: 3rem;
       }
       context-selector {

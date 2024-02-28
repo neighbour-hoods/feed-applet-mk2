@@ -17,14 +17,12 @@ export class FeedStore {
 
   allPosts = lazyLoadAndPoll(async () => {
     const records = await this.fetchAllPosts();
-    console.log('polling all post records :>> ', records);
     return records.map(r => r.entryHash);
   }, 4000);
 
   allPostsForAssessment = lazyLoadAndPoll(async () => {
     await this.fetchAllPosts();
     const tuples =get(await this.allPostEntryActionHashTuples());
-    console.log('polling all post eh/ah :>> ', tuples);
     return tuples
   }, 1000);
 
