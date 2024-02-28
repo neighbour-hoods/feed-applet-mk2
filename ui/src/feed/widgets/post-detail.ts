@@ -1,4 +1,4 @@
-import { css, html } from 'lit';
+import { CSSResult, css, html } from 'lit';
 import { state, property } from 'lit/decorators.js';
 import {
   EntryHash,
@@ -10,12 +10,17 @@ import { decode } from '@msgpack/msgpack';
 
 import { Post } from '../posts/types';
 import { FeedStore } from '../../feed-store';
-import { NHButton, NHCard, NHComponent } from '@neighbourhoods/design-system-components';
-import { editIcon, pearImg, trashIcon } from '../components/b64images';
+import { NHAssessmentContainer, NHButton, NHCard, NHComponent, NHResourceAssessmentTray } from '@neighbourhoods/design-system-components';
+import { editIcon, trashIcon } from '../components/b64images';
 import { EditPost } from './edit-post';
+import applet from '../../applet-index';
+import { InputAssessmentRenderer, OutputAssessmentRenderer, createInputAssessmentWidgetDelegate } from '@neighbourhoods/app-loader';
+import { AppletConfig, SensemakerStore } from '@neighbourhoods/client';
 
 export class PostDetailWidget extends NHComponent {
   @property() feedStore!: FeedStore;
+  @property() sensemakerStore!: SensemakerStore;
+  @property() config!: AppletConfig;
   
   @property({
     hasChanged: (newVal: ActionHash, oldVal: ActionHash) =>
@@ -64,6 +69,15 @@ export class PostDetailWidget extends NHComponent {
       errorSnackbar.show();
     }
   }
+  
+  createInputDelegate(dimensionName: string, resourceDefName: string) {
+    return createInputAssessmentWidgetDelegate(
+      this.sensemakerStore,
+      this.config.dimensions[dimensionName],
+      this.config.resource_defs[resourceDefName],
+      this.postEh
+    )
+  }
 
   renderDetail(record: Record) {
     const post = decode((record.entry as any).Present.entry) as Post;
@@ -71,23 +85,48 @@ export class PostDetailWidget extends NHComponent {
       <nh-card
         .heading=${post.title}
         .textSize=${"md"}
+        .footerAlign=${"l"}
         .hasContextMenu=${true}
       >
         <p>${post.text_content}</p>
-          <div class="action-buttons" slot="context-menu">
-            <nh-button
-              .variant=${'primary'}
-              .size=${'icon-sm'}
-              .iconImageB64=${editIcon}
-              @click=${() => { this._editing = true }}>
-            </nh-button>
-            <nh-button
-              .variant=${'danger'}
-              .size=${'icon-sm'}
-              .iconImageB64=${trashIcon}
-              @click=${this.deletePost}>
-            </nh-button>
+
+        <div class="action-buttons" slot="context-menu">
+          <nh-button
+            .variant=${'primary'}
+            .size=${'icon-sm'}
+            .iconImageB64=${editIcon}
+            @click=${() => { this._editing = true }}>
+          </nh-button>
+          <nh-button
+            .variant=${'danger'}
+            .size=${'icon-sm'}
+            .iconImageB64=${trashIcon}
+            @click=${this.deletePost}>
+          </nh-button>
+        </div>
+
+        <assessment-widget-tray
+          slot="footer"
+          .editable=${false}
+          .editing=${false}
+        >
+          <div slot="widgets">
+            <assessment-container>
+              <span slot="assessment-output">0</span>
+              <input-assessment-renderer slot="assessment-control"
+                  .component=${applet.assessmentWidgets.heatAssessment.component}
+                  .nhDelegate=${this.createInputDelegate('Priority', 'task_item')}
+              ></input-assessment-renderer>
+            </assessment-container>
+            <assessment-container>
+              <span slot="assessment-output">0</span>
+              <input-assessment-renderer slot="assessment-control"
+                  .component=${applet.assessmentWidgets.importanceAssessment.component}
+                  .nhDelegate=${this.createInputDelegate('Like', 'post_item')}
+              ></input-assessment-renderer>
+            </assessment-container>
           </div>
+        </assessment-widget-tray>
       </nh-card>
     `;
   }
@@ -125,10 +164,14 @@ export class PostDetailWidget extends NHComponent {
     'nh-button': NHButton,
     'nh-card': NHCard,
     'edit-post-widget': EditPost,
+    'input-assessment-renderer': InputAssessmentRenderer,
+    'output-assessment-renderer': OutputAssessmentRenderer,
+    'assessment-widget-tray': NHResourceAssessmentTray,
+    'assessment-container': NHAssessmentContainer,
   }
-
-  static styles = [
-    super.styles,
+  
+  static styles: CSSResult[] = [
+    super.styles as CSSResult,
     css`
       .icon-spinner {
         font-size: 2.1rem;
