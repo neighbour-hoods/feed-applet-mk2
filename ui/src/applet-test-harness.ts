@@ -12,6 +12,7 @@ import './global-toast-styles.css';
 import { INSTALLED_APP_ID, appletConfig } from './appletConfig'
 import FeedApplet from './applet-index'
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
+import { SlSpinner } from '@scoped-elements/shoelace';
 
 @customElement('applet-test-harness')
 export class AppletTestHarness extends ScopedRegistryHost(LitElement) {
@@ -102,9 +103,7 @@ export class AppletTestHarness extends ScopedRegistryHost(LitElement) {
 
   render() {
     if (this.isSensemakerCloned && this.loading)
-      return html`
-        Loading
-      `;
+      return html`<sl-spinner class="icon-spinner"></sl-spinner>`;
     if (!this.isSensemakerCloned)
       return html`
         <create-or-join-nh @create-nh=${this.createNeighbourhood} @join-nh=${this.joinNeighbourhood}></create-or-join-nh>
@@ -133,7 +132,7 @@ export class AppletTestHarness extends ScopedRegistryHost(LitElement) {
   static elementDefinitions = {
     'create-or-join-nh': CreateOrJoinNH,
     'app-renderer': AppBlockRenderer,
-    // 'mwc-circular-progress': CircularProgress,
+    "sl-spinner": SlSpinner
   }
 
   static styles = css`
@@ -153,6 +152,17 @@ export class AppletTestHarness extends ScopedRegistryHost(LitElement) {
       display: block;
       margin: 30vh auto;
       height: 50vh;
+    }
+
+    .icon-spinner {
+      font-size: 2.1rem;
+      --speed: 10000ms;
+      --track-width: 4px;
+      --indicator-color: blue;
+      margin: 3px
+      position: fixed;
+      right: 48vw;
+      top: 45vh;
     }
 
     main {
