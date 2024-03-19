@@ -6,6 +6,7 @@ import {
 import { NHIconContainer } from '@neighbourhoods/design-system-components';
 import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { NHDelegateReceiver, InputAssessmentWidgetDelegate } from '@neighbourhoods/client';
+import { SlSpinner } from '@scoped-elements/shoelace';
 
 export class HeatDimensionAssessment extends ScopedRegistryHost(InputAssessmentControl) implements NHDelegateReceiver<InputAssessmentWidgetDelegate> {
   @state() loading = true;
@@ -62,7 +63,7 @@ export class HeatDimensionAssessment extends ScopedRegistryHost(InputAssessmentC
 
   render() {
     if (this.loading) {
-      return html`<span>l o a d i n g</span>`
+      return html`<sl-spinner class="wide-spinner"></sl-spinner>`
     }
     return html`
       <div class="heat-scale">
@@ -71,8 +72,11 @@ export class HeatDimensionAssessment extends ScopedRegistryHost(InputAssessmentC
     `;
   }
 
-  static elementDefinitions = {
-    'nh-icon': NHIconContainer
+  static get elementDefinitions() {
+    return {
+      'nh-icon': NHIconContainer,
+      'sl-spinner': SlSpinner
+    };
   }
 
   static get styles() {
@@ -85,6 +89,16 @@ export class HeatDimensionAssessment extends ScopedRegistryHost(InputAssessmentC
           display: flex;
           flex-direction: row;
           flex-wrap: nowrap;
+        }
+        
+        .wide-spinner {
+          width: 34px;
+          padding: 12px 72px;
+
+          font-size: 1.75rem;
+          --speed: 10000ms;
+          --track-width: 4px;
+          --indicator-color: #8a58ff;
         }
       `,
     ];

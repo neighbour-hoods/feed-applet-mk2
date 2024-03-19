@@ -20,26 +20,26 @@ const applet: NeighbourhoodApplet = {
         post: PostDisplayWrapper as any,
     },
     assessmentWidgets: {
-        importanceAssessment: {
-        name: 'Like Assessment',
+        likeAssessment: {
+        name: 'Like',
         component: LikeDimensionAssessment,
         rangeKind: { Integer: { min: 0, max: 1 } },
         kind: 'input',
         },
-        importanceOutput: {
-        name: 'Total Likes Display',
+        likeOutput: {
+        name: 'Total Likes',
         component: TotalLikesDimensionAssessment,
         rangeKind: { Integer: { min: 0, max: 4294967295 } },
         kind: 'output',
         },
         heatAssessment: {
-        name: 'Heat',
+        name: 'Fire',
         component: HeatDimensionAssessment,
         rangeKind: { Integer: { min: 0, max: 4 } },
         kind: 'input',
         },
         heatOuput: {
-        name: 'Average Heat',
+        name: 'Total Fire',
         component: AverageHeatDimensionDisplay,
         rangeKind: { Integer: { min: 0, max: 4294967295 } },
         kind: 'output',
