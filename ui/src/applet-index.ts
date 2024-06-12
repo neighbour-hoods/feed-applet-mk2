@@ -3,9 +3,9 @@ import { NeighbourhoodApplet } from '@neighbourhoods/client';
 import { FeedApplet } from './feed-app';
 import { appletConfig } from './appletConfig';
 import {
-    HeatDimensionAssessment,
-    LikeDimensionAssessment,
-    TotalLikesDimensionAssessment,
+  HeatDimensionAssessment,
+  LikeDimensionAssessment,
+  TotalLikesDimensionAssessment,
 } from './sensemaker/controls';
 
 import { PostDisplayWrapper } from './feed/components/post-display-wrapper';
@@ -19,30 +19,30 @@ const applet: NeighbourhoodApplet = {
     resourceRenderers: {
         post: PostDisplayWrapper as any,
     },
-    assessmentWidgets: {
+    assessmentControls: {
         likeAssessment: {
-        name: 'Like',
-        component: LikeDimensionAssessment,
-        rangeKind: { Integer: { min: 0, max: 1 } },
-        kind: 'input',
+            name: 'Like',
+            component: LikeDimensionAssessment,
+            rangeKind: { Integer: { min: 0, max: 1 } },
+            kind: 'input',
         },
         likeOutput: {
-        name: 'Total Likes',
-        component: TotalLikesDimensionAssessment,
-        rangeKind: { Integer: { min: 0, max: 4294967295 } },
-        kind: 'output',
+            name: 'Total Likes',
+            component: TotalLikesDimensionAssessment,
+            rangeKind: { Integer: { min: 0, max: 4294967295 } },
+            kind: 'output',
         },
         heatAssessment: {
-        name: 'Fire',
-        component: HeatDimensionAssessment,
-        rangeKind: { Integer: { min: 0, max: 4 } },
-        kind: 'input',
+            name: 'Fire',
+            component: HeatDimensionAssessment,
+            rangeKind: { Integer: { min: 0, max: 4 } },
+            kind: 'input',
         },
-        heatOuput: {
-        name: 'Total Fire',
-        component: AverageHeatDimensionDisplay,
-        rangeKind: { Integer: { min: 0, max: 4294967295 } },
-        kind: 'output',
+        heatOutput: {
+            name: 'Total Fire',
+            component: AverageHeatDimensionDisplay,
+            rangeKind: { Integer: { min: 0, max: 4294967295 } },
+            kind: 'output',
         },
     },
 };

@@ -9,7 +9,7 @@ export class LikeDimensionAssessment extends ScopedRegistryHost(InputAssessmentC
     @state() loading = true;
     
     assessor(value: RangeValueInteger): () => {} {
-        return async () => this.assessment =  await this.nhDelegate.createAssessment(value)
+        return async () => this.assessment = (await this.nhDelegate.createAssessment(value))!.entry;
     }
 
     public async loadData(): Promise<void> {

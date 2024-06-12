@@ -6,7 +6,7 @@ import { EntryRecord } from '@holochain-open-dev/utils';
 import { FeedStore } from '../../feed-store';
 import { object, string, array, InferType } from 'yup';
 import { SlInput, SlTag, SlTextarea } from '@scoped-elements/shoelace';
-import { NHForm, NHButton, NHCard, NHComponentShoelace, NHSelectAvatar } from '@neighbourhoods/design-system-components';
+import { NHForm, NHButton, NHCard, NHComponent, NHSelectAvatar } from '@neighbourhoods/design-system-components';
 import { postImagePlaceholder } from '../b64images';
 import { SensemakerStore } from '@neighbourhoods/client';
 import { parseZomeError } from '../../utils';
@@ -19,7 +19,7 @@ export function isDataURL(s: string) {
 }
 isDataURL.regex = /^\s*data:([a-z]+\/[a-z0-9\-\+]+(;[a-z\-]+\=[a-z0-9\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i;
 
-export default class NHCreatePost extends NHComponentShoelace {
+export default class NHCreatePost extends NHComponent {
   @property() feedStore!: FeedStore;
   @property() sensemakerStore!: SensemakerStore;
   @property() editMode: boolean = false;

@@ -81,7 +81,6 @@ export class FeedStore {
       posts.map(post => {
         allPostsEhs.push(post.entryHash)
       })
-      console.log('allPostsEhs :>> ', allPostsEhs);
       return allPostsEhs
     })
   }

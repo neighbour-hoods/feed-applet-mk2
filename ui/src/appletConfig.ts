@@ -10,9 +10,9 @@ const likeRange: Range = {
 }
 
 const totalLikesRange: Range = {
-    "name": "1-scale-total",
+    "name": "1-scale-limit",
     "kind": {
-        "Integer": { "min": 0, "max": 1000000 }
+        "Integer": { "min": 0, "max": 4294967295 }
     }
 }
 
@@ -50,7 +50,7 @@ const totalFireDimension: ConfigDimension = {
 // ==========RESOURCE DEFS==========
 //@ts-ignore
 const postItemResourceDef: ConfigResourceDef = {
-    "resource_name": "post_item",
+    "resource_name": "post",
     "base_types": [{ "entry_index": 0, "zome_index": 0, "visibility": { "Public": null } }],
     "role_name": "feed",
     "zome_name": "posts"
