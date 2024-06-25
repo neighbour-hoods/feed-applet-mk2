@@ -1,58 +1,50 @@
+import { NeighbourhoodApplet } from '@neighbourhoods/client';
+
+import { FeedApplet } from './feed-app';
+import { appletConfig } from './appletConfig';
 import {
-  AppAgentClient,
-  EntryHash,
-} from "@holochain/client";
-import {
-  NeighbourhoodApplet,
-  AppletRenderers,
-  NeighbourhoodServices,
-  AppletInfo,
-} from "@neighbourhoods/nh-launcher-applet";
+  HeatDimensionAssessment,
+  LikeDimensionAssessment,
+  TotalLikesDimensionAssessment,
+} from './sensemaker/controls';
 
-import { LikeDimensionAssessment, TotalLikesDimensionAssessment } from "./sensemaker/widgets";
+import { PostDisplayWrapper } from './feed/components/post-display-wrapper';
+import { AverageHeatDimensionDisplay } from './sensemaker/controls/average-heat-dimension-display';
 
-import { FeedApplet } from "./applet/feed-applet";
-import { appletConfig } from "./appletConfig";
-import { html, render } from "lit";
-
-import "./feed/components/post-display-wrapper";
-
-const feedApplet: NeighbourhoodApplet = {
-  appletConfig: appletConfig,
-  widgetPairs: [
-    {
-      assess: LikeDimensionAssessment,
-      display: TotalLikesDimensionAssessment,
-      compatibleDimensions: ["like", "total_likes"],
-    }
-  ],
-  async appletRenderers(
-    appAgentWebsocket: AppAgentClient,
-    weStore: NeighbourhoodServices,
-    appletAppInfo: AppletInfo[],
-  ): Promise<AppletRenderers> {
-    return {
-      full(element: HTMLElement, registry: CustomElementRegistry) {
-        registry?.define("feed-applet", FeedApplet);
-        element.innerHTML = `<feed-applet></feed-applet>`;
-        const appletElement = element.querySelector("feed-applet") as any;
-        appletElement.appAgentWebsocket = appAgentWebsocket;
-        appletElement.appletAppInfo = appletAppInfo;
-        appletElement.sensemakerStore = weStore.sensemakerStore;
-      },
-      resourceRenderers: {
-        "post_item": (element: HTMLElement, resourceHash: EntryHash) => {
-          console.log('trying to render post', resourceHash)
-          render(html`
-            <post-display-wrapper
-              .resourceHash=${resourceHash}
-              .appAgentWebsocket=${appAgentWebsocket}
-            ></post-display-wrapper>
-          `, element)
-        }
-      }
-    };
-  },
+const applet: NeighbourhoodApplet = {
+    appletConfig: appletConfig,
+    appletRenderers: {
+        full: FeedApplet,
+    },
+    resourceRenderers: {
+        post: PostDisplayWrapper as any,
+    },
+    assessmentControls: {
+        likeAssessment: {
+            name: 'Like',
+            component: LikeDimensionAssessment,
+            rangeKind: { Integer: { min: 0, max: 1 } },
+            kind: 'input',
+        },
+        likeOutput: {
+            name: 'Total Likes',
+            component: TotalLikesDimensionAssessment,
+            rangeKind: { Integer: { min: 0, max: 4294967295 } },
+            kind: 'output',
+        },
+        heatAssessment: {
+            name: 'Fire',
+            component: HeatDimensionAssessment,
+            rangeKind: { Integer: { min: 0, max: 4 } },
+            kind: 'input',
+        },
+        heatOutput: {
+            name: 'Total Fire',
+            component: AverageHeatDimensionDisplay,
+            rangeKind: { Integer: { min: 0, max: 4294967295 } },
+            kind: 'output',
+        },
+    },
 };
 
-export default feedApplet;
+export default applet;

@@ -1,45 +1,80 @@
-import { AppletConfigInput, CreateAppletConfigInput, ConfigCulturalContext, ConfigMethod, ConfigThreshold, Range, ConfigResourceDef, ConfigDimension } from '@neighbourhoods/client'
+import { AppletConfigInput, ConfigCulturalContext, ConfigDimension, ConfigMethod, ConfigResourceDef, ConfigThreshold, Dimension, Range } from '@neighbourhoods/client'
+export const INSTALLED_APP_ID = 'feed-sensemaker';
 
+// ==========RANGES==========
 const likeRange: Range = {
     "name": "1-scale",
     "kind": {
         "Integer": { "min": 0, "max": 1 }
     }
 }
+
+const totalLikesRange: Range = {
+    "name": "1-scale-limit",
+    "kind": {
+        "Integer": { "min": 0, "max": 4294967295 }
+    }
+}
+
+const perceivedHeatRange: Range = {
+    "name": "perceived_heat_range",
+    "kind": {
+        "Integer": { "min": 0, "max": 4 }
+    }
+}
+
+// ==========DIMENSIONS==========
 const likeDimension: ConfigDimension = {
-    "name": "like",
+    "name": "Like",
     "range": likeRange,
     "computed": false
 }
 
-const totalLikesRange: Range = {
-    "name": "1-scale-total",
-    "kind": {
-        "Integer": { "min": 0, "max": 1000000 }
-    }
-}
 const totalLikesDimension: ConfigDimension = {
-    "name": "total_likes",
+    "name": "Total Likes",
     "range": totalLikesRange,
     "computed": true
 }
 
-const postItemResourceDef: ConfigResourceDef = {
-    "name": "post_item",
-    "base_types": [{ "entry_index": 0, "zome_index": 0, "visibility": { "Public": null } }],
-    "dimensions": [likeDimension, totalLikesDimension]
+const perceivedFireDimension: ConfigDimension = {
+    "name": "Fire",
+    "range": perceivedHeatRange,
+    "computed": false
+}
+const totalFireDimension: ConfigDimension = {
+    "name": "Total Fire",
+    "range": totalLikesRange,
+    "computed": true
 }
 
+// ==========RESOURCE DEFS==========
+//@ts-ignore
+const postItemResourceDef: ConfigResourceDef = {
+    "resource_name": "post",
+    "base_types": [{ "entry_index": 0, "zome_index": 0, "visibility": { "Public": null } }],
+    "role_name": "feed",
+    "zome_name": "posts"
+}
+
+// ==========METHODS==========
 const totalLikesMethod: ConfigMethod = {
     "name": "total_likes_method",
-    "target_resource_def": postItemResourceDef,
     "input_dimensions": [likeDimension],
     "output_dimension": totalLikesDimension,
     "program": { "Sum": null },
     "can_compute_live": false,
     "requires_validation": false
 }
+const totalFireMethod: ConfigMethod = {
+    "name": "total_fire_method",
+    "input_dimensions": [perceivedFireDimension],
+    "output_dimension": totalFireDimension,
+    "program": { "Sum": null },
+    "can_compute_live": false,
+    "requires_validation": false
+}
 
+// ==========THRESHOLDS==========
 const likesThreshold: ConfigThreshold = {
     "dimension": totalLikesDimension,
     "kind": { "GreaterThan": null },
@@ -50,24 +85,30 @@ const noLikesThreshold: ConfigThreshold = {
     "kind": { "GreaterThan": null },
     "value": { "Integer": 0 }
 }
+
+// ==========CULTURAL CONTEXTS==========
 const mostLikedPostsContext: ConfigCulturalContext = {
     "name": "most_liked_posts_(>3)",
     "resource_def": postItemResourceDef,
     "thresholds": [likesThreshold],
     "order_by": [[totalLikesDimension, { "Biggest": null }]]
 }
+
 const likedPostsContext: ConfigCulturalContext = {
     "name": "liked_posts",
     "resource_def": postItemResourceDef,
     "thresholds": [noLikesThreshold],
     "order_by": [[totalLikesDimension, { "Biggest": null }]]
 }
+
+// ==========APPLET CONFIG==========
+//@ts-ignore
 const appletConfig: AppletConfigInput = {
-    "name": "feed_applet",
-    "ranges": [likeRange, totalLikesRange],
-    "dimensions": [likeDimension, totalLikesDimension],
-    "resource_defs": { "feed": { "posts": [postItemResourceDef] } },
-    "methods": [totalLikesMethod],
+    "name": INSTALLED_APP_ID,
+    "resource_defs": [postItemResourceDef],
+    "ranges": [likeRange, totalLikesRange, perceivedHeatRange],
+    "dimensions": [likeDimension, totalLikesDimension, perceivedFireDimension, totalFireDimension],
+    "methods": [totalLikesMethod, totalFireMethod],
     "cultural_contexts": [mostLikedPostsContext, likedPostsContext]
 }
 

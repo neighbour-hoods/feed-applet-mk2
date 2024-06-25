@@ -1,6 +1,6 @@
 import { css, CSSResult, html } from "lit";
 import { property } from "lit/decorators.js";
-import { NHComponent , NHCard, NHAssessmentWidget } from '@neighbourhoods/design-system-components';
+import { NHComponent , NHCard } from '@neighbourhoods/design-system-components';
 import { SlSkeleton } from "@scoped-elements/shoelace";
 import { classMap } from "lit/directives/class-map.js";
 
@@ -15,7 +15,11 @@ export default class NHPostCard extends NHComponent {
   @property()
   textContent!: string;
   @property()
-  iconImg!: string;
+  imageContent!: string;
+  @property()
+  assessmentIcon!: string;
+  @property()
+  tags!: string[];
   @property()
   loading: boolean = false;
   @property()
@@ -25,11 +29,11 @@ export default class NHPostCard extends NHComponent {
     return this.loading
     ? html`
       <nh-card
-        .theme=${"light"}
+        .theme=${"dark"}
         .heading=${""}
-        .hasContextMenu=${!false}
+        .hasContextMenu=${true}
         .hasPrimaryAction=${false}
-        .footerAlign=${"l"}
+        .footerAlign=${"r"}
         class="nested-card"
       ><div class="skeleton-container">
         <div class="skeleton-row">
@@ -57,19 +61,18 @@ export default class NHPostCard extends NHComponent {
           preview: this.isPreview
         })}">
           ${this.textContent !== "" ? html`<p>${this.textContent}</p>` : null}
-          <slot name="image"></slot>
+          <slot name="image">
+            <img src=${this.imageContent} />
+          </slot>
         </div>
-        ${this.isPreview ? null : html`<nh-assessment-widget slot="footer" .name=${kebabCase(this.title)} .iconAlt=${`Assess post: "${this.title}"`} .iconImg=${this.iconImg}></nh-assessment-widget>`}
+        ${this.isPreview ? null : html`<nh-assessment-widget slot="footer" .name=${kebabCase(this.title)} .iconAlt=${`Assess post: "${this.title}"`} .iconImg=${this.assessmentIcon}></nh-assessment-widget>`}
       </nh-card>
     `;
   }
 
-  static get elementDefinitions() {
-    return {
-      "nh-assessment-widget": NHAssessmentWidget,
+  static elementDefinitions = {
       "nh-card": NHCard,
       "sl-skeleton": SlSkeleton,
-    };
   }
 
   static styles: CSSResult[] = [

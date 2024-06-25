@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 
 export default defineConfig(({ mode }) => {
   const isProduction = mode === 'production'
@@ -18,7 +18,6 @@ export default defineConfig(({ mode }) => {
       },
     ],
     build: {
-      sourcemap: true,
       lib: {
         entry: 'src/applet-index.ts',
         name: 'applet',

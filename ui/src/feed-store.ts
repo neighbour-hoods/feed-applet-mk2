@@ -1,8 +1,7 @@
-import { derived, get, Writable, writable } from 'svelte/store';
-import { AgentPubKey, AgentPubKeyB64, AppAgentClient, Record, AppSignal, AppWebsocket, CellId, encodeHashToBase64, EntryHash, ActionHash, DnaHash, RoleName } from '@holochain/client';
+import { AgentPubKeyB64, AppAgentClient, AppSignal, CellId, encodeHashToBase64, EntryHash, ActionHash, DnaHash, RoleName } from '@holochain/client';
 import { FeedService } from './feed-service';
-import { PostsSignal, Post, WrappedEntry, EntryTypes } from './feed/types';
-import { lazyLoadAndPoll, AsyncReadable } from "@holochain-open-dev/stores";
+import { PostsSignal, Post } from './feed/types';
+import { lazyLoadAndPoll, get, writable, Writable, derived } from "@holochain-open-dev/stores";
 import { EntryRecord, LazyHoloHashMap } from "@holochain-open-dev/utils";
 
 export class FeedStore {
@@ -18,14 +17,12 @@ export class FeedStore {
 
   allPosts = lazyLoadAndPoll(async () => {
     const records = await this.fetchAllPosts();
-    console.log('polling all post records :>> ', records);
     return records.map(r => r.entryHash);
   }, 4000);
 
   allPostsForAssessment = lazyLoadAndPoll(async () => {
     await this.fetchAllPosts();
     const tuples =get(await this.allPostEntryActionHashTuples());
-    // console.log('polling all post eh/ah :>> ', tuples);
     return tuples
   }, 1000);
 
@@ -51,11 +48,13 @@ export class FeedStore {
       if (payload.app_entry.type !== 'Post') return;
       this.signaledHashes = [payload.action.hashed.hash, ...this.signaledHashes];
     });
+
     this.service = new FeedService(
       client,
       cellId,
       roleName
     );
+
     this.myAgentPubKey = encodeHashToBase64(cellId[1]);
   }
 
@@ -82,7 +81,6 @@ export class FeedStore {
       posts.map(post => {
         allPostsEhs.push(post.entryHash)
       })
-      console.log('allPostsEhs :>> ', allPostsEhs);
       return allPostsEhs
     })
   }
@@ -108,7 +106,8 @@ export class FeedStore {
   }
   
 }
-interface UpdatePostInput {
+
+export interface UpdatePostInput {
       original_post_hash: ActionHash
       previous_post_hash: ActionHash,
       updated_post: Post,

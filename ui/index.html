@@ -12,27 +12,23 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
 
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: sans-serif;
-        background-color: #ededed;
-      }
-      
-      :root {
-        --mdc-theme-primary: #7B1FA2;
-        --mdc-theme-secondary: #FF5722;
-      }
-    </style>
-    <title>Feed Applet</title>
+      <style>
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+          font-family: sans-serif;
+          background-color: #18151b;
+          color: #fff;
+          overflow: hidden;
+        }
+      </style>
+      <script type="module" src="./src/polyfills.ts"></script>
+      <title>Neighbourhoods Applet - Dev Test Harness</title>
   </head>
 
   <body>
     <applet-test-harness></applet-test-harness>
-
-    <script type="module" src="/scoped-custom-element-registry.min.js"></script>
     <script type="module" src="./src/applet-test-harness.ts"></script>
   </body>
 </html>

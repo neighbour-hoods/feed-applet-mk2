@@ -8,7 +8,7 @@ import {
   CreateLink,
   DeleteLink,
 } from '@holochain/client';
-import { Assessment } from '@neighbourhoods/sensemaker-lite-types';
+import { Assessment } from '@neighbourhoods/client';
 
 export type PostsSignal =
   | {
@@ -40,10 +40,6 @@ export type PostsSignal =
 
 export type EntryTypes = { type: 'Post' } & Post;
 
-export interface Post {
-  text: string;
-}
-
 export interface WrappedEntry<T> {
   action_hash: ActionHash;
   entry_hash: EntryHash;
@@ -53,6 +49,7 @@ export interface WrappedEntry<T> {
 export type WrappedPostWithAssessment = WrappedEntry<Post> & {
   assessments: Assessment | undefined;
 };
+
 export interface AppletConfig {
   dimensions: {
     [dimensionName: string]: EntryHash;
@@ -66,4 +63,14 @@ export interface AppletConfig {
   contextResults: {
     [contextName: string]: Array<WrappedPostWithAssessment>;
   };
+}
+
+export interface Post { 
+  title: string;
+
+  text_content: string;
+
+  image_content: string;
+
+  hash_tags: Array<string>;
 }

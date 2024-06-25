@@ -1,25 +1,23 @@
 import { css, html } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import { AppAgentCallZomeRequest, AppAgentClient, EntryHash } from "@holochain/client";
+import { state } from "lit/decorators.js";
+import { AppAgentCallZomeRequest } from "@holochain/client";
 import { Post, WrappedEntry } from "../types";
 
-import { NHComponent } from "neighbourhoods-design-system-components";
 import NHPostCard from "./post-card";
+import { RenderBlock } from "@neighbourhoods/client";
+import { ScopedRegistryHost } from "@lit-labs/scoped-registry-mixin";
+import { NHSpinner } from "@neighbourhoods/design-system-components";
 
-@customElement('post-display-wrapper')
-export class PostDisplayWrapper extends NHComponent {
-    @property()
-    resourceHash!: EntryHash;
-
-    @property()
-    appAgentWebsocket!: AppAgentClient;
-
-    @state()
-    fetchingResource = true;
+export class PostDisplayWrapper extends ScopedRegistryHost(RenderBlock) {
+    @state() fetchingResource = true;
 
     post?: WrappedEntry<Post>
 
-    protected async firstUpdated() {
+    async loadData() {
+        await super.loadData();
+        
+        if(!this.resourceHash) throw new Error('Could not fetch resource in resource renderer');
+
         const req: AppAgentCallZomeRequest = {
             cap_secret: null,
             role_name: "feed",
@@ -27,7 +25,7 @@ export class PostDisplayWrapper extends NHComponent {
             fn_name: "get_latest_post_with_eh",
             payload: this.resourceHash,
         }
-        const post = await this.appAgentWebsocket.callZome(req);
+        const post = await this.nhDelegate.appAgentWebsocket.callZome(req);
         this.post = {
             entry: post,
             entry_hash: this.resourceHash,
@@ -36,12 +34,22 @@ export class PostDisplayWrapper extends NHComponent {
         this.fetchingResource = false;
     }
     render() {
+        // if(this.fetchingResource) return html`<nh-spinner type=${"icon"}></nh-spinner>`
+
         return html`
-            <post-card .loading=${this.fetchingResource} .isPreview=${true} .title=${!this.fetchingResource && this.post!.entry.text} .textContent=${""}></post-card>`
+            <post-card
+                .loading=${this.fetchingResource}
+                .isPreview=${true}
+                .title=${!this.fetchingResource && this.post!.entry.title}
+                .textContent=${!this.fetchingResource && this.post!.entry.text_content}
+                .imageContent=${!this.fetchingResource && this.post!.entry.image_content}
+            >
+            </post-card>`
     }
 
     static elementDefinitions = {
         "post-card": NHPostCard,
+        'nh-spinner': NHSpinner,
     }
 
     static get styles() {

@@ -1,35 +1,39 @@
 {
   "name": "feed-applet-dev",
   "private": true,
+  "workspaces": [
+    "ui",
+    "tests"
+  ],
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "start": "AGENTS=2 npm run network",
-    "dev": "AGENTS=2 npm run network:dev",
-    "network:dev": "hc s clean && npm run build:test-happ && UI_PORT=8888 concurrently \"open-cli http://localhost:8888 && cd ui && npm start\" \"ADMIN_PORT=9000 HC_PORT=9001 npm run start:dev\"",
-    "start:dev": "RUST_LOG=warn WASM_LOG=debug echo \"pass\" | hc s --piped -f=$ADMIN_PORT generate ./workdir/sensemaker-enabled/feed-sensemaker.happ --run $HC_PORT -a feed-sensemaker network mdns",
-    "network": "hc s clean && npm run build:test-happ && concurrently \"npm run build:watch -w ui\" \"npm run launch:happ\"",
+    "start": "npm run network:dev2",
+    "dev": "dotenv -- npm run network:dev",
+    "dev2": "dotenv -- npm run network:dev2",
+    "network:dev": "hc s clean && npm run build:test-happ && dotenv -- concurrently \"open-cli http://localhost:${UI_PORT} && cd ui && npm run dev\" \"dotenv -- npm run start:dev\"",
+    "start:dev": "RUST_LOG=warn WASM_LOG=debug echo \"pass\" | hc s --piped -f=$VITE_ADMIN_PORT generate ./workdir/sensemaker-enabled/feed-sensemaker.happ -d=agent1 --run $VITE_HC_PORT -a feed-sensemaker network mem",
+    "network:dev2": "hc s clean && npm run build:test-happ && dotenv -- concurrently \"open-cli http://localhost:${UI_PORT} && open-cli http://localhost:${UI_PORT_2} && cd ui && npm run dev2\" \"dotenv -- npm run start:dev2\"",
+    "start:dev2": "RUST_LOG=warn WASM_LOG=debug echo \"pass\" | hc s --piped -f=$VITE_ADMIN_PORT,$VITE_ADMIN_PORT_2 generate ./workdir/sensemaker-enabled/feed-sensemaker.happ -n 2 --run=$VITE_HC_PORT,$VITE_HC_PORT_2 -a feed-sensemaker network mem",
     "test": "npm run build:happ && npm t -w tests",
-    "launch:happ": "RUST_LOG=warn echo \"pass\" | hc launch --piped -n $AGENTS ./workdir/sensemaker-enabled/feed-sensemaker.happ --ui-path ui/dist network mdns",
-    "package": "npm run build:happ && cd ui && npm run package:ui && cd .. && hc web-app pack workdir",
+    "package": "npm run build:happ && npm run package:ui -w ui && hc web-app pack workdir",
     "build:happ": "npm run build:dnas && hc app pack ./workdir",
-    "build:test-happ": "npm run download-sensemaker && npm run build:dnas && hc app pack ./workdir/sensemaker-enabled",
+    "build:test-happ": "npm run build:dnas && hc app pack ./workdir/sensemaker-enabled",
     "build:dnas": "npm run build:zomes && hc dna pack ./dna/workdir",
     "build:zomes": "CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown",
-    "download-sensemaker": "rimraf workdir/sensemaker.dna && curl -L --output workdir/sensemaker.dna https://github.com/neighbour-hoods/sensemaker-lite/releases/download/v0.0.8-alpha/sensemaker.dna; exit 0",
-    "clean": "rimraf workdir/sensemaker.dna; rimraf ui/node_modules; rimraf node_modules"
+    "clean": "rimraf ui/node_modules; rimraf node_modules",
+    "postinstall": "test -f .env || cp .env.example .env"
   },
   "devDependencies": {
     "@holochain-playground/cli": "^0.1.1",
     "concurrently": "^6.2.1",
-    "rimraf": "^3.0.2"
+    "concurrently-repeat": "^0.0.1",
+    "dotenv-cli": "^7.2.1",
+    "open-cli": "^7.2.0",
+    "@webcomponents/scoped-custom-element-registry": "^0.0.9",
+    "rimraf": "^3.0.2",
+    "vitest": "^0.32.2"
   },
   "engines": {
     "npm": ">=7.0.0"
-  },
-  "dependencies": {
-    "@holochain/client": "^0.15.0",
-    "@neighbourhoods/sensemaker-lite-types": "^0.4.0",
-    "@webcomponents/custom-elements": "^1.6.0",
-    "vitest": "^0.32.2"
   }
 }
