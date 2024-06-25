@@ -91,7 +91,6 @@ export class PostDetailWidget extends NHComponent {
     let delegate;
     try {
       if(!assessableDimension || !this.postEh) {
-        console.log('assessableDimension, this.postEh, resourceDefName :>> ', assessableDimension, this.postEh, resourceDefName);
         throw new Error("Not enough details to create delegate")
       }
       delegate = createInputAssessmentControlDelegate(
@@ -101,7 +100,7 @@ export class PostDetailWidget extends NHComponent {
         this.postEh
       )
     } catch (error) {
-      console.error('Could not create working delegate :>> ', error);
+      console.log(error);
     }
     return delegate
   }
